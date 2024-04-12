@@ -49,7 +49,7 @@ const SignInScreen = () => {
             </View>
             
             <TouchableOpacity style={tw`self-end mb-6`}>
-              <Text style={tw`text-blue-500 text-md`}
+              <Text style={tw`text-blue-500 `}
               onPress={() => navigation.navigate('ForgotPassword')}
               >Forgot Password?</Text>
             </TouchableOpacity>
@@ -79,7 +79,7 @@ const SignInScreen = () => {
 
           <View style={tw`w-full pb-6 px-4`}>
             <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-              <Text style={tw`text-md text-center`}>
+              <Text style={tw`text-center`}>
                 Don’t Have An Account? <Text style={[tw`text-pink-600 font-bold`,{color: '#A72C76'}]}>Sign Up</Text>
               </Text>
             </TouchableOpacity>

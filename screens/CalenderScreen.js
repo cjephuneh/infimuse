@@ -1,87 +1,151 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, Modal, StyleSheet } from 'react-native';
+import tw from 'tailwind-react-native-classnames';
 import { Calendar } from 'react-native-calendars';
-import { Card } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-const CalenderScreen = () => {
-  // Dummy data for upcoming events or updates
-  const upcomingEvents = [
-    { id: 1, title: 'Event 1', date: '2024-04-10', description: 'Description for Event 1' },
-    { id: 2, title: 'Event 2', date: '2024-04-15', description: 'Description for Event 2' },
-    { id: 3, title: 'Event 3', date: '2024-04-20', description: 'Description for Event 3' },
-    // Add more events as needed
-  ];
+const CalendarScreen = () => {
+  const [selectedDate, setSelectedDate] = useState();
+    // State to manage the visibility of the modal
+    const [isModalVisible, setModalVisible] = useState(false);
+
+  const [events, setEvents] = useState({
+    // Mock data: events indexed by date
+    '2022-04-10': [{ id: 1, time: '09:00', title: 'Appointment times' }],
+    // Add more events here
+  });
+
+
+
+    // Function to toggle the modal
+    const toggleModal = () => {
+      setModalVisible(!isModalVisible);
+    };
+  
+
+  const onDayPress = (day) => {
+    setSelectedDate(day.dateString);
+  };
+
+  const EventItem = ({ event }) => {
+    return (
+      <View style={tw`flex-row items-center p-2 border-b border-gray-200`}>
+        <Icon name="clock-o" size={20} color="#4B5563" style={tw`mr-2`} />
+        <View style={tw`flex-1`}>
+          <Text style={tw`text-base text-gray-800`}>{event.time}</Text>
+          <Text style={tw`text-sm text-gray-500`}>{event.title}</Text>
+        </View>
+      </View>
+    );
+  };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      {/* Calendar Section */}
+    <View style={tw`flex-1 bg-gray-900`}>
       <Calendar
-        // Customize calendar appearance here
-        style={styles.calendar}
-        // Add any calendar props as needed
+        // The theme property allows for custom styling
+        theme={{
+          calendarBackground: tw.color('gray-900'),
+          textSectionTitleColor: tw.color('gray-400'),
+          todayTextColor: tw.color('red-500'),
+          dayTextColor: tw.color('gray-300'),
+          selectedDayBackgroundColor: tw.color('red-500'),
+          selectedDayTextColor: tw.color('gray-900'),
+          arrowColor: tw.color('gray-600'),
+          dotColor: tw.color('red-500'),
+          monthTextColor: tw.color('gray-100'),
+        }}
+        onDayPress={onDayPress}
+        markedDates={{
+          [selectedDate]: { selected: true, selectedColor: tw.color('gray-500') },
+          // ...mark other dates with dots or custom styles if needed
+        }}
+        // ...other Calendar props
       />
-
-      {/* Upcoming Events Section */}
-      <View style={styles.upcomingEventsContainer}>
-        <Text style={styles.sectionTitle}>Upcoming Events</Text>
-        {/* Render cards for upcoming events */}
-        {upcomingEvents.map(event => (
-          <TouchableOpacity key={event.id} style={styles.cardContainer}>
-            <Card containerStyle={styles.card}>
-              <Card.Title style={styles.cardTitle}>{event.title}</Card.Title>
-              <Card.Divider />
-              <Text style={styles.cardText}>{event.date}</Text>
-              <Text style={styles.cardText}>{event.description}</Text>
-            </Card>
-          </TouchableOpacity>
+      <View style={tw`flex-1 bg-gray-800 p-4`}>
+        {events[selectedDate]?.map((event) => (
+          <EventItem key={event.id} event={event} />
         ))}
       </View>
-    </ScrollView>
+      <TouchableOpacity
+        style={[tw`absolute bottom-4 right-4  p-4 rounded-full shadow-lg`,{backgroundColor: '#A72C76'}]}
+        onPress={toggleModal}
+      >
+        <Icon name="plus" size={24} color="#FFF" />
+      </TouchableOpacity>
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={toggleModal}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Create a listing </Text>
+            <TouchableOpacity style={styles.modalButton} onPress={toggleModal}>
+              <Text 
+                style={tw`text-white text-center text-lg`}
+              >Workshop</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.modalButton} onPress={toggleModal}>
+              <Text
+                style={tw`text-white text-center text-lg`}
+              >Class</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.modalButton} onPress={toggleModal}>
+              <Text
+                style={tw`text-white text-center text-lg`}
+              >PackageClass</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.modalButton} onPress={toggleModal}>
+              <Text
+                style={tw`text-white text-center text-lg`}
+              >Venue</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    backgroundColor: '#F8F9FA', // Background color for the screen
-    padding: 20,
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)', // Dimmed background
   },
-  calendar: {
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: '#CED0CE', // Border color for the calendar
-    borderRadius: 10,
-    // Add any additional calendar styles here
-  },
-  upcomingEventsContainer: {
-    marginBottom: 20,
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  cardContainer: {
-    marginBottom: 10,
-  },
-  card: {
-    borderRadius: 15,
-    elevation: 3, // For Android
+  modalView: {
+    width: '80%', // Makes modal take up 80% of screen width
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
     },
     shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    shadowRadius: 4,
+    elevation: 5,
   },
-  cardTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+    fontSize: 18, // Larger font size for title
   },
-  cardText: {
-    fontSize: 14,
+  modalButton: {
+    marginBottom: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    width: '100%', // Make buttons spread out to the full width of the modal
+    borderRadius: 10,
+    elevation: 2,
+    backgroundColor: "#A72C76", // Tailwind gray-300
+    alignItems: 'center', // Center text in the button
   },
 });
 
-export default CalenderScreen;
+export default CalendarScreen;
