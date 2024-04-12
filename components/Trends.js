@@ -12,13 +12,14 @@ import tw from "tailwind-react-native-classnames";
 import { useNavigation } from "@react-navigation/native";
 import { fetchStaffMembers } from "../redux/slice/staff/staffservice"; // Adjust the import path as needed
 
-const StaffCard = ({ name, email, role, description, onPress }) => {
+const StaffCard = ({ name, email, role, description, onPress, image }) => {
   return (
     <TouchableOpacity
       onPress={onPress}
-      style={[styles.card, tw`bg-white rounded-lg p-4 mb-4`]}
+      style={[styles.card, tw`bg-white rounded-lg p-4 mb-4 flex-row items-center shadow-md`]}
     >
-      <View style={tw`flex-1`}>
+      <Image source={image} style={styles.image} />
+      <View style={tw`flex-1 ml-4`}>
         <Text style={tw`text-xl font-bold`}>{name}</Text>
         <Text style={tw`text-sm text-gray-600`}>{email}</Text>
         <Text style={tw`text-sm text-gray-600`}>{role}</Text>
@@ -27,6 +28,7 @@ const StaffCard = ({ name, email, role, description, onPress }) => {
     </TouchableOpacity>
   );
 };
+
 
 
 const Tools = () => {
