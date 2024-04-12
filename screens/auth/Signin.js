@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -10,11 +10,47 @@ import {
   StatusBar,
 } from 'react-native';
 import tw from 'tailwind-react-native-classnames';
-import Icon from 'react-native-vector-icons/FontAwesome5'; // FontAwesome5 for updated icons
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
+import { login } from '../../redux/slice/auth/authSlice'; // Adjust the import path as necessary
+import Toast from 'react-native-toast-message';
 
 const SignInScreen = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const { isLoading, isError, isSuccess, message } = useSelector(state => state.auth);
+  const [credentials, setCredentials] = useState({ email: '', password: '' });
+
+  const handleInputChange = (name, value) => {
+    setCredentials(prevState => ({ ...prevState, [name]: value }));
+  };
+
+  const handleSignIn = () => {
+    // Here simulate the hardcoded OTP
+    const userData = { ...credentials, OTP: "541747" };
+    dispatch(login(userData))
+      .unwrap()
+      .then((response) => {
+        Toast.show({
+          type: 'success',
+          position: 'bottom',
+          text1: 'Login Successful',
+          text2: response.message,
+          visibilityTime: 4000,
+        });
+        navigation.navigate('Main'); // Navigate on successful login
+      })
+      .catch((error) => {
+        Toast.show({
+          type: 'error',
+          position: 'bottom',
+          text1: 'Login Failed',
+          text2: error.message || 'An error occurred',
+          visibilityTime: 4000,
+        });
+      });
+  };
 
   return (
     <>
@@ -35,6 +71,7 @@ const SignInScreen = () => {
                 keyboardType="email-address"
                 textContentType="emailAddress"
                 placeholderTextColor="#9a9a9a"
+                onChangeText={text => handleInputChange('email', text)}
               />
             </View>
 
@@ -45,16 +82,15 @@ const SignInScreen = () => {
                 secureTextEntry
                 textContentType="password"
                 placeholderTextColor="#9a9a9a"
+                onChangeText={text => handleInputChange('password', text)}
               />
             </View>
             
-            <TouchableOpacity style={tw`self-end mb-6`}>
-              <Text style={tw`text-blue-500 `}
-              onPress={() => navigation.navigate('ForgotPassword')}
-              >Forgot Password?</Text>
+            <TouchableOpacity style={tw`self-end mb-6`} onPress={() => navigation.navigate('ForgotPassword')}>
+              <Text style={tw`text-blue-500 `}>Forgot Password?</Text>
             </TouchableOpacity>
             
-            <TouchableOpacity style={[tw` w-full rounded-full py-3 mb-6 shadow-lg`,{ backgroundColor: "#12B9F3" }]} onPress={() => navigation.navigate('Main')}>
+            <TouchableOpacity style={[tw` w-full rounded-full py-3 mb-6 shadow-lg`,{ backgroundColor: "#12B9F3" }]} onPress={handleSignIn}>
               <Text style={tw`text-white text-center text-lg`}>Sign In</Text>
             </TouchableOpacity>
             
@@ -86,6 +122,7 @@ const SignInScreen = () => {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+      <Toast ref={(ref) => Toast.setRef(ref)} />
     </>
   );
 };
