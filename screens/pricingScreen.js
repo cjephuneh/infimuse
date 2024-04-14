@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FlatList, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, Platform, StyleSheet, Image, Text, TouchableOpacity, View } from 'react-native';
 import { moderateScale } from 'react-native-size-matters';
 import { ScreenHeight } from '@rneui/base';
 import FastImage from 'react-native-fast-image';
@@ -87,13 +87,13 @@ const MainSubscriptionContainer = (props) => {
                   style={styles.cardSelector}
                 >
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <FastImage
+                    <Image
                       source={require('../assets/icons/card.png')}
                       style={{
                         width: moderateScale(40),
-                        height: moderateScale(40),
+                        height: moderateScale(40), 
                       }}
-                      resizeMode={FastImage.resizeMode.contain}
+                      // resizeMode={FastImage.resizeMode.contain}
                     />
                     <Text
                       style={{
@@ -134,13 +134,13 @@ const MainSubscriptionContainer = (props) => {
                 style={styles.cardSelector}
               >
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <FastImage
+                  <Image
                     source={require('../assets/icons/mpesa.png')}
                     style={{
                       width: moderateScale(40),
                       height: moderateScale(40),
                     }}
-                    resizeMode={FastImage.resizeMode.contain}
+                    // resizeMode={FastImage.resizeMode.contain}
                   />
                   <Text
                     style={{
