@@ -23,6 +23,7 @@ import CreatePackagesSuccessScreen from '../screens/listings/sucessScreens/Creat
 import CreateWorkshopSuccessScreen from '../screens/listings/sucessScreens/CreateWorkshopSuccessScreen';
 import CreateTemplatesScreen from '../screens/CreateTemplatesScreen';
 import CreateWorkshopClassesScreen from '../screens/listings/CreateWorkshopClassesScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -56,6 +57,9 @@ function AppNavigation() {
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
         <Stack.Screen name="OtpVerification" component={OtpVerificationScreen} />
+
+        {/* Here we include the Profile Screen */}
+        <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
 
 
         {/* Here is where we include the Drawer Navigator */}
