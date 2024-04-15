@@ -21,6 +21,8 @@ const SignInScreen = () => {
   const dispatch = useDispatch();
   const { isLoading, isError, isSuccess, message } = useSelector(state => state.auth);
   const [credentials, setCredentials] = useState({ email: '', password: '' });
+  const [loading, setLoading] = useState(false);
+
 
   const handleInputChange = (name, value) => {
     setCredentials(prevState => ({ ...prevState, [name]: value }));
@@ -39,6 +41,7 @@ const SignInScreen = () => {
           text2: response.message,
           visibilityTime: 4000,
         });
+        setLoading(false);
         navigation.navigate('Main'); // Navigate on successful login
       })
       .catch((error) => {
@@ -49,6 +52,7 @@ const SignInScreen = () => {
           text2: error.message || 'An error occurred',
           visibilityTime: 4000,
         });
+        setLoading(false);
       });
   };
 
@@ -87,11 +91,16 @@ const SignInScreen = () => {
             </View>
             
             <TouchableOpacity style={tw`self-end mb-6`} onPress={() => navigation.navigate('ForgotPassword')}>
-              <Text style={tw`text-blue-500 `}>Forgot Password?</Text>
+              <Text style={tw`text-blue-500 `}>
+                Forgot Password?</Text>
             </TouchableOpacity>
             
             <TouchableOpacity style={[tw` w-full rounded-full py-3 mb-6 shadow-lg`,{ backgroundColor: "#12B9F3" }]} onPress={handleSignIn}>
-              <Text style={tw`text-white text-center text-lg`}>Sign In</Text>
+              <Text style={tw`text-white text-center text-lg`}>{loading ? (
+                <ActivityIndicator size="small" color="#ffffff" />
+              ) : (
+                <Text style={tw`text-white text-center text-lg`}>Sign In</Text>
+              )}</Text>
             </TouchableOpacity>
             
             <Text style={tw`text-sm mb-4 text-center`}>Or Sign In With:</Text>
