@@ -22,6 +22,23 @@ export const fetchWorkshops = createAsyncThunk(
   }
 );
 
+
+//Thunk for fetching a single workshop
+
+export const fetchWorkshop = createAsyncThunk(
+    'workshops/fetchWorkshop',
+    async (workshopId, { rejectWithValue }) => {
+        try {
+        const response = await getWorkshop(workshopId);
+        return response;
+        } catch (error) {
+        return rejectWithValue(error.message);
+        }
+    }
+    );
+    
+
+
 // Thunk for creating a workshop
 export const createWorkshopAsync = createAsyncThunk(
   'workshops/createWorkshop',
@@ -130,3 +147,9 @@ const workshopSlice = createSlice({
     },
   },
 });
+
+// Export the action creators
+export const { selectWorkshop } = workshopSlice.actions;
+
+// Export the workshop slice
+export default workshopSlice.reducer;

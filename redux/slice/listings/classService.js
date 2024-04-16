@@ -38,6 +38,21 @@ export const getClassSessions = async () => {
   }
 };
 
+// Add this function to fetch a single class session
+export const getClassSession = async (classId) => {
+  try {
+    const response = await fetch(`${API_URL}/class-sessions/${classId}`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch class session');
+    }
+    const json = await response.json();
+    return json; // This should include status and doc as per your API response
+  } catch (error) {
+    console.error("Error fetching class session:", error);
+    throw error;
+  }
+};
+
 export const updateClassSession = async (classData) => {
   try {
     const response = await fetch(`${API_URL}/class-sessions/${classData.id}`, {

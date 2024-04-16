@@ -23,6 +23,22 @@ export const fetchClassSessions = createAsyncThunk(
   }
 );
 
+
+//Thunk for fetching a single class session
+export const fetchClassSession = createAsyncThunk(
+    'classSessions/fetchClassSession',
+    async (classId, { rejectWithValue }) => {
+        try {
+        const response = await getClassSession(classId);
+        return response;
+        } catch (error) {
+        return rejectWithValue(error.message);
+        }
+    }
+    );
+
+    
+
 // Thunk for creating a class session
 export const createClassSessionAsync = createAsyncThunk(
   'classSessions/createClassSession',

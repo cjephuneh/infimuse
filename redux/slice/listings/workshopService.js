@@ -26,6 +26,8 @@ export const createWorkshop = async (workshopData, token) => {
 }
 
 
+
+
 export const getWorkshops = async () => {    
   try {
     const response = await fetch(`${API_URI}/workshops`);
@@ -39,6 +41,22 @@ export const getWorkshops = async () => {
     throw error;
   }
 }
+
+export const getWorkshop = async (workshopId) => {
+    try {
+        const response = await fetch(`${API_URI}/workshops/${workshopId}`);
+        if (!response.ok) {
+        throw new Error('Failed to fetch workshop');
+        }
+        const json = await response.json();
+        return json;
+    } catch (error) {
+        console.error('Error fetching workshop:', error);
+        throw error;
+    }
+    }
+
+//
 
 
 

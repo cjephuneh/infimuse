@@ -36,6 +36,23 @@ export const getWorkshops = async () => {
   }
 }
 
+// Add this function to fetch a single workshop
+export const getWorkshop = async (workshopId) => {
+    try {
+        const response = await fetch(`${API_URL}/workshops/${workshopId}`);
+        if (!response.ok) {
+        throw new Error('Failed to fetch workshop');
+        }
+        const json = await response.json();
+        return json;
+    }
+    catch (error) {
+        console.error('Error fetching workshop:', error);
+        throw error;
+    }
+}
+
+
 export const updateWorkshop = async (workshopData) => {
     try {
         const response = await fetch(`${API_URL}/workshops/${workshopData.id}`, {

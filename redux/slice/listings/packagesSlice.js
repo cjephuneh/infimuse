@@ -23,6 +23,22 @@ export const fetchPackages = createAsyncThunk(
     }
     );
 
+//Thunk for fetching a single package
+
+export const fetchPackage = createAsyncThunk(
+    "packages/fetchPackage",
+
+    async (packageId, { rejectWithValue }) => {
+        try {
+        const response = await getPackage(packageId);
+        return response;
+        } catch (error) {
+        return rejectWithValue(error.message);
+        }
+    }
+    );
+    
+
 // Thunk for creating a package
 export const createPackageAsync = createAsyncThunk(
     "packages/createPackage",
