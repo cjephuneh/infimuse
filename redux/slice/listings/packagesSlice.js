@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { createPackage, getPackages, updatePackage, deletePackage } from "./packageService";
+import { createPackage, getPackages, getaPackage, updatePackage, deletePackage } from "./packagesServices";
 
 // Define the initial state
 const initialState = {
@@ -30,14 +30,14 @@ export const fetchPackage = createAsyncThunk(
 
     async (packageId, { rejectWithValue }) => {
         try {
-        const response = await getPackage(packageId);
+        const response = await getaPackage(packageId);
         return response;
         } catch (error) {
         return rejectWithValue(error.message);
         }
     }
     );
-    
+
 
 // Thunk for creating a package
 export const createPackageAsync = createAsyncThunk(

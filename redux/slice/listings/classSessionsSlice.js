@@ -1,6 +1,6 @@
 // src/redux/slice/classSessionsSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { createClassSession, getClassSessions, updateClassSession, deleteClassSession } from './classService';
+import { createClassSession, getClassSession, getClassSessions, updateClassSession, deleteClassSession } from './classService';
 
 // Define the initial state
 const initialState = {

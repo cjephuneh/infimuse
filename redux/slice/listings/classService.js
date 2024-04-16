@@ -1,4 +1,3 @@
-// src/services/classService.js
 const API_URL = 'https://whatever.lat/api/v1/'; // Adjust this to your actual API URL
 
 export const createClassSession = async (classData, token) => {
@@ -23,10 +22,14 @@ export const createClassSession = async (classData, token) => {
   }
 };
 
-
-export const getClassSessions = async () => {
+export const getClassSessions = async (token) => {
   try {
-    const response = await fetch(`${API_URL}/class-sessions`);
+    const response = await fetch(`${API_URL}/class-sessions`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`, // Include the token in the request headers
+      },
+    });
     if (!response.ok) {
       throw new Error('Failed to fetch class sessions');
     }
@@ -39,9 +42,14 @@ export const getClassSessions = async () => {
 };
 
 // Add this function to fetch a single class session
-export const getClassSession = async (classId) => {
+export const getClassSession = async (classId, token) => {
   try {
-    const response = await fetch(`${API_URL}/class-sessions/${classId}`);
+    const response = await fetch(`${API_URL}/class-sessions/${classId}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`, // Include the token in the request headers
+      },
+    });
     if (!response.ok) {
       throw new Error('Failed to fetch class session');
     }
@@ -53,12 +61,14 @@ export const getClassSession = async (classId) => {
   }
 };
 
-export const updateClassSession = async (classData) => {
+export const updateClassSession = async (classData, token) => {
   try {
     const response = await fetch(`${API_URL}/class-sessions/${classData.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`, // Include the token in the request headers
+
       },
       body: JSON.stringify(classData),
     });
@@ -73,10 +83,15 @@ export const updateClassSession = async (classData) => {
   }
 };
 
-export const deleteClassSession = async (classId) => {
+export const deleteClassSession = async (classId, token) => {
   try {
     const response = await fetch(`${API_URL}/class-sessions/${classId}`, {
       method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json ',
+        'Authorization': `Bearer ${token}`, // Include the token in the request headers
+      }
+
     });
     if (!response.ok) {
       throw new Error('Failed to delete class session');

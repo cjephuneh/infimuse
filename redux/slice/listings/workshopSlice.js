@@ -1,5 +1,5 @@
 import { createSlice, createAction, createAsyncThunk } from '@reduxjs/toolkit';
-import { createWorkshop, getWorkshops, updateWorkshop, deleteWorkshop } from './workshopService';
+import { createWorkshop, getWorkshops,getWorkshop, updateWorkshop, deleteWorkshop } from './workshopService';
 
 // Define the initial state
 const initialState = {
