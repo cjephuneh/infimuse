@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 import {
   View,
   Text,
@@ -15,12 +16,14 @@ import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../redux/slice/auth/authSlice'; // Adjust the import path as necessary
 import Toast from 'react-native-toast-message';
+import { ActivityIndicator } from 'react-native';
+
 
 const SignInScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const { isLoading, isError, isSuccess, message } = useSelector(state => state.auth);
-  const [credentials, setCredentials] = useState({ email: '', password: '' });
+  const [credentials, setCredentials] = useState({ email: 'Jeh@kim.com', password: '12345' });
   const [loading, setLoading] = useState(false);
 
 
@@ -29,32 +32,51 @@ const SignInScreen = () => {
   };
 
   const handleSignIn = () => {
-    // Here simulate the hardcoded OTP
-    const userData = { ...credentials, OTP: "541747" };
-    dispatch(login(userData))
-      .unwrap()
-      .then((response) => {
-        Toast.show({
-          type: 'success',
-          position: 'bottom',
-          text1: 'Login Successful',
-          text2: response.message,
-          visibilityTime: 4000,
+    setLoading(true); // Set loading to true when login process starts
+  
+    // Retrieve stored OTP from AsyncStorage
+    AsyncStorage.getItem('OTP').then((storedOTP) => {
+      const userData = { ...credentials, OTP: storedOTP }; // Include stored OTP in login request
+  
+      // Dispatch login action with userData
+      dispatch(login(userData))
+        .unwrap()
+        .then((response) => {
+          console.log('Login response:', response); // Log the response here
+          Toast.show({
+            type: 'success',
+            position: 'bottom',
+            text1: 'Login Successful',
+            text2: response.message,
+            visibilityTime: 4000,
+          });
+          setLoading(false); // Set loading to false when login is successful
+          navigation.navigate('Main'); // Navigate on successful login
+        })
+        .catch((error) => {
+          console.error('Login error:', error); // Log the error here
+          Toast.show({
+            type: 'error',
+            position: 'bottom',
+            text1: 'Login Failed',
+            text2: error.message || 'An error occurred',
+            visibilityTime: 4000,
+          });
+          setLoading(false); // Set loading to false when login fails
         });
-        setLoading(false);
-        navigation.navigate('Main'); // Navigate on successful login
-      })
-      .catch((error) => {
-        Toast.show({
-          type: 'error',
-          position: 'bottom',
-          text1: 'Login Failed',
-          text2: error.message || 'An error occurred',
-          visibilityTime: 4000,
-        });
-        setLoading(false);
+    }).catch((error) => {
+      // Handle error if OTP is not found in AsyncStorage
+      Toast.show({
+        type: 'error',
+        position: 'bottom',
+        text1: 'Login Failed',
+        text2: 'Failed to retrieve OTP. Please try again.',
+        visibilityTime: 4000,
       });
+      setLoading(false); // Set loading to false
+    });
   };
+  
 
   return (
     <>
@@ -75,6 +97,7 @@ const SignInScreen = () => {
                 keyboardType="email-address"
                 textContentType="emailAddress"
                 placeholderTextColor="#9a9a9a"
+                value={credentials.email}
                 onChangeText={text => handleInputChange('email', text)}
               />
             </View>
@@ -86,6 +109,7 @@ const SignInScreen = () => {
                 secureTextEntry
                 textContentType="password"
                 placeholderTextColor="#9a9a9a"
+                value={credentials.password}
                 onChangeText={text => handleInputChange('password', text)}
               />
             </View>

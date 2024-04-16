@@ -2,14 +2,15 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { combineReducers } from 'redux';
 import authReducer from './slice/auth/authSlice';
-// Import other reducers and middleware if necessary
+import classSessionsReducer from '../redux/slice/listings/classSessionsSlice'; // Import the class sessions reducer
 
+// Combine all reducers
 const rootReducer = combineReducers({
-  // Combine reducers
   auth: authReducer,
-  // otherState: otherReducer
+  classSessions: classSessionsReducer, // Add the class sessions reducer to the root reducer
 });
 
+// Configure the Redux store
 const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) => getDefaultMiddleware(),

@@ -24,6 +24,7 @@ import CreateWorkshopSuccessScreen from '../screens/listings/sucessScreens/Creat
 import CreateTemplatesScreen from '../screens/CreateTemplatesScreen';
 import CreateWorkshopClassesScreen from '../screens/listings/CreateWorkshopClassesScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import TermsSreen from '../screens/TermsScreen';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -32,6 +33,8 @@ function MainDrawer() {
   return (
     <Drawer.Navigator drawerContent={(props) => <CustomDrawerContent {...props} />}>
       <Drawer.Screen name="Home" component={BottomTabNavigator} />
+      <Drawer.Screen name="Profile" component={ProfileScreen} />
+      <Drawer.Screen name="CreateClasses" component={CreateClassesScreen} />
 
     </Drawer.Navigator>
   );
@@ -60,6 +63,9 @@ function AppNavigation() {
 
         {/* Here we include the Profile Screen */}
         <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+        
+        {/* Here we include the Term Screen */}
+        <Stack.Screen name="TermsScreen" component={TermsSreen} />
 
 
         {/* Here is where we include the Drawer Navigator */}

@@ -1,5 +1,5 @@
 // src/redux/slices/authSlice.js
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, createAction } from '@reduxjs/toolkit';
 import AuthService from './authService';
 
 export const signUp = createAsyncThunk(
@@ -28,25 +28,28 @@ export const login = createAsyncThunk(
   );
 
 
+// Add success action creator
+export const signUpSuccess = createAction('auth/signUpSuccess');
+
 const initialState = {
-    user: null,
-    isError: false,
-    isSuccess: false,
-    isLoading: false,
-    message: ''
-  };
+  user: null,
+  isError: false,
+  isSuccess: false,
+  isLoading: false,
+  message: ''
+};
   
-  export const authSlice = createSlice({
-    name: 'auth',
-    initialState,
-    reducers: {
-      reset: (state) => {
-        state.isLoading = false;
-        state.isError = false;
-        state.isSuccess = false;
-        state.message = '';
-      },
+export const authSlice = createSlice({
+  name: 'auth',
+  initialState,
+  reducers: {
+    reset: (state) => {
+      state.isLoading = false;
+      state.isError = false;
+      state.isSuccess = false;
+      state.message = '';
     },
+  },
     extraReducers: (builder) => {
       builder
         .addCase(signUp.pending, (state) => {
@@ -62,6 +65,9 @@ const initialState = {
           state.isError = true;
           state.message = action.payload.message;
           state.user = null;
+        })
+        .addCase(signUpSuccess, (state) => {
+          state.isSuccess = true;
         })
         .addCase(login.pending, (state) => {
           state.isLoading = true;
