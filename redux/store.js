@@ -4,12 +4,14 @@ import { combineReducers } from 'redux';
 import authReducer from './slice/auth/authSlice';
 import classSessionsReducer from '../redux/slice/listings/classSessionsSlice'; // Import the class sessions reducer
 import workshopReducer from './slice/listings/workshopSlice';
+import packagesReducer from './slice/listings/packagesSlice';
 
 // Combine all reducers
 const rootReducer = combineReducers({
   auth: authReducer,
-  classSessions: classSessionsReducer, // Add the class sessions reducer to the root reducer
-  workshop: workshopReducer,
+  classSessions: classSessionsReducer,
+  workshop: workshopReducer, // Add the workshop reducer to the root reducer
+  // packages: packagesReducer, // Add the packages reducer to the root reducer
 });
 
 // Configure the Redux store

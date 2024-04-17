@@ -1,5 +1,5 @@
-import { createSlice, createAction, createAsyncThunk } from '@reduxjs/toolkit';
-import { createWorkshop, getWorkshops,getWorkshop, updateWorkshop, deleteWorkshop } from './workshopService';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { getWorkshops, getWorkshop, createWorkshop, updateWorkshop, deleteWorkshop } from "./workshopService";
 
 // Define the initial state
 const initialState = {
@@ -12,42 +12,38 @@ const initialState = {
 // Thunk for fetching workshops
 export const fetchWorkshops = createAsyncThunk(
   'workshops/fetchWorkshops',
-  async (_, { rejectWithValue }) => {
+  async () => {
     try {
       const response = await getWorkshops();
       return response;
     } catch (error) {
-      return rejectWithValue(error.message);
+      throw error;
     }
   }
 );
 
-
-//Thunk for fetching a single workshop
-
+// Thunk for fetching a single workshop
 export const fetchWorkshop = createAsyncThunk(
-    'workshops/fetchWorkshop',
-    async (workshopId, { rejectWithValue }) => {
-        try {
-        const response = await getWorkshop(workshopId);
-        return response;
-        } catch (error) {
-        return rejectWithValue(error.message);
-        }
+  'workshops/fetchWorkshop',
+  async (workshopId) => {
+    try {
+      const response = await getWorkshop(workshopId);
+      return response;
+    } catch (error) {
+      throw error;
     }
-    );
-    
-
+  }
+);
 
 // Thunk for creating a workshop
 export const createWorkshopAsync = createAsyncThunk(
   'workshops/createWorkshop',
-  async (workshopData, { rejectWithValue }) => {
+  async (workshopData) => {
     try {
       const response = await createWorkshop(workshopData);
       return response;
     } catch (error) {
-      return rejectWithValue(error.message);
+      throw error;
     }
   }
 );
@@ -55,30 +51,28 @@ export const createWorkshopAsync = createAsyncThunk(
 // Thunk for updating a workshop
 export const updateWorkshopAsync = createAsyncThunk(
   'workshops/updateWorkshop',
-  async (workshopData, { rejectWithValue }) => {
+  async (workshopData) => {
     try {
       const response = await updateWorkshop(workshopData);
       return response;
     } catch (error) {
-      return rejectWithValue(error.message);
+      throw error;
     }
   }
 );
 
 // Thunk for deleting a workshop
-
 export const deleteWorkshopAsync = createAsyncThunk(
-    'workshops/deleteWorkshop',
-    async (workshopId, { rejectWithValue }) => {
-        try {
-        const response = await deleteWorkshop(workshopId);
-        return response;
-        } catch (error) {
-        return rejectWithValue(error.message);
-        }
+  'workshops/deleteWorkshop',
+  async (workshopId) => {
+    try {
+      const response = await deleteWorkshop(workshopId);
+      return response;
+    } catch (error) {
+      throw error;
     }
-    );
-
+  }
+);
 
 // Define the workshop slice
 const workshopSlice = createSlice({
@@ -89,67 +83,54 @@ const workshopSlice = createSlice({
       state.selectedWorkshop = action.payload;
     },
   },
-  extraReducers: {
-    [fetchWorkshops.pending]: (state) => {
-      state.loading = true;
-      state.error = null;
-    },
-    [fetchWorkshops.fulfilled]: (state, action) => {
-      state.loading = false;
-      state.error = null;
-      state.workshops = action.payload.doc;
-    },
-    [fetchWorkshops.rejected]: (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
-    },
-    [createWorkshopAsync.pending]: (state) => {
-      state.loading = true;
-      state.error = null;
-    },
-    [createWorkshopAsync.fulfilled]: (state, action) => {
-      state.loading = false;
-      state.error = null;
-      state.workshops.push(action.payload.doc);
-    },
-    [createWorkshopAsync.rejected]: (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
-    },
-    [updateWorkshopAsync.pending]: (state) => {
-      state.loading = true;
-      state.error = null;
-    },
-    [updateWorkshopAsync.fulfilled]: (state, action) => {
-      state.loading = false;
-      state.error = null;
-      const index = state.workshops.findIndex((workshop) => workshop._id === action.payload.doc._id);
-      if (index !== -1) {
-        state.workshops[index] = action.payload.doc;
-      }
-    },
-    [updateWorkshopAsync.rejected]: (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
-    },
-    [deleteWorkshopAsync.pending]: (state) => {
-      state.loading = true;
-      state.error = null;
-    },
-    [deleteWorkshopAsync.fulfilled]: (state, action) => {
-      state.loading = false;
-      state.error = null;
-      state.workshops = state.workshops.filter((workshop) => workshop._id !== action.payload.doc._id);
-    },
-    [deleteWorkshopAsync.rejected]: (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
-    },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchWorkshops.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.workshops = action.payload;
+      })
+      .addCase(fetchWorkshops.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(createWorkshopAsync.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.workshops.push(action.payload);
+      })
+      .addCase(createWorkshopAsync.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(updateWorkshopAsync.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        const index = state.workshops.findIndex((workshop) => workshop.id === action.payload.id);
+        if (index !== -1) {
+          state.workshops[index] = action.payload;
+        }
+      })
+      .addCase(updateWorkshopAsync.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(deleteWorkshopAsync.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.workshops = state.workshops.filter((workshop) => workshop.id !== action.payload.id);
+      })
+      .addCase(deleteWorkshopAsync.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      });
   },
 });
 
-// Export the action creators
+
+// Export the workshop slice actions
 export const { selectWorkshop } = workshopSlice.actions;
 
-// Export the workshop slice
+// Export the workshop slice reducer
+
 export default workshopSlice.reducer;
