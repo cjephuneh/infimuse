@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Image, Modal, TextInput } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Image, Modal, TextInput, Platform } from 'react-native';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { getClassSessions } from '../../../redux/slice/listings/classService';
 import { updateClassSession } from '../../../redux/slice/listings/classService';
 
@@ -10,13 +10,15 @@ const ClassScheduleScreen = () => {
     const [scheduledSessions, setScheduledSessions] = useState([]);
     const [startTime, setStartTime] = useState(new Date());
     const [endTime, setEndTime] = useState(new Date());
-    const [showStartTimePicker, setShowStartTimePicker] = useState(false);
-    const [showEndTimePicker, setShowEndTimePicker] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [price, setPrice] = useState('');
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
+    const [isStartDatePickerVisible, setIsStartDatePickerVisible] = useState(false);
+    const [isEndDatePickerVisible, setIsEndDatePickerVisible] = useState(false);
+    const [isStartTimePickerVisible, setIsStartTimePickerVisible] = useState(false);
+    const [isEndTimePickerVisible, setIsEndTimePickerVisible] = useState(false);
 
     useEffect(() => {
         fetchClassSessions();
@@ -32,19 +34,33 @@ const ClassScheduleScreen = () => {
         }
     };
 
-    const selectSessionAndShowModal = (session) => {
-        setSelectedSession(session);
-        setShowModal(true);
+    const showStartDatePicker = () => setIsStartDatePickerVisible(true);
+    const hideStartDatePicker = () => setIsStartDatePickerVisible(false);
+    const showEndDatePicker = () => setIsEndDatePickerVisible(true);
+    const hideEndDatePicker = () => setIsEndDatePickerVisible(false);
+    const showStartTimePicker = () => setIsStartTimePickerVisible(true);
+    const hideStartTimePicker = () => setIsStartTimePickerVisible(false);
+    const showEndTimePicker = () => setIsEndTimePickerVisible(true);
+    const hideEndTimePicker = () => setIsEndTimePickerVisible(false);
+
+    const handleStartDateConfirm = (date) => {
+        setStartDate(date);
+        hideStartDatePicker();
     };
 
-    const handleStartTimeChange = (event, selectedTime) => {
-        setShowStartTimePicker(false);
-        setStartTime(selectedTime || startTime);
+    const handleEndDateConfirm = (date) => {
+        setEndDate(date);
+        hideEndDatePicker();
     };
 
-    const handleEndTimeChange = (event, selectedTime) => {
-        setShowEndTimePicker(false);
-        setEndTime(selectedTime || endTime);
+    const handleStartTimeConfirm = (time) => {
+        setStartTime(time);
+        hideStartTimePicker();
+    };
+
+    const handleEndTimeConfirm = (time) => {
+        setEndTime(time);
+        hideEndTimePicker();
     };
 
     const handleScheduleSession = async () => {
@@ -67,88 +83,86 @@ const ClassScheduleScreen = () => {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.heading}>Scheduled Sessions</Text>
-        {/* Render scheduled class sessions */}
-        {scheduledSessions.map((session) => (
-            <View key={session.id} style={styles.scheduledSessionItem}>
-                <Text style={styles.scheduledSessionTitle}>{session.title}</Text>
-                <Text>{session.startTime} - {session.endTime}</Text>
-            </View>
-        ))}
-
-
             <Text style={styles.heading}>Available Classes</Text>
-            {classSessions && classSessions.map((session) => (
-                <TouchableOpacity
-                    key={session.id}
-                    style={styles.sessionItem}
-                    onPress={() => selectSessionAndShowModal(session)}
-                >
-                    <Image source={{ uri: session.posterUrl }} style={styles.sessionImage} resizeMode="cover" />
-                    <Text style={styles.sessionTitle}>{session.title}</Text>
-                    <Text>{session.description}</Text>               
-                    
-                 </TouchableOpacity>
-            ))}
-
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={showModal}
-                onRequestClose={() => setShowModal(false)}
-            >
-                <View style={styles.modalContainer}>
-                    <View style={styles.modalContent}>
-                        <Text style={styles.modalHeading}>Schedule Session</Text>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Price"
-                            keyboardType="numeric"
-                            value={price}
-                            onChangeText={setPrice}
-                        />
-                        {/* <View style={styles.dateTimeContainer}>
-                            <Text style={styles.label}>Start Date:</Text>
-                            <DateTimePicker
-                                value={startDate}
-                                mode="date"
-                                display="spinner"
-                                onChange={(event, date) => setStartDate(date)}
-                            />
-                        </View> */}
-                        <View style={styles.dateTimeContainer}>
-                            <Text style={styles.label}>End Date:</Text>
-                            <DateTimePicker
-                                value={endDate}
-                                mode="date"
-                                display="spinner"
-                                onChange={(event, date) => setEndDate(date)}
-                            />
-                        </View>
-                        <View style={styles.dateTimeContainer}>
-                            <Text style={styles.label}>Start Time:</Text>
-                            <DateTimePicker
-                                value={startTime}
-                                mode="time"
-                                display="spinner"
-                                onChange={(event, time) => setStartTime(time)}
-                            />
-                        </View>
-                        <View style={styles.dateTimeContainer}>
-                            <Text style={styles.label}>End Time:</Text>
-                            <DateTimePicker
-                                value={endTime}
-                                mode="time"
-                                display="spinner"
-                                onChange={(event, time) => setEndTime(time)}
-                            />
-                        </View>
-                        <TouchableOpacity style={styles.scheduleButton} onPress={handleScheduleSession}>
-                            <Text style={styles.buttonText}>Schedule</Text>
+            <ScrollView horizontal>
+                <View style={styles.cardsContainer}>
+                    {classSessions.map((session) => (
+                        <TouchableOpacity
+                            key={session.id}
+                            style={styles.sessionCard}
+                            onPress={() => setSelectedSession(session)}
+                        >
+                            <Image source={{ uri: session.posterUrl }} style={styles.sessionImage} resizeMode="cover" />
+                            <Text style={styles.sessionTitle}>{session.title}</Text>
+                            <Text style={styles.sessionDescription}>{session.description}</Text>
                         </TouchableOpacity>
-                    </View>
+                    ))}
                 </View>
-            </Modal>
+            </ScrollView>
+
+            {selectedSession && (
+                <View style={styles.schedulingDetailsContainer}>
+                    <Text style={styles.heading}>Schedule Session</Text>
+                    <TouchableOpacity style={styles.dateTimeContainer} onPress={showStartDatePicker}>
+                        <Text style={styles.label}>Start Date:</Text>
+                        <Text>{startDate.toDateString()}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.dateTimeContainer} onPress={showEndDatePicker}>
+                        <Text style={styles.label}>End Date:</Text>
+                        <Text>{endDate.toDateString()}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.dateTimeContainer} onPress={showStartTimePicker}>
+                        <Text style={styles.label}>Start Time:</Text>
+                        <Text>{startTime.toLocaleTimeString()}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.dateTimeContainer} onPress={showEndTimePicker}>
+                        <Text style={styles.label}>End Time:</Text>
+                        <Text>{endTime.toLocaleTimeString()}</Text>
+                    </TouchableOpacity>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Price"
+                        keyboardType="numeric"
+                        value={price}
+                        onChangeText={setPrice}
+                    />
+                    <TouchableOpacity style={styles.scheduleButton} onPress={handleScheduleSession}>
+                        <Text style={styles.buttonText}>Schedule</Text>
+                    </TouchableOpacity>
+                </View>
+            )}
+
+            <DateTimePickerModal
+                isVisible={isStartDatePickerVisible}
+                mode="date"
+                date={startDate}
+                onConfirm={handleStartDateConfirm}
+                onCancel={hideStartDatePicker}
+            />
+
+            <DateTimePickerModal
+                isVisible={isEndDatePickerVisible}
+                mode="date"
+                date={endDate}
+                onConfirm={handleEndDateConfirm}
+                onCancel={hideEndDatePicker}
+            />
+
+            <DateTimePickerModal
+                isVisible={isStartTimePickerVisible}
+                mode="time"
+                date={startTime}
+                onConfirm={handleStartTimeConfirm}
+                onCancel={hideStartTimePicker}
+            />
+
+            <DateTimePickerModal
+                isVisible={isEndTimePickerVisible}
+                mode="time"
+                date={endTime}
+                onConfirm={handleEndTimeConfirm}
+                onCancel={hideEndTimePicker}
+            />
         </ScrollView>
     );
 };
@@ -163,48 +177,39 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 20,
     },
-    sessionItem: {
+    cardsContainer: {
+        flexDirection: 'row',
+    },
+    sessionCard: {
         borderWidth: 1,
         borderColor: '#ccc',
         borderRadius: 5,
         padding: 10,
-        marginBottom: 10,
+        margin: 5,
     },
     sessionImage: {
-        width: '100%',
-        height: 200,
-    },
-    scheduledSessionItem: {
-        borderWidth: 1,
-        borderColor: 'green',
-        borderRadius: 5,
-        padding: 10,
-        marginBottom: 10,
-    },
-    scheduledSessionTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
+        width: 150,
+        height: 150,
         marginBottom: 5,
-        color: 'green',
     },
-    modalContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    },
-    modalContent: {
-        backgroundColor: '#fff',
-        padding: 20,
-        borderRadius: 10,
-        elevation: 5,
-        width: '80%',
-    },
-    modalHeading: {
-        fontSize: 20,
+    sessionTitle: {
+        fontSize: 16,
         fontWeight: 'bold',
-        marginBottom: 20,
-        textAlign: 'center',
+    },
+    sessionDescription: {
+        fontSize: 14,
+    },
+    schedulingDetailsContainer: {
+        marginTop: 20,
+    },
+    dateTimeContainer: {
+        marginBottom: 10,
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    label: {
+        marginRight: 10,
+        fontWeight: 'bold',
     },
     input: {
         borderWidth: 1,
@@ -212,13 +217,6 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         padding: 10,
         marginBottom: 10,
-    },
-    dateTimeContainer: {
-        marginBottom: 10,
-    },
-    label: {
-        marginBottom: 5,
-        fontWeight: 'bold',
     },
     scheduleButton: {
         backgroundColor: 'blue',
