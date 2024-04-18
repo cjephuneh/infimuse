@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, ScrollView, TouchableOpacity, Image } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, Image, RefreshControl } from "react-native";
 import tw from "tailwind-react-native-classnames";
 import { useNavigation } from "@react-navigation/native";
 
@@ -16,25 +16,37 @@ const ExploreScreen = () => {
   const [classSessions, setClassSessions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const workshopData = await getWorkshops();
-        const packageData = await getPackages();
-        const classSessionData = await getClassSessions();
-        setWorkshops(workshopData);
-        setPackages(packageData);
-        setClassSessions(classSessionData);
-        setLoading(false);
-      } catch (error) {
-        setError(error.message);
-        setLoading(false);
-      }
-    };
-
     fetchData();
   }, []);
+
+  const fetchData = async () => {
+    try {
+      const workshopResponse = await getWorkshops();
+      const packageResponse = await getPackages();
+      const classSessionResponse = await getClassSessions();
+
+      const workshops = workshopResponse || [];
+      const packages = packageResponse || [];
+      const classSessions = classSessionResponse || [];
+
+      setWorkshops(workshops);
+      setPackages(packages);
+      setClassSessions(classSessions);
+      setLoading(false);
+    } catch (error) {
+      setError(error.message);
+      setLoading(false);
+    }
+  };
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchData();
+    setRefreshing(false);
+  };
 
   if (loading) {
     return <Text>Loading...</Text>;
@@ -50,6 +62,7 @@ const ExploreScreen = () => {
 
   const handleCreateTemplatePress = () => {
     navigation.navigate("TemplateScreen"); // Navigate to the Templates screen
+    
   };
 
   const categories = {
@@ -58,7 +71,9 @@ const ExploreScreen = () => {
     classSessions,
   };
 
-  const CategorySection = ({ title, items }) => {
+  const CategorySection = ({ title, items, imageKey, navigation }) => {
+    const itemList = items && items.Document ? items.Document : [];
+    
     return (
       <View style={tw`mt-2 p-4`}>
         <Text style={tw`text-xl font-semibold mb-4`}>{title}</Text>
@@ -66,14 +81,48 @@ const ExploreScreen = () => {
           horizontal
           showsHorizontalScrollIndicator={false}
           style={tw`pl-2`}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         >
-          {items && items.map((item) => ( // Check if items is defined before mapping
-            <CategoryCard key={item.id} item={item} image={item.image} />
-          ))}
+          {itemList.map((item) => (
+          <CategoryCard key={item.id} item={item} image={item[imageKey]} templateType={title} navigation={navigation} />
+        ))}
         </ScrollView>
       </View>
     );
   };
+  
+  
+  const CategoryCard = ({ item, image, templateType, navigation }) => {
+    const handleTemplatePress = () => {
+      let type;
+      switch (templateType) {
+        case 'Workshops':
+          type = 'workshops';
+          break;
+        case 'Packages':
+          type = 'packages';
+          break;
+        case 'Class Sessions':
+          type = 'classes';
+          break;
+        default:
+          throw new Error('Invalid template type');
+      }
+      navigation.navigate("TemplateDetailScreen", { templateType: type, templateId: item.id });
+    };
+  
+    return (
+      <TouchableOpacity style={tw`mr-4 bg-white rounded-xl overflow-hidden shadow-lg`} onPress={handleTemplatePress}>
+        <Image source={{ uri: image }} style={tw`h-36 w-full`} resizeMode="cover" />
+        <View style={tw`p-3`}>
+          <Text style={tw`text-lg font-semibold `}>{item.title}</Text>
+          <Text style={tw`text-sm`}>{item.description}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+  
+  
 
   return (
     <View style={tw`bg-gray-100 flex-1`}>
@@ -89,10 +138,12 @@ const ExploreScreen = () => {
       <ScrollView>
         {Object.entries(categories).map(([key, items]) => (
           <CategorySection
-            key={key}
-            title={key.charAt(0).toUpperCase() + key.slice(1)}
-            items={items}
-          />
+          key={key}
+          title={key.charAt(0).toUpperCase() + key.slice(1)}
+          items={items}
+          imageKey="posterUrl"
+          navigation={navigation}
+        />
         ))}
       </ScrollView>
     </View>

@@ -3,8 +3,11 @@ import { View, Text, TouchableOpacity, Modal, StyleSheet } from 'react-native';
 import tw from 'tailwind-react-native-classnames';
 import { Calendar } from 'react-native-calendars';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { useNavigation } from '@react-navigation/native'; // Import useNavigation hook
+
 
 const CalendarScreen = () => {
+  const navigation = useNavigation(); // Initialize navigation
   const [selectedDate, setSelectedDate] = useState();
     // State to manage the visibility of the modal
     const [isModalVisible, setModalVisible] = useState(false);
@@ -21,6 +24,13 @@ const CalendarScreen = () => {
     const toggleModal = () => {
       setModalVisible(!isModalVisible);
     };
+
+      // Function to navigate to the relevant scheduling screen
+  const navigateToScheduleScreen = (screenName) => {
+    navigation.navigate(screenName);
+    toggleModal(); // Close the modal after navigation
+  };
+
   
 
   const onDayPress = (day) => {
@@ -82,25 +92,33 @@ const CalendarScreen = () => {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>Create a listing </Text>
-            <TouchableOpacity style={styles.modalButton} onPress={toggleModal}>
-              <Text 
-                style={tw`text-white text-center text-lg`}
-              >Workshop</Text>
+            {/* Workshop option */}
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => navigateToScheduleScreen('WorkshopScheduleScreen')}
+            >
+              <Text style={tw`text-white text-center text-lg`}>Workshop</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.modalButton} onPress={toggleModal}>
-              <Text
-                style={tw`text-white text-center text-lg`}
-              >Class</Text>
+            {/* Class option */}
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => navigateToScheduleScreen('ClassScheduleScreen')}
+            >
+              <Text style={tw`text-white text-center text-lg`}>Class</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.modalButton} onPress={toggleModal}>
-              <Text
-                style={tw`text-white text-center text-lg`}
-              >PackageClass</Text>
+            {/* PackageClass option */}
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => navigateToScheduleScreen('PackageClassScheduleScreen')}
+            >
+              <Text style={tw`text-white text-center text-lg`}>PackageClass</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.modalButton} onPress={toggleModal}>
-              <Text
-                style={tw`text-white text-center text-lg`}
-              >Venue</Text>
+            {/* Venue option */}
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => navigateToScheduleScreen('VenueScheduleScreen')}
+            >
+              <Text style={tw`text-white text-center text-lg`}>Venue</Text>
             </TouchableOpacity>
           </View>
         </View>

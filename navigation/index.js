@@ -25,6 +25,9 @@ import CreateTemplatesScreen from '../screens/CreateTemplatesScreen';
 import CreateWorkshopClassesScreen from '../screens/listings/CreateWorkshopClassesScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import TermsSreen from '../screens/TermsScreen';
+import TemplateDetailScreen from '../screens/TemplateDetailScreen';
+import ScheduleScreen from '../screens/ScheduleScreen';
+import ClassScheduleScreen from '../screens/listings/Schedules/ClassScheduleScreen';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -67,9 +70,17 @@ function AppNavigation() {
         {/* Here we include the Term Screen */}
         <Stack.Screen name="TermsScreen" component={TermsSreen} />
 
+        {/* Here we include the Template Detail Screen */}
+        <Stack.Screen name="TemplateDetailScreen" component={TemplateDetailScreen} />
+
+        {/* Here we include the Schedule Screen */}
+        <Stack.Screen name="ClassScheduleScreen" component={ClassScheduleScreen} />
+
 
         {/* Here is where we include the Drawer Navigator */}
         <Stack.Screen name="Main" component={MainDrawer} />
+
+
 
         <Stack.Screen name="TemplateScreen" component={TemplateScreen} />
         <Stack.Screen name="CreateClassesScreen" component={CreateClassesScreen} />
