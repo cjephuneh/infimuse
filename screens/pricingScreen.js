@@ -1,187 +1,123 @@
-import React, { useState } from 'react';
-import { FlatList, Platform, StyleSheet, Image, Text, TouchableOpacity, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { FlatList, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import { moderateScale } from 'react-native-size-matters';
-import { ScreenHeight } from '@rneui/base';
-import FastImage from 'react-native-fast-image';
 import Colors from '../constants/Colors';
-
+import { initializePayment } from '../redux/slice/payments/paymentSlice';
+import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
+import jwtDecode from 'jwt-decode';
 
 
 const MainSubscriptionContainer = (props) => {
   const [plan, setPlan] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [hostId, setHostId] = useState(null);
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    const getHostIdFromToken = async () => {
+      try {
+        const token = await AsyncStorage.getItem('token');
+        console.log('Retrieved token:', token);
+        if (token) {
+          const decodedToken = jwtDecode(token);
+          console.log('Decoded token:', decodedToken); // Add this line to check the decoded token
+          const id = decodedToken.id;
+          setHostId(id);
+        } else {
+          console.error('Token not found in local storage');
+        }
+      } catch (error) {
+        console.error('Error retrieving token from local storage:', error);
+      }
+    };
+  
+    getHostIdFromToken();
+  }, []);
+  
+  const handlePayment = async () => {
+    if (!hostId) {
+      console.error('HostId is null');
+      return;
+    }
+
+    setLoading(true);
+
+    const paymentData = {
+      hostId: hostId,
+      callbackUrl: 'https://whatever.lat/api/v1/hostplans/verify',
+      subscription: plan,
+    };
+
+    try {
+      const response = await dispatch(initializePayment(paymentData));
+      if (response && response.data && response.data.authorizationUrl) {
+        const authorizationUrl = response.data.authorizationUrl;
+        navigation.navigate(authorizationUrl);
+      } else {
+        console.error('Error initializing payment: Invalid response data');
+      }
+    } catch (error) {
+      console.error('Error initializing payment:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Choose Monthly Plan</Text>
       <Text style={styles.desc}>Professional or Business, it's your call</Text>
       <FlatList
-        data={Array(1)}
-        keyExtractor={(item) => `${item}`}
-        ListFooterComponent={<View style={{ marginBottom: moderateScale(100) }} />}
-        renderItem={(item) => (
-          <View key={item.index} style={{ marginBottom: moderateScale(100) }}>
-            <View style={styles.plans}>
-              <TouchableOpacity
-                onPress={() => setPlan('Business')}
-                style={[
-                  styles.plan,
-                  plan === 'Business' && { borderColor: Colors.theme.primary },
-                ]}
-              >
-                <View>
-                  <Text style={styles.planTitle}>Business</Text>
-                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Text style={styles.amount}>KES 2000</Text>
-                    <Text style={styles.period}>/mo</Text>
-                  </View>
-                </View>
-                <View
-                  style={[
-                    styles.circle,
-                    plan === 'Business' && {
-                      borderColor: Colors.theme.primary,
-                    },
-                  ]}
-                >
-                  {plan === 'Business' && <View style={styles.active}></View>}
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => setPlan('Professional')}
-                style={[
-                  styles.plan,
-                  plan === 'Professional' && {
-                    borderColor: Colors.theme.primary,
-                  },
-                ]}
-              >
-                <View>
-                  <Text style={styles.planTitle}>Professional</Text>
-                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Text style={styles.amount}>KES 2000</Text>
-                    <Text style={styles.period}>/mo</Text>
-                  </View>
-                </View>
-                <View
-                  style={[
-                    styles.circle,
-                    plan === 'Professional' && {
-                      borderColor: Colors.theme.primary,
-                    },
-                  ]}
-                >
-                  {plan === 'Professional' && (
-                    <View style={styles.active}></View>
-                  )}
-                </View>
-              </TouchableOpacity>
-            </View>
-            <View style={{ marginTop: moderateScale(20) }}>
-              <Text style={{ fontSize: moderateScale(15), fontWeight: '900' }}>
-                Payment Method
-              </Text>
-              <View style={styles.cardContainer}>
-                <TouchableOpacity
-                  onPress={() => setPaymentMethod('Card')}
-                  style={styles.cardSelector}
-                >
-                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Image
-                      source={require('../assets/icons/card.png')}
-                      style={{
-                        width: moderateScale(40),
-                        height: moderateScale(40), 
-                      }}
-                      // resizeMode={FastImage.resizeMode.contain}
-                    />
-                    <Text
-                      style={{
-                        marginLeft: moderateScale(10),
-                        fontSize: moderateScale(15),
-                        fontWeight: '800',
-                      }}
-                    >
-                      Credit/Debit card
-                    </Text>
-                  </View>
-                  <View
-                    style={[
-                      styles.circle,
-                      paymentMethod === 'Card' && {
-                        borderColor: Colors.theme.primary,
-                      },
-                    ]}
-                  >
-                    {paymentMethod === 'Card' && (
-                      <View style={styles.active}></View>
-                    )}
-                  </View>
-                </TouchableOpacity>
+        data={['Dabbler', 'Dipper', 'Diver']}
+        keyExtractor={(item) => item}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            onPress={() => setPlan(item)}
+            style={[
+              styles.plan,
+              plan === item && {
+                borderColor: Colors.theme.primary,
+              },
+            ]}
+          >
+            <View>
+              <Text style={styles.planTitle}>{item}</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text style={styles.amount}>KES 2000</Text>
+                <Text style={styles.period}>/mo</Text>
               </View>
             </View>
             <View
               style={[
-                styles.cardContainer,
-                {
-                  marginTop: moderateScale(20),
-                  borderRadius: moderateScale(10),
+                styles.circle,
+                plan === item && {
+                  borderColor: Colors.theme.primary,
                 },
               ]}
             >
-              <TouchableOpacity
-                onPress={() => setPaymentMethod('Mpesa')}
-                style={styles.cardSelector}
-              >
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Image
-                    source={require('../assets/icons/mpesa.png')}
-                    style={{
-                      width: moderateScale(40),
-                      height: moderateScale(40),
-                    }}
-                    // resizeMode={FastImage.resizeMode.contain}
-                  />
-                  <Text
-                    style={{
-                      marginLeft: moderateScale(10),
-                      fontSize: moderateScale(15),
-                      fontWeight: '800',
-                    }}
-                  >
-                    Mpesa
-                  </Text>
-                </View>
-                <View
-                  style={[
-                    styles.circle,
-                    paymentMethod === 'Mpesa' && {
-                      borderColor: Colors.theme.primary,
-                    },
-                  ]}
-                >
-                  {paymentMethod === 'Mpesa' && (
-                    <View style={styles.active}></View>
-                  )}
-                </View>
-              </TouchableOpacity>
+              {plan === item && <View style={styles.active} />}
             </View>
-          </View>
+          </TouchableOpacity>
         )}
       />
       <TouchableOpacity
         style={[
           styles.pay,
-          (plan === 'Business' || plan === 'Professional') &&
-            (paymentMethod === 'Card' || paymentMethod === 'Mpesa')
-            ? {
-                backgroundColor: Colors.theme.primary,
-              }
-            : { backgroundColor: '#999' },
+          plan && {
+            backgroundColor: Colors.theme.primary,
+          },
         ]}
-        disabled={plan === 'Business' || 'Professional' ? false : true}
+        onPress={handlePayment}
+        disabled={!plan || loading} // Disable button while loading
       >
-        <Text style={styles.payTxt}>Pay Now</Text>
+        {loading ? (
+          <ActivityIndicator color="#FFFFFF" size="small" />
+        ) : (
+          <Text style={styles.payTxt}>Pay Now</Text>
+        )}
       </TouchableOpacity>
     </View>
   );
@@ -193,46 +129,11 @@ const styles = StyleSheet.create({
   container: {
     marginHorizontal: moderateScale(20),
     marginVertical: moderateScale(20),
-    height: ScreenHeight,
+    // height: ScreenHeight,
   },
   title: {
     fontSize: moderateScale(22),
     fontWeight: '800',
-  },
-  cardSelector: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: moderateScale(10),
-  },
-  savedCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: moderateScale(10),
-  },
-  newCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: moderateScale(10),
-  },
-  cardContainer: {
-    backgroundColor: Colors.theme.primaryLightBg,
-    padding: moderateScale(10),
-    marginTop: moderateScale(10),
-    borderRadius: moderateScale(10),
-    ...(Platform.OS === 'ios'
-      ? {
-          shadowColor: '#F2E0F2',
-          shadowOffset: { width: 0, height: 4 },
-          shadowOpacity: 0.5,
-          shadowRadius: 10,
-        }
-      : {
-          elevation: 5,
-        }),
-    marginHorizontal: moderateScale(5),
   },
   desc: {
     color: '#999',
@@ -240,9 +141,9 @@ const styles = StyleSheet.create({
     marginTop: moderateScale(5),
   },
   pay: {
-    bottom: ScreenHeight * 0.22,
+    // bottom: ScreenHeight * 0.22,
     width: '100%',
-    backgroundColor: Colors.theme.primary,
+    backgroundColor: '#999',
     height: moderateScale(50),
     alignItems: 'center',
     justifyContent: 'center',
@@ -295,4 +196,3 @@ const styles = StyleSheet.create({
     color: '#999',
   },
 });
-
