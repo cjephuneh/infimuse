@@ -38,15 +38,15 @@ const MainSubscriptionContainer = (props) => {
   }, []);
   
   const handlePayment = async () => {
-    if (!hostId) {
-      console.error('HostId is null');
-      return;
-    }
+    // if (!hostId) {
+    //   console.error('HostId is null');
+    //   return;
+    // }
 
     setLoading(true);
 
     const paymentData = {
-      hostId: hostId,
+      hostId: 33,
       callbackUrl: 'https://whatever.lat/api/v1/hostplans/verify',
       subscription: plan,
     };
