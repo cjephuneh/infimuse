@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, ActivityIndicator } from 'react-native';
 import tw from 'tailwind-react-native-classnames';
 
-import { getWorkshops } from '../redux/slice/listings/workshopService'; // Import API functions
-import { fetchWorkshopClasses } from '../redux/slice/listings/WorkshopClassService'; // Import API functions
 import { getClassSessions } from '../redux/slice/listings/classService'; // Import API functions
+import { fetchWorkshopClasses } from '../redux/slice/listings/WorkshopClassService'; // Import API functions
+import { getWorkshops } from '../redux/slice/listings/workshopService'; // Import API functions
 import { getPackages } from '../redux/slice/listings/packagesServices'; // Import API functions
 
 const ListingSchedule = ({ date }) => {
@@ -15,21 +15,20 @@ const ListingSchedule = ({ date }) => {
     const fetchListings = async () => {
       setLoading(true);
       try {
-        // Fetch listings for the given date from different sources
+        // Fetch listings for the selected date
         const classSessions = await getClassSessions(date);
         const workshopClasses = await fetchWorkshopClasses(date);
         const workshops = await getWorkshops(date);
         const packages = await getPackages(date);
 
-        // Combine listings from all sources
+        // Combine non-empty arrays only
         const allListings = [
-          ...classSessions,
-          ...workshopClasses,
-          ...workshops,
-          ...packages,
+          ...classSessions.Document.map(item => ({ ...item, type: 'Class' })),
+          ...workshopClasses.Document.map(item => ({ ...item, type: 'Workshop Class' })),
+          ...workshops.Document.map(item => ({ ...item, type: 'Workshop' })),
+          ...packages.Document.map(item => ({ ...item, type: 'Package' })),
         ];
 
-        // Set the fetched listings
         setListings(allListings);
       } catch (error) {
         console.error('Error fetching listings:', error);
@@ -38,12 +37,14 @@ const ListingSchedule = ({ date }) => {
       }
     };
 
-    fetchListings();
+    if (date) {
+      fetchListings();
+    }
   }, [date]);
 
   const renderItem = ({ item }) => (
-    <View style={tw`py-2 px-4 border-b border-gray-200`}>
-      <Text style={tw`text-lg font-bold mb-1`}>{item.type}</Text>
+    <View style={tw`py-2 px-4 border bg-white rounded-xl mb-2 `}>
+      <Text style={tw`text-lg font-bold text-gray-800 mb-1`}>{item.type}</Text>
       <Text style={tw`text-base`}>{item.title}</Text>
       <Text style={tw`text-sm text-gray-500`}>{item.time}</Text>
     </View>

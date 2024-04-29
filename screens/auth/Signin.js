@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage"; // Import AsyncStorage
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   View,
   Text,
@@ -9,14 +9,18 @@ import {
   Platform,
   ScrollView,
   StatusBar,
+  ActivityIndicator,
 } from "react-native";
 import tw from "tailwind-react-native-classnames";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../../redux/slice/auth/authSlice"; // Adjust the import path as necessary
+import { login } from "../../redux/slice/auth/authSlice";
 import Toast from "react-native-toast-message";
-import { ActivityIndicator } from "react-native";
+import { jwtDecode } from "jwt-decode";
+import "core-js/stable/atob";
+
+
 
 const SignInScreen = () => {
   const navigation = useNavigation();
@@ -34,53 +38,54 @@ const SignInScreen = () => {
     setCredentials((prevState) => ({ ...prevState, [name]: value }));
   };
 
-  const handleSignIn = () => {
-    setLoading(true); // Set loading to true when login process starts
+  const handleSignIn = async () => {
+    setLoading(true);
+    const storedOTP = await AsyncStorage.getItem("OTP");
+    const userData = { ...credentials, OTP: storedOTP };
 
-    // Retrieve stored OTP from AsyncStorage
-    AsyncStorage.getItem("OTP")
-      .then((storedOTP) => {
-        const userData = { ...credentials, OTP: storedOTP }; // Include stored OTP in login request
-
-        // Dispatch login action with userData
-        dispatch(login(userData))
-          .unwrap()
-          .then((response) => {
-            console.log("Login response:", response); // Log the response here
-            Toast.show({
-              type: "success",
-              position: "bottom",
-              text1: "Login Successful",
-              text2: response.message,
-              visibilityTime: 4000,
-            });
-            setLoading(false); // Set loading to false when login is successful
-            navigation.navigate("Main"); // Navigate on successful login
-          })
-          .catch((error) => {
-            console.error("Login error:", error); // Log the error here
-            Toast.show({
-              type: "error",
-              position: "bottom",
-              text1: "Login Failed",
-              text2: error.message || "An error occurred",
-              visibilityTime: 4000,
-            });
-            setLoading(false); // Set loading to false when login fails
-          });
-      })
-      .catch((error) => {
-        // Handle error if OTP is not found in AsyncStorage
+    dispatch(login(userData))
+      .unwrap()
+      .then((response) => {
         Toast.show({
-          type: "error",
+          type: "success",
           position: "bottom",
-          text1: "Login Failed",
-          text2: "Failed to retrieve OTP. Please try again.",
+          text1: "Login Successful",
+          text2: response.message,
           visibilityTime: 4000,
         });
-        setLoading(false); // Set loading to false
+        setLoading(false);
+        navigation.navigate("Main");
+      })
+      .catch((error) => {
+        Toast.show({
+          type: "error",
+          position: "bottom",     
+          text1: "Login Failed",
+          text2: error.message || "An error occurred",
+          visibilityTime: 4000,
+        });
+        setLoading(false);
       });
   };
+
+  const decodeToken = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      if (token) {
+        const decoded = jwtDecode(token);
+        console.log('Decoded JWT:', decoded);
+        // Store the decoded token in AsyncStorage
+        await AsyncStorage.setItem('decodedToken', JSON.stringify(decoded));
+      } else {
+        console.log('No token found');
+      }
+    } catch (error) {
+      console.error('Error decoding token:', error);
+    }
+  };
+  
+  decodeToken();  // Call decodeToken when the component mounts
+
 
   return (
     <>
@@ -134,7 +139,7 @@ const SignInScreen = () => {
               style={tw`self-end mb-6`}
               onPress={() => navigation.navigate("ForgotPassword")}
             >
-              <Text style={tw`text-blue-500 `}>Forgot Password?</Text>
+              <Text style={tw`text-blue-500`}>Forgot Password?</Text>
             </TouchableOpacity>
 
             <TouchableOpacity

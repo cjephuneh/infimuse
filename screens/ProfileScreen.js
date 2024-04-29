@@ -1,24 +1,52 @@
 import React, { useEffect, useState } from 'react';
-import { View, Image, ScrollView, Text, TouchableOpacity, TextInput } from 'react-native';
-import { tw } from 'tailwind-react-native-classnames'; // Import tw from Tailwind CSS
-import { fetchCurrentHost, updateCurrentHost } from '../redux/slice/host/hostService';
-import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
+import { View, ScrollView, Text, TouchableOpacity, TextInput } from 'react-native';
+import { tw } from 'tailwind-react-native-classnames';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const API_URI = "https://whatever.lat/api/v1/";
 
 export default function Profile() {
   const [userData, setUserData] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [updatedBio, setUpdatedBio] = useState('');
+  const [userId, setUserId] = useState(null); // State to hold the user ID
 
   useEffect(() => {
-    fetchUserData();
+    fetchUserId(); // Fetch user ID when component mounts
   }, []);
 
-  const fetchUserData = async () => {
+  useEffect(() => {
+    if (userId) {
+      fetchUserData(userId); // Fetch user data when user ID is available
+    }
+  }, [userId]);
+
+  const fetchUserId = async () => {
     try {
-      const token = await AsyncStorage.getItem('token'); // Retrieve token from AsyncStorage
-      const response = await fetchCurrentHost(token);
-      setUserData(response.NewDocument);
-      setUpdatedBio(response.NewDocument.bio);
+      const storedUserId = await AsyncStorage.getItem('userId');
+      if (storedUserId) {
+        const parsedUserId = JSON.parse(storedUserId).id;
+        console.log('Parsed User ID:', parsedUserId);
+        setUserId(parsedUserId);
+      } else {
+        console.error('User ID not found in AsyncStorage');
+      }
+    } catch (error) {
+      console.error('Error fetching user ID:', error);
+    }
+  };
+  
+  
+
+  const fetchUserData = async (userId) => {
+    try {
+      const response = await fetch(`${API_URI}/hosts/${userId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch user data');
+      }
+      const userData = await response.json();
+      setUserData(userData.Data);
+      setUpdatedBio(userData.Data.bio);
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
@@ -26,11 +54,7 @@ export default function Profile() {
 
   const handleUpdateProfile = async () => {
     try {
-      const updatedUserData = { ...userData, bio: updatedBio };
-      const token = await AsyncStorage.getItem('token'); // Retrieve token from AsyncStorage
-      await updateCurrentHost(updatedUserData, token);
-      setUserData(updatedUserData);
-      setIsEditing(false);
+      // Implement your update logic here
     } catch (error) {
       console.error('Error updating user data:', error);
     }

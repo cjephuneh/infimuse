@@ -6,7 +6,9 @@ import Colors from '../constants/Colors';
 import { initializePayment } from '../redux/slice/payments/paymentSlice';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
-import jwtDecode from 'jwt-decode';
+import { jwtDecode } from "jwt-decode";
+import "core-js/stable/atob";
+import { Linking } from 'react-native';
 
 
 const MainSubscriptionContainer = (props) => {
@@ -26,6 +28,7 @@ const MainSubscriptionContainer = (props) => {
           console.log('Decoded token:', decodedToken); // Add this line to check the decoded token
           const id = decodedToken.id;
           setHostId(id);
+          console.log('HostId:', id); // Log the hostId
         } else {
           console.error('Token not found in local storage');
         }
@@ -37,25 +40,27 @@ const MainSubscriptionContainer = (props) => {
     getHostIdFromToken();
   }, []);
   
+  
   const handlePayment = async () => {
-    // if (!hostId) {
-    //   console.error('HostId is null');
-    //   return;
-    // }
-
+    if (!hostId) {
+      console.error('HostId is null');
+      return;
+    }
+  
     setLoading(true);
-
+  
     const paymentData = {
-      hostId: 33,
+      hostId: hostId,
       callbackUrl: 'https://whatever.lat/api/v1/hostplans/verify',
       subscription: plan,
     };
-
+  
     try {
       const response = await dispatch(initializePayment(paymentData));
       if (response && response.data && response.data.authorizationUrl) {
         const authorizationUrl = response.data.authorizationUrl;
-        navigation.navigate(authorizationUrl);
+        // Navigate the user to the authorization URL
+        Linking.openURL(authorizationUrl);
       } else {
         console.error('Error initializing payment: Invalid response data');
       }
@@ -65,6 +70,8 @@ const MainSubscriptionContainer = (props) => {
       setLoading(false);
     }
   };
+  
+  
 
   return (
     <View style={styles.container}>

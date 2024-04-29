@@ -8,12 +8,19 @@ export const initializePayment = createAsyncThunk(
   async ({ subscription, hostId, callbackUrl }, thunkAPI) => {
     try {
       const response = await PaymentService.initializePayment({ subscription, hostId, callbackUrl });
+      console.log('Payment initialization response:', response); // Log the response
+      if (response.error) {
+        throw new Error(response.error); // Handle specific error cases
+      }
       return response;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
+      console.error('Error initializing payment:', error);
+      return thunkAPI.rejectWithValue(error.message);
     }
   }
 );
+
+
 
 // Payment slice
 const initialState = {

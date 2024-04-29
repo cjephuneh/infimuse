@@ -1,18 +1,19 @@
-import jwt_decode from 'jwt-decode'; // Import the jwt_decode function from the jwt-decode library
+import * as jwt_decode from 'jwt-decode';
 const API_URI = "https://whatever.lat/api/v1/"; // Adjust this to your actual API URL
+import "core-js/stable/atob";
 
 
 // Fetch current user
 export const fetchCurrentHost = async (token) => {
     try {
         // Decode the token to extract the host ID
-        const decodedToken = decodeToken(token);
-        const hostId = decodedToken.hostId;
+        const decodedToken = jwt_decode(token);
+        const hostId = decodedToken.id; // Assuming the host ID is stored as 'id' in the token
 
         // Log the hostId
         console.log('Host ID:', hostId);
 
-        const response = await fetch(`${API_URI}/hosts/33`, {
+        const response = await fetch(`${API_URI}/hosts/${hostId}`, {
             headers: {
                 "Content-Type": "application/json",
                 'Authorization': `Bearer ${token}`,
@@ -34,8 +35,8 @@ export const fetchCurrentHost = async (token) => {
 export const updateCurrentHost = async (hostData, token) => {
     try {
         // Decode the token to extract the host ID
-        const decodedToken = decodeToken(token);
-        const hostId = decodedToken.hostId;
+        const decodedToken = jwt_decode(token);
+        const hostId = decodedToken.id; // Assuming the host ID is stored as 'id' in the token
 
         // Log the hostId
         console.log('Host ID:', hostId);
@@ -56,18 +57,6 @@ export const updateCurrentHost = async (hostData, token) => {
         return json;
     } catch (error) {
         console.error("Error updating current host:", error);
-        throw error;
-    }
-}
-
-// Function to decode JWT token
-const decodeToken = (token) => {
-    try {
-        // Decode the JWT token using jwt-decode library
-        const decodedToken = jwt_decode(token);
-        return decodedToken;
-    } catch (error) {
-        console.error("Error decoding token:", error);
         throw error;
     }
 }

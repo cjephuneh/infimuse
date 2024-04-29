@@ -50,7 +50,7 @@ const CustomDrawerContent = (props) => {
       </View>
       {/* Footer */}
       <View style={styles.footerContainer}>
-        <Text style={styles.footerText}>Finance Management Version 1.0.1</Text>
+        <Text style={styles.footerText}>Infimuse Beta 1.0.1</Text>
       </View>
     </ScrollView>
   );
@@ -58,10 +58,10 @@ const CustomDrawerContent = (props) => {
 
 // Add your drawer items here
 const drawerItems = [
-  { name: 'Finance PRO', icon: 'wallet' },
+  // { name: 'Finance PRO', icon: 'wallet' },
   { name: 'Account', icon: 'user-circle' },
-  { name: 'Data Usage', icon: 'chart-bar' },
-  { name: 'Scan QR Code', icon: 'qrcode' },
+  // { name: 'Data Usage', icon: 'chart-bar' },
+  // { name: 'Scan QR Code', icon: 'qrcode' },
   // ... add other items
 ];
 
