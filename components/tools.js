@@ -2,19 +2,18 @@ import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Image, StatusBar, StyleSheet } from 'react-native';
 import tw from 'tailwind-react-native-classnames';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useNavigation } from '@react-navigation/native'; // Import useNavigation hook
 
 const Tools = () => {
+  const navigation = useNavigation(); // Initialize useNavigation
+
   // Dummy data for the UI
   const features = [
-    { id: 1, title: 'Update your availability', color: '#F472B6', icon: 'calendar-clock' },
-    { id: 2, title: 'Fine tune your Pricing', color: '#FBBF24', icon: 'currency-usd' },
-    { id: 3, title: 'Explore your setting', color: '#FB7185', icon: 'cog' },
-    { id: 4, title: 'Schedule a class', color: '#F472B6', icon: 'calendar' },
-   
+    { id: 1, title: 'Update your availability', color: '#F472B6', icon: 'calendar-clock', screen: 'CalenderScreen' },
+    { id: 2, title: 'Fine tune your Pricing', color: '#FBBF24', icon: 'currency-usd', screen: 'PricingScreen' },
+    { id: 3, title: 'Explore your setting', color: '#FB7185', icon: 'cog', screen: 'HomeScreen' },
+    { id: 4, title: 'Schedule a class', color: '#F472B6', icon: 'calendar', screen: 'ListingScreen' },
   ];
-
-
-  
 
   return (
     <>
@@ -25,7 +24,7 @@ const Tools = () => {
             <Text style={tw`text-xl font-semibold mb-4`}>Tools</Text>
             <View style={tw`flex-row flex-wrap justify-between mb-4`}>
               {features.map((feature) => (
-                <TouchableOpacity key={feature.id} style={[styles.featureCard, { backgroundColor: feature.color }]}>
+                <TouchableOpacity key={feature.id} style={[styles.featureCard, { backgroundColor: feature.color }]} onPress={() => navigation.navigate(feature.screen)}>
                   <Icon name={feature.icon} size={24} color="#ffffff" />
                   <Text style={tw` text-white text-center mt-2 `}>{feature.title}</Text>
                 </TouchableOpacity>

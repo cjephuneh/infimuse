@@ -41,7 +41,7 @@ export default function WelcomeScreen() {
 
         <TouchableOpacity
           onPress={() => navigation.navigate("OnboardingScreen")}
-          style={[tw`mx-5 p-4 rounded-2xl`, { backgroundColor: "#12B9F3" }]}
+          style={[tw`mx-5 p-4 rounded-2xl mt-10`, { backgroundColor: "#12B9F3" }]}
         >
           <Text
             style={[
@@ -50,6 +50,20 @@ export default function WelcomeScreen() {
             ]}
           >
             Get Started
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => navigation.navigate("SignIn")}
+          style={[tw`mx-5 rounded-2xl `]}
+        >
+          <Text
+            style={[
+              tw`text-center font-bold text-2xl`,
+              { fontSize: wp(6), color: "#12B9F3" },
+            ]}
+          >
+            Login
           </Text>
         </TouchableOpacity>
       </SafeAreaView>

@@ -1,76 +1,71 @@
-import { View, Image, ScrollView, Text, TouchableOpacity } from 'react-native'
-import React from 'react'
-import Colors from '../utils/Colors';
-import * as ProfileData from '../utils/Profile';
-import Icon from 'react-native-vector-icons/Entypo';
-import CustomIcon from '../components/CustomIcon';
-import Heading from '../components/Heading';
+import React, { useEffect, useState } from 'react';
+import { View, Image, ScrollView, Text, TouchableOpacity, TextInput } from 'react-native';
+import { tw } from 'tailwind-react-native-classnames'; // Import tw from Tailwind CSS
+import { fetchCurrentHost, updateCurrentHost } from '../redux/slice/host/hostService';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 
 export default function Profile() {
-  const DATA = ProfileData.default;
+  const [userData, setUserData] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [updatedBio, setUpdatedBio] = useState('');
 
-  const Analytics = ({ title, subTitle, icon }) => (
-    <View style={{ flexDirection: "row", alignItems: "center", paddingVertical: 10 }}>
-      <CustomIcon name={icon} size={28} color={Colors.GRAY} style={{ marginRight: 10 }} />
-      <View>
-        <TouchableOpacity onPress={() => { }}>
-          <Text style={{ fontSize: 18, fontWeight: "bold", color: Colors.BLACK }}>{title}</Text>
-        </TouchableOpacity>
-        <Text style={{ color: Colors.LIGHT_BLACK }}>{subTitle}</Text>
-      </View>
-    </View>
-  )
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
+  const fetchUserData = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token'); // Retrieve token from AsyncStorage
+      const response = await fetchCurrentHost(token);
+      setUserData(response.NewDocument);
+      setUpdatedBio(response.NewDocument.bio);
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  };
+
+  const handleUpdateProfile = async () => {
+    try {
+      const updatedUserData = { ...userData, bio: updatedBio };
+      const token = await AsyncStorage.getItem('token'); // Retrieve token from AsyncStorage
+      await updateCurrentHost(updatedUserData, token);
+      setUserData(updatedUserData);
+      setIsEditing(false);
+    } catch (error) {
+      console.error('Error updating user data:', error);
+    }
+  };
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={{ backgroundColor: Colors.WHITE, marginBottom: 10 }}>
-        <Image source={DATA.INFO.banner} style={{ width: "100%", height: 120 }} />
-        <Image source={DATA.INFO.profile_picture} style={{ borderRadius: 100, height: 100, width: 100, borderColor: Colors.WHITE, borderWidth: 3, bottom: 50, left: 15 }} />
-
-        <View style={{ marginTop: -45, paddingHorizontal: 10 }}>
-          <Text style={{ fontSize: 28, fontWeight: "bold", color: Colors.BLACK }}>{DATA.INFO.name}</Text>
-          <Text style={{ fontSize: 16, color: Colors.BLACK }}>{DATA.INFO.bio}</Text>
-          <Text style={{ marginTop: 4, marginBottom: 10, color: Colors.GRAY }}>Talks about - {DATA.INFO.talksAbout.map(item => `${item} `)}</Text>
+    <ScrollView showsVerticalScrollIndicator={false} style={tw`bg-white`}>
+      <View style={tw`p-4`}>
+        <View style={tw`mt-24 px-4`}>
+          <Text style={tw`text-2xl font-bold text-black`}>{userData?.firstName}</Text>
+          {isEditing ? (
+            <TextInput
+              style={tw`border-b border-gray-400 text-lg my-2`}
+              multiline
+              placeholder="Enter your bio"
+              value={updatedBio}
+              onChangeText={setUpdatedBio}
+            />
+          ) : (
+            <Text style={tw`text-base text-black`}>{userData?.bio}</Text>
+          )}
+          <Text style={tw`text-base text-gray-600 mt-2`}>Email: {userData?.email}</Text>
+          <Text style={tw`text-base text-gray-600`}>Phone: {userData?.phone}</Text>
+          <Text style={tw`text-base text-gray-600`}>Qualifications: {userData?.qualifications}</Text>
+          <Text style={tw`text-base text-gray-600`}>Experience Years: {userData?.experienceYears}</Text>
+          <Text style={tw`text-base text-gray-600`}>Image URL 1: {userData?.imageUrl1}</Text>
+          <Text style={tw`text-base text-gray-600`}>Image URL 2: {userData?.imageUrl2}</Text>
+          <Text style={tw`text-base text-gray-600`}>Image URL 3: {userData?.imageUrl3}</Text>
+          {isEditing && (
+            <TouchableOpacity style={tw`bg-blue-500 py-2 px-4 rounded-md mt-4`} onPress={handleUpdateProfile}>
+              <Text style={tw`text-white`}>Save</Text>
+            </TouchableOpacity>
+          )}
         </View>
-      </View>
-
-      <View style={{ backgroundColor: Colors.WHITE, marginBottom: 10, padding: 10 }}>
-        <Heading title="Analytics" />
-
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <CustomIcon name="eye" size={19} color={Colors.GRAY} />
-          <Text> Private to you</Text>
-        </View>
-
-        <Analytics
-          icon="people"
-          title={`CIasses Hosted `}
-          subTitle="Discover who's viewed your profile"
-        />
-
-        <Analytics
-          icon="bar-chart"
-          title={`${DATA.ANALYTICS.post_impressions} post impressions`}
-          subTitle="engaging with your content"
-        />
-
-        <Analytics
-          icon="search"
-          title={`${DATA.ANALYTICS.search_appearence} search appearence`}
-          subTitle="See how often you appear in search results"
-        />
-      </View>
-
-      <View style={{ backgroundColor: Colors.WHITE, marginBottom: 10, padding: 10 }}>
-        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-          <Heading title="About" />
-          <TouchableOpacity onPress={() => { }}>
-            <CustomIcon name='pencil' size={22} color={Colors.GRAY} />
-          </TouchableOpacity>
-        </View>
-
-        <Text style={{ textAlign: "justify", fontSize: 15, color: Colors.BLACK, paddingHorizontal: 5, marginVertical: 10 }} numberOfLines={4} ellipsizeMode='tail'>{DATA.ABOUT}</Text>
       </View>
     </ScrollView>
-  )
+  );
 }

@@ -4,6 +4,7 @@ import tw from 'tailwind-react-native-classnames';
 import { Calendar } from 'react-native-calendars';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native'; // Import useNavigation hook
+import ListingSchedule from '../components/ListingSchedule'; // Import ListingSchedule component
 
 
 const CalendarScreen = () => {
@@ -71,11 +72,13 @@ const CalendarScreen = () => {
         }}
         // ...other Calendar props
       />
-      <View style={tw`flex-1 bg-gray-800 p-4`}>
+      <ListingSchedule date={selectedDate} />
+
+      {/* <View style={tw`flex-1 bg-gray-800 p-4`}>
         {events[selectedDate]?.map((event) => (
           <EventItem key={event.id} event={event} />
         ))}
-      </View>
+      </View> */}
       <TouchableOpacity
         style={[tw`absolute bottom-4 right-4  p-4 rounded-full shadow-lg`,{backgroundColor: '#A72C76'}]}
         onPress={toggleModal}
