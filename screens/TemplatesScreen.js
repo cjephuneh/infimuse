@@ -12,6 +12,7 @@ const ListingScreen = () => {
     { id: 'packages', title: 'Packages', description: 'Host classes physically and advertise them on our platform, get better and organized information about your class.' },
     { id: 'workshop', title: 'WorkShop', description: 'Host classes physically and advertise them on our platform, get better and organized information about your class.' },
     { id: 'venue', title: 'Venue', description: 'Host classes physically and advertise them on our platform, get better and organized information about your class.' },
+    { id: 'experience', title: 'Experience', description: 'Host unique experiences and adventures for users to enjoy and learn from.' }, // New "Experience" listing
   ];
 
   const cardStyle = (id) => [
@@ -28,6 +29,7 @@ const ListingScreen = () => {
       packages: 'CreatePackagesScreen',
       workshop: 'CreateWorkshopScreen',
       venue: 'CreateVenueScreen',
+      experience: 'CreateExperienceScreen', // Navigation path for "Experience" listing
     };
 
     // Navigate to the respective screen based on the listing id

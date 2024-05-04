@@ -28,6 +28,12 @@ import TermsSreen from '../screens/TermsScreen';
 import TemplateDetailScreen from '../screens/TemplateDetailScreen';
 import ScheduleScreen from '../screens/ScheduleScreen';
 import ClassScheduleScreen from '../screens/listings/Schedules/ClassScheduleScreen';
+import CreateExperienceScreen from '../screens/listings/CreateExperienceScreen';
+import CreateVenueScreen from '../screens/listings/CreateVenueScreen';
+import VenueScheduleScreen from '../screens/listings/Schedules/VenueScheduleScreen';
+import ExperienceScheduleScreen from '../screens/listings/Schedules/ExperiencesScheduleScreen';
+import WorkshopScheduleScreen from '../screens/listings/Schedules/WorkshopScheduleScreen';
+import PackageScheduleScreen from '../screens/listings/Schedules/PackagesScheduleScreen';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -75,6 +81,11 @@ function AppNavigation() {
 
         {/* Here we include the Schedule Screen */}
         <Stack.Screen name="ClassScheduleScreen" component={ClassScheduleScreen} />
+        <Stack.Screen name="VenueScheduleScreen" component={VenueScheduleScreen} />
+        <Stack.Screen name="ExperienceScheduleScreen" component={ExperienceScheduleScreen} />
+        <Stack.Screen name="WorkshopScheduleScreen" component={WorkshopScheduleScreen} />
+        <Stack.Screen name="PackageScheduleScreen" component={PackageScheduleScreen} />
+
 
 
         {/* Here is where we include the Drawer Navigator */}
@@ -88,6 +99,8 @@ function AppNavigation() {
         <Stack.Screen name="CreateWorkshopScreen" component={CreateWorkshopScreen} />
         <Stack.Screen name="CreateVenueScreen" component={CreateVenueScreen} />
         <Stack.Screen name="CreateTemplatesScreen" component={CreateTemplatesScreen} />
+        <Stack.Screen name="CreateExperienceScreen" component={CreateExperienceScreen} />
+
 
         <Stack.Screen name="CreateClassesSuccessScreen" component={CreateClassesSuccessScreen} />
         <Stack.Screen name="CreateWorkshopClassesScreen" component={CreateWorkshopClassesScreen} />

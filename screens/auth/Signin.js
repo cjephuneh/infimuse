@@ -42,10 +42,16 @@ const SignInScreen = () => {
     setLoading(true);
     const storedOTP = await AsyncStorage.getItem("OTP");
     const userData = { ...credentials, OTP: storedOTP };
-
+  
     dispatch(login(userData))
       .unwrap()
-      .then((response) => {
+      .then(async (response) => {
+        // Save the token in AsyncStorage
+        await AsyncStorage.setItem('token', response.token);
+
+        console.log('Token:', response.token);
+  
+        // Show success message
         Toast.show({
           type: "success",
           position: "bottom",
@@ -53,6 +59,7 @@ const SignInScreen = () => {
           text2: response.message,
           visibilityTime: 4000,
         });
+        
         setLoading(false);
         navigation.navigate("Main");
       })
@@ -67,7 +74,7 @@ const SignInScreen = () => {
         setLoading(false);
       });
   };
-
+  
   const decodeToken = async () => {
     try {
       const token = await AsyncStorage.getItem('token');

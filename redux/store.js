@@ -9,6 +9,8 @@ import paymentReducer from './slice/payments/paymentSlice'; // Import the paymen
 import workshopClassReducer from './slice/listings/WorkshopClassSlice'; // Import the workshop class reducer
 // import workshopClassReducer from './slice/listings/workshopClassSlice'; // Import the workshop reducer
 import HostReducer from './slice/host/hostSlice';
+import ExperienceReducer from './slice/listings/ExeperienceSlice';
+import VenueReducer from './slice/listings/VenueSlice';
 
 // Combine all reducers
 const rootReducer = combineReducers({
@@ -19,6 +21,8 @@ const rootReducer = combineReducers({
   packages: packagesReducer, // Add the packages reducer to the root reducer
   workshopClass: workshopClassReducer, // Add the workshop class reducer to the root reducer
   host: HostReducer,
+  experience: ExperienceReducer,
+  venue: VenueReducer,
 
 });
 

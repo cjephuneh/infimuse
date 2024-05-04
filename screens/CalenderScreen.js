@@ -123,6 +123,12 @@ const CalendarScreen = () => {
             >
               <Text style={tw`text-white text-center text-lg`}>Venue</Text>
             </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => navigateToScheduleScreen('ExperienceScheduleScreen')}
+            >
+              <Text style={tw`text-white text-center text-lg`}>Experience</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>

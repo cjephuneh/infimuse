@@ -1,14 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity, ScrollView, Switch, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useNavigation } from '@react-navigation/native';
-import ProfileScreen from '../screens/ProfileScreen';
+import { fetchCurrentHost } from '../redux/slice/host/hostService'; // Import fetchCurrentHost function
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const CustomDrawerContent = (props) => {
-  // Define your switch state and toggle function here
+  const [hostData, setHostData] = useState(null);
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const navigation = useNavigation();
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = await AsyncStorage.getItem('token');
+        const response = await fetchCurrentHost(token);
+        setHostData(response.Data);
+      } catch (error) {
+        console.error('Error fetching host data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const toggleSwitch = () => setNotificationsEnabled(previousState => !previousState);
 
@@ -16,26 +31,26 @@ const CustomDrawerContent = (props) => {
     <ScrollView style={styles.container}>
       {/* Header */}
       <View style={styles.headerContainer}>
-        {/* User info, adjust styles as needed */}
-        <Image 
-          source={require("../assets/man.png")} 
-          style={styles.userImage} 
-        />
-        <Text style={styles.userName}>Jenna Madelynn</Text>
-        <Text style={styles.userLocation}>New York, US</Text>
+        {/* User info */}
+        <Image source={require("../assets/man.png")} style={styles.userImage} />
+        {hostData && (
+          <View>
+            <Text style={styles.userName}>{hostData.firstName}</Text>
+            <Text style={styles.userLocation}>{hostData.phone}</Text>
+          </View>
+        )}
         {/* Other header content */}
       </View>
       {/* Drawer Items */}
       {drawerItems.map((item, index) => (
         <TouchableOpacity
-        key={index}
-        style={styles.itemContainer}
-        onPress={() => navigation.navigate('ProfileScreen')} // Navigate to ProfileScreen
-      >
-        <Icon name={item.icon} size={20} color="#4B5563" />
-        <Text style={styles.itemText}>{item.name}</Text>
-      </TouchableOpacity>
-      
+          key={index}
+          style={styles.itemContainer}
+          onPress={() => navigation.navigate(item.screen)} // Navigate to the specified screen
+        >
+          <Icon name={item.icon} size={20} color="#4B5563" />
+          <Text style={styles.itemText}>{item.name}</Text>
+        </TouchableOpacity>
       ))}
       {/* Notifications Switch */}
       <View style={styles.switchContainer}>
@@ -58,11 +73,8 @@ const CustomDrawerContent = (props) => {
 
 // Add your drawer items here
 const drawerItems = [
-  // { name: 'Finance PRO', icon: 'wallet' },
-  { name: 'Account', icon: 'user-circle' },
-  // { name: 'Data Usage', icon: 'chart-bar' },
-  // { name: 'Scan QR Code', icon: 'qrcode' },
-  // ... add other items
+  { name: 'Account', icon: 'user-circle', screen: 'ProfileScreen' }, // Update with your screen name
+  // Add more items as needed
 ];
 
 const styles = StyleSheet.create({
