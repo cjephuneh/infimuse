@@ -34,6 +34,8 @@ import VenueScheduleScreen from '../screens/listings/Schedules/VenueScheduleScre
 import ExperienceScheduleScreen from '../screens/listings/Schedules/ExperiencesScheduleScreen';
 import WorkshopScheduleScreen from '../screens/listings/Schedules/WorkshopScheduleScreen';
 import PackageScheduleScreen from '../screens/listings/Schedules/PackagesScheduleScreen';
+import HistoryScreen from '../screens/UpcomingScreen';
+import UpcomingScreen from '../screens/HistoryScreen';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -90,6 +92,16 @@ function AppNavigation() {
 
         {/* Here is where we include the Drawer Navigator */}
         <Stack.Screen name="Main" component={MainDrawer} />
+
+
+        {/* Here we    jsdnfhsdvnjf =================================================================================  include the Schedule Screen */} 
+        <Stack.Screen name="ScheduleScreen" component={ScheduleScreen} /> 
+
+        {/* Here we include the History Screen */}
+        <Stack.Screen name="HistoryScreen" component={HistoryScreen} />
+
+        {/* Here we include the Upcoming Screen */}
+        
 
 
 
