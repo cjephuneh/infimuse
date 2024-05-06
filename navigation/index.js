@@ -29,7 +29,7 @@ import TemplateDetailScreen from '../screens/TemplateDetailScreen';
 import ScheduleScreen from '../screens/ScheduleScreen';
 import ClassScheduleScreen from '../screens/listings/Schedules/ClassScheduleScreen';
 import CreateExperienceScreen from '../screens/listings/CreateExperienceScreen';
-import CreateVenueScreen from '../screens/listings/CreateVenueScreen';
+// import CreateVenueScreen from '../screens/listings/CreateVenueScreen';
 import VenueScheduleScreen from '../screens/listings/Schedules/VenueScheduleScreen';
 import ExperienceScheduleScreen from '../screens/listings/Schedules/ExperiencesScheduleScreen';
 import WorkshopScheduleScreen from '../screens/listings/Schedules/WorkshopScheduleScreen';
@@ -101,6 +101,7 @@ function AppNavigation() {
         <Stack.Screen name="HistoryScreen" component={HistoryScreen} />
 
         {/* Here we include the Upcoming Screen */}
+        <Stack.Screen name="UpcomingScreen" component={UpcomingScreen} />
         
 
 

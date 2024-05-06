@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet, TextInput, Platform } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import { getPackages, updatePackage } from '../../../redux/slice/listings/packageService';
+import { getPackages, updatePackage } from '../../../redux/slice/listings/packagesServices';
 
 const PackageScheduleScreen = () => {
     // Define state variables

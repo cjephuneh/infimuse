@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet, TextInput, Platform } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import { getExperiences, updateExperience } from '../../../redux/slice/listings/experienceService';
+import { getExperiences, updateExperience } from '../../../redux/slice/listings/ExperienceService';
 
 const ExperienceScheduleScreen = () => {
     // Define state variables
