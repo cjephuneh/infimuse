@@ -33,6 +33,24 @@ const SignInScreen = () => {
     password: "12345",
   });
   const [loading, setLoading] = useState(false);
+  const [showOTPField, setShowOTPField] = useState(false); // State to control OTP field visibility
+
+  useEffect(() => {
+    // Check if the user has already logged in before
+    const checkFirstLogin = async () => {
+      try {
+        const hasLoggedInBefore = await AsyncStorage.getItem('hasLoggedInBefore');
+        if (!hasLoggedInBefore) {
+          // If not, show the OTP field
+          setShowOTPField(true);
+        }
+      } catch (error) {
+        console.error('Error checking first login:', error);
+      }
+    };
+
+    checkFirstLogin();
+  }, []); // Run only once on component mount
 
   const handleInputChange = (name, value) => {
     setCredentials((prevState) => ({ ...prevState, [name]: value }));
@@ -62,6 +80,8 @@ const SignInScreen = () => {
         
         setLoading(false);
         navigation.navigate("Main");
+          // Set a flag in AsyncStorage indicating that the user has logged in before
+        await AsyncStorage.setItem('hasLoggedInBefore', 'true');
       })
       .catch((error) => {
         Toast.show({
@@ -141,6 +161,17 @@ const SignInScreen = () => {
                 onChangeText={(text) => handleInputChange("password", text)}
               />
             </View>
+            {showOTPField && (
+              <View style={tw`w-full mb-8`}>
+                <TextInput
+                  style={tw`border-b border-gray-400 w-full px-4 py-2 text-lg`}
+                  placeholder="Enter OTP"
+                  keyboardType="numeric"
+                  placeholderTextColor="#9a9a9a"
+                  onChangeText={(text) => handleInputChange("OTP", text)}
+                />
+              </View>
+            )}
 
             <TouchableOpacity
               style={tw`self-end mb-6`}

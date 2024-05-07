@@ -5,11 +5,11 @@ import { moderateScale } from 'react-native-size-matters';
 import Colors from '../constants/Colors';
 import { initializePayment } from '../redux/slice/payments/paymentSlice';
 import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { jwtDecode } from "jwt-decode";
 import "core-js/stable/atob";
 import { Linking } from 'react-native';
-
+import PaystackPop from 'react-native-paystack-popup';
 
 const MainSubscriptionContainer = (props) => {
   const [plan, setPlan] = useState('');
@@ -25,10 +25,10 @@ const MainSubscriptionContainer = (props) => {
         console.log('Retrieved token:', token);
         if (token) {
           const decodedToken = jwtDecode(token);
-          console.log('Decoded token:', decodedToken); // Add this line to check the decoded token
+          console.log('Decoded token:', decodedToken);
           const id = decodedToken.id;
           setHostId(id);
-          console.log('HostId:', id); // Log the hostId
+          console.log('HostId:', id);
         } else {
           console.error('Token not found in local storage');
         }
@@ -39,7 +39,6 @@ const MainSubscriptionContainer = (props) => {
   
     getHostIdFromToken();
   }, []);
-  
   
   const handlePayment = async () => {
     if (!hostId) {
@@ -57,10 +56,11 @@ const MainSubscriptionContainer = (props) => {
   
     try {
       const response = await dispatch(initializePayment(paymentData));
+      console.log('Payment initialization response:', response); // Log the response
       if (response && response.data && response.data.authorizationUrl) {
         const authorizationUrl = response.data.authorizationUrl;
-        // Navigate the user to the authorization URL
-        Linking.openURL(authorizationUrl);
+        // Instead of navigating, trigger Paystack checkout process
+        triggerPaystackCheckout(authorizationUrl);
       } else {
         console.error('Error initializing payment: Invalid response data');
       }
@@ -70,8 +70,15 @@ const MainSubscriptionContainer = (props) => {
       setLoading(false);
     }
   };
-  
-  
+
+  // Function to trigger Paystack checkout process
+  const triggerPaystackCheckout = (authorizationUrl) => {
+    const accessCode = authorizationUrl.split('/').pop(); // Extract access code from URL
+    const paystack = new PaystackPop();
+    paystack.checkout({
+      accessCode: accessCode,
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -118,7 +125,7 @@ const MainSubscriptionContainer = (props) => {
           },
         ]}
         onPress={handlePayment}
-        disabled={!plan || loading} // Disable button while loading
+        disabled={!plan || loading}
       >
         {loading ? (
           <ActivityIndicator color="#FFFFFF" size="small" />
@@ -136,7 +143,6 @@ const styles = StyleSheet.create({
   container: {
     marginHorizontal: moderateScale(20),
     marginVertical: moderateScale(20),
-    // height: ScreenHeight,
   },
   title: {
     fontSize: moderateScale(22),
@@ -148,7 +154,6 @@ const styles = StyleSheet.create({
     marginTop: moderateScale(5),
   },
   pay: {
-    // bottom: ScreenHeight * 0.22,
     width: '100%',
     backgroundColor: '#999',
     height: moderateScale(50),
