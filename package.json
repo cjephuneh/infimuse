@@ -9,6 +9,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@expo/dev-server": "^0.5.5",
     "@paystack/inline-js": "^2.18.1",
     "@react-native-async-storage/async-storage": "^1.23.1",
     "@react-native-community/datetimepicker": "^7.6.4",
@@ -20,7 +21,7 @@
     "@rneui/base": "^4.0.0-rc.8",
     "@types/react": "~18.2.45",
     "core-js": "^3.37.0",
-    "expo": "^51.0.0",
+    "expo": "^51.0.1",
     "expo-status-bar": "~1.12.1",
     "jwt-decode": "^4.0.0",
     "metro": "^0.80.9",
@@ -29,7 +30,7 @@
     "nativewind": "^2.0.11",
     "postcss": "^8.4.38",
     "react": "18.2.0",
-    "react-native": "0.74.1",
+    "react-native": "^0.74.1",
     "react-native-calendars": "^1.1304.1",
     "react-native-datepicker": "^1.7.2",
     "react-native-elements": "^3.4.3",
