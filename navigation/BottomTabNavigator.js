@@ -1,4 +1,3 @@
-// BottomTabNavigator.js
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -8,7 +7,6 @@ import CalenderScreen from '../screens/CalenderScreen';
 import InsightScreen from '../screens/InsightsScreen';
 import ListingScreen from '../screens/CreateTemplatesScreen';
 import PricingScreen from '../screens/pricingScreen';
-// ... import other screens
 
 const Tab = createBottomTabNavigator();
 
@@ -29,8 +27,7 @@ function BottomTabNavigator() {
             iconName = 'calendar-alt';
           } else if (route.name === 'Insight') {
             iconName = 'chart-line';
-          }
-          else if (route.name === 'listings') {
+          } else if (route.name === 'listings') {
             iconName = 'list';
           }
 
@@ -45,7 +42,7 @@ function BottomTabNavigator() {
         tabBarStyle: {
           height: 60, // Increase tab bar height if needed
           paddingBottom: 5, // Add padding at the bottom for better ergonomics
-          paddingTop: 5, // Add padding at the topr
+          paddingTop: 5, // Add padding at the top
         },
         headerShown: false,
       })}
@@ -53,10 +50,8 @@ function BottomTabNavigator() {
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Calender" component={CalenderScreen} />
       <Tab.Screen name="listings" component={ListingScreen} />
-      {/* <Tab.Screen name="Insight" component={InsightScreen} /> */}
+      <Tab.Screen name="Insight" component={InsightScreen} />
       <Tab.Screen name="Pricing" component={PricingScreen} />
-
-      {/* Add other tabs with respective screens and icons */}
     </Tab.Navigator>
   );
 }

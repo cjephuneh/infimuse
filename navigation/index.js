@@ -72,14 +72,14 @@ function AppNavigation() {
         <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
         <Stack.Screen name="OtpVerification" component={OtpVerificationScreen} />
 
-        Here we include the Profile Screen
-        {/* <Stack.Screen name="ProfileScreen" component={ProfileScreen} /> */}
+        {/* Here we include the Profile Screen */}
+        <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
         
         {/* Here we include the Term Screen */}
         <Stack.Screen name="TermsScreen" component={TermsSreen} />
 
         {/* Here we include the Template Detail Screen */}
-        {/* <Stack.Screen name="TemplateDetailScreen" component={TemplateDetailScreen} /> */}
+        <Stack.Screen name="TemplateDetailScreen" component={TemplateDetailScreen} />
 
         {/* Here we include the Schedule Screen */}
         <Stack.Screen name="ClassScheduleScreen" component={ClassScheduleScreen} />
@@ -106,7 +106,7 @@ function AppNavigation() {
 
 
 
-        {/* <Stack.Screen name="TemplateScreen" component={TemplateScreen} />
+        <Stack.Screen name="TemplateScreen" component={TemplateScreen} />
         <Stack.Screen name="CreateClassesScreen" component={CreateClassesScreen} />
         <Stack.Screen name="CreatePackagesScreen" component={CreatePackagesScreen} />
         <Stack.Screen name="CreateWorkshopScreen" component={CreateWorkshopScreen} />
@@ -118,7 +118,7 @@ function AppNavigation() {
         <Stack.Screen name="CreateClassesSuccessScreen" component={CreateClassesSuccessScreen} />
         <Stack.Screen name="CreateWorkshopClassesScreen" component={CreateWorkshopClassesScreen} />
         <Stack.Screen name="CreatePackagesSuccessScreen" component={CreatePackagesSuccessScreen} />
-        <Stack.Screen name="CreateWorkshopSuccessScreen" component={CreateWorkshopSuccessScreen} /> */}
+        <Stack.Screen name="CreateWorkshopSuccessScreen" component={CreateWorkshopSuccessScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

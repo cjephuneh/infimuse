@@ -7,7 +7,6 @@ import workshopReducer from './slice/listings/workshopSlice';
 import packagesReducer from './slice/listings/packagesSlice';
 import paymentReducer from './slice/payments/paymentSlice'; // Import the payment reducer
 import workshopClassReducer from './slice/listings/WorkshopClassSlice'; // Import the workshop class reducer
-// import workshopClassReducer from './slice/listings/workshopClassSlice'; // Import the workshop reducer
 import HostReducer from './slice/host/hostSlice';
 import ExperienceReducer from './slice/listings/ExeperienceSlice';
 import VenueReducer from './slice/listings/VenueSlice';
