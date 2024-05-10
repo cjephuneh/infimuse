@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, StyleSheet, Image, TouchableOpacity, Share } from 'react-native';
+import {
+    View,
+    Text,
+    ScrollView,
+    StyleSheet,
+    Image,
+    TouchableOpacity,
+    Share
+} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// import { getClassSessions, getExperiences, getPackages, getVenues, getWorkshops, fetchWorkshopClasses } from '../../../redux/slice/listings';
-import { getClassSessions} from '../redux/slice/listings/classService';
+import { getClassSessions } from '../redux/slice/listings/classService';
 import { getExperiences } from '../redux/slice/listings/ExperienceService';
 import { getPackages } from '../redux/slice/listings/packagesServices';
 import { getVenues } from '../redux/slice/listings/VenueService';
@@ -20,29 +27,25 @@ const HistoryScreen = () => {
 
     const fetchListings = async () => {
         try {
-            // Fetch all types of listings
-            const classSessions = await getClassSessions('token');
-            const experiences = await getExperiences('token');
-            const packages = await getPackages('token');
-            const venues = await getVenues('token');
-            const workshops = await getWorkshops('token');
-            const workshopClasses = await fetchWorkshopClasses('token');
+            // Assuming these functions return the correct format
+            const classSessionsRes = await getClassSessions();
+            const experiencesRes = await getExperiences();
+            const packagesRes = await getPackages();
+            const venuesRes = await getVenues();
+            const workshopsRes = await getWorkshops();
+            const workshopClassesRes = await fetchWorkshopClasses();
 
-            // Combine all listings into a single array
             const allListings = [
-                ...classSessions,
-                ...experiences,
-                ...packages,
-                ...venues,
-                ...workshops,
-                ...workshopClasses
-            ];
+                ...classSessionsRes.Document,
+                ...experiencesRes.Document,
+                ...packagesRes.Document,
+                ...venuesRes.Document,
+                ...workshopsRes.Document,
+                ...workshopClassesRes.Document,
+            ].filter(listing => listing.status === "upcoming");
 
-            // Sort the listings by date in descending order
-            allListings.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-            // Set the sorted listings state
             setListings(allListings);
+            console.log('All listings:', allListings);
         } catch (error) {
             console.error('Error fetching listings:', error);
         }
@@ -51,21 +54,24 @@ const HistoryScreen = () => {
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <Text style={styles.heading}>History</Text>
-            {listings.map((listing) => (
-                <TouchableOpacity key={listing.id} style={styles.listingCard}>
-                    <Image
-                        source={{ uri: listing.posterUrl || placeholderImage }}
-                        style={styles.listingImage}
-                        resizeMode="cover"
-                    />
-                    <View style={styles.listingInfo}>
-                        <Text style={styles.listingTitle}>{listing.title}</Text>
-                        <Text style={styles.listingDate}>{new Date(listing.date).toDateString()}</Text>
-                        {/* Display listing type */}
-                        <Text style={styles.listingType}>{listing.__typename}</Text>
+            {listings.length > 0 ? (
+                listings.map((listing, index) => (
+                    <View key={index} style={styles.listingCard}>
+                        <Image
+                            source={{ uri: listing.posterUrl || 'https://via.placeholder.com/100' }}
+                            style={styles.listingImage}
+                            resizeMode="cover"
+                        />
+                        <View style={styles.listingInfo}>
+                            <Text style={styles.listingTitle}>{listing.title || 'No Title'}</Text>
+                            <Text style={styles.listingDate}>{new Date(listing.date).toDateString()}</Text>
+                            <Text style={styles.listingPrice}>Price: {listing.price || 'Free'}</Text>
+                        </View>
                     </View>
-                </TouchableOpacity>
-            ))}
+                ))
+            ) : (
+                <Text>No History Listings</Text>
+            )}
         </ScrollView>
     );
 };
@@ -105,7 +111,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginBottom: 5,
     },
-    listingType: {
+    listingPrice: {
         fontSize: 14,
         color: 'grey',
     },
