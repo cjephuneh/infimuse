@@ -5,6 +5,7 @@ import {
     ScrollView,
     StyleSheet,
     Image,
+    ActivityIndicator, // Import ActivityIndicator
     TouchableOpacity,
     Share
 } from 'react-native';
@@ -20,6 +21,7 @@ import placeholderImage from '../assets/_8e7e9a6e-d314-4014-b9ad-4bfaaa838ff1.jp
 
 const HistoryScreen = () => {
     const [listings, setListings] = useState([]);
+    const [loading, setLoading] = useState(true); // State to track loading status
 
     useEffect(() => {
         fetchListings();
@@ -27,7 +29,6 @@ const HistoryScreen = () => {
 
     const fetchListings = async () => {
         try {
-            // Assuming these functions return the correct format
             const classSessionsRes = await getClassSessions();
             const experiencesRes = await getExperiences();
             const packagesRes = await getPackages();
@@ -45,32 +46,37 @@ const HistoryScreen = () => {
             ].filter(listing => listing.status === "upcoming");
 
             setListings(allListings);
-            console.log('All listings:', allListings);
+            setLoading(false); // Set loading to false when data is fetched
         } catch (error) {
             console.error('Error fetching listings:', error);
+            setLoading(false); // Set loading to false in case of error
         }
     };
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <Text style={styles.heading}>History</Text>
-            {listings.length > 0 ? (
-                listings.map((listing, index) => (
-                    <View key={index} style={styles.listingCard}>
-                        <Image
-                            source={{ uri: listing.posterUrl || 'https://via.placeholder.com/100' }}
-                            style={styles.listingImage}
-                            resizeMode="cover"
-                        />
-                        <View style={styles.listingInfo}>
-                            <Text style={styles.listingTitle}>{listing.title || 'No Title'}</Text>
-                            <Text style={styles.listingDate}>{new Date(listing.date).toDateString()}</Text>
-                            <Text style={styles.listingPrice}>Price: {listing.price || 'Free'}</Text>
-                        </View>
-                    </View>
-                ))
+            {loading ? ( // Render loading indicator if data is loading
+                <ActivityIndicator size="large" color="#0000ff" />
             ) : (
-                <Text>No History Listings</Text>
+                listings.length > 0 ? (
+                    listings.map((listing, index) => (
+                        <View key={index} style={styles.listingCard}>
+                            <Image
+                                source={{ uri: listing.posterUrl || 'https://via.placeholder.com/100' }}
+                                style={styles.listingImage}
+                                resizeMode="cover"
+                            />
+                            <View style={styles.listingInfo}>
+                                <Text style={styles.listingTitle}>{listing.title || 'No Title'}</Text>
+                                <Text style={styles.listingDate}>{new Date(listing.date).toDateString()}</Text>
+                                <Text style={styles.listingPrice}>Price: {listing.price || 'Free'}</Text>
+                            </View>
+                        </View>
+                    ))
+                ) : (
+                    <Text>No History Listings</Text>
+                )
             )}
         </ScrollView>
     );
