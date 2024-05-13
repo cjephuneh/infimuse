@@ -50,7 +50,7 @@ const SignUpScreen = () => {
   
         // Navigate only if the sign-up was successful
         if (response && response.token) {
-          navigation.navigate('Main');
+          navigation.navigate('SignIn');
         }
       })
       .catch((error) => {

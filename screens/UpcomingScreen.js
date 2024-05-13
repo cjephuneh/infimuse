@@ -5,7 +5,9 @@ import {
     ScrollView,
     StyleSheet,
     Image,
-    ActivityIndicator, // Import ActivityIndicator
+    ActivityIndicator,
+    TouchableOpacity,
+    Share, // Import Share from react-native
 } from 'react-native';
 import { getClassSessions } from '../redux/slice/listings/classService';
 import { getExperiences } from '../redux/slice/listings/ExperienceService';
@@ -13,6 +15,7 @@ import { getPackages } from '../redux/slice/listings/packagesServices';
 import { getVenues } from '../redux/slice/listings/VenueService';
 import { getWorkshops } from '../redux/slice/listings/workshopService';
 import { fetchWorkshopClasses } from '../redux/slice/listings/WorkshopClassService';
+import Poster from '../assets/posterDesign.png'
 
 const UpcomingScreen = () => {
     const [listings, setListings] = useState([]);
@@ -48,15 +51,36 @@ const UpcomingScreen = () => {
         }
     };
 
+    const shareListing = async (listing) => {
+        try {
+            const result = await Share.share({
+                title: listing.title,
+                message: `Title: ${listing.title}\nDate: ${new Date(listing.date).toDateString()}\nPrice: ${listing.price || 'Free'}`,
+                url: listing.posterUrl,
+            });
+            if (result.action === Share.sharedAction) {
+                if (result.activityType) {
+                    // Shared via activity type
+                } else {
+                    // Shared
+                }
+            } else if (result.action === Share.dismissedAction) {
+                // Dismissed
+            }
+        } catch (error) {
+            console.error('Error sharing:', error.message);
+        }
+    };
+
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <Text style={styles.heading}>Upcoming</Text>
-            {loading ? ( // Render loading indicator if data is loading
+            {loading ? (
                 <ActivityIndicator size="large" color="#0000ff" />
             ) : (
                 listings.length > 0 ? (
                     listings.map((listing, index) => (
-                        <View key={index} style={styles.listingCard}>
+                        <TouchableOpacity key={index} style={styles.listingCard} onPress={() => shareListing(listing)}>
                             <Image
                                 source={{ uri: listing.posterUrl || 'https://via.placeholder.com/100' }}
                                 style={styles.listingImage}
@@ -67,7 +91,7 @@ const UpcomingScreen = () => {
                                 <Text style={styles.listingDate}>{new Date(listing.date).toDateString()}</Text>
                                 <Text style={styles.listingPrice}>Price: {listing.price || 'Free'}</Text>
                             </View>
-                        </View>
+                        </TouchableOpacity>
                     ))
                 ) : (
                     <Text>No Upcoming Listings</Text>
