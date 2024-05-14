@@ -76,6 +76,8 @@ const drawerItems = [
   { name: 'Account', icon: 'user-circle', screen: 'ProfileScreen' }, // Update with your screen name
   { name: 'Upcoming', icon: 'user', screen: 'HistoryScreen' }, // Update with your screen name
   { name: 'History', icon: 'history', screen: 'UpcomingScreen' }, // Update with your screen name
+  { name: 'Session', icon: 'session', screen: 'SessionScreen' }, // Update with your screen name
+
 
   // Add more items as needed
 ];

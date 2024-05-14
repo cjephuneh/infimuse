@@ -36,6 +36,7 @@ import WorkshopScheduleScreen from '../screens/listings/Schedules/WorkshopSchedu
 import PackageScheduleScreen from '../screens/listings/Schedules/PackagesScheduleScreen';
 import HistoryScreen from '../screens/UpcomingScreen';
 import UpcomingScreen from '../screens/HistoryScreen';
+import SessionScreen from '../screens/SessionScreen'; 
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -74,6 +75,7 @@ function AppNavigation() {
 
         {/* Here we include the Profile Screen */}
         <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+        <Stack.Screen name="SessionScreen" component={SessionScreen} />
         
         {/* Here we include the Term Screen */}
         <Stack.Screen name="TermsScreen" component={TermsSreen} />

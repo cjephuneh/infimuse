@@ -20,19 +20,22 @@ import tw from "tailwind-react-native-classnames"; // Import tailwind-react-nati
 import User from "../assets/man.png";
 import { useNavigation } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
-import { getClassSessions } from '../redux/slice/listings/classService';
-import { getExperiences } from '../redux/slice/listings/ExperienceService';
-import { getPackages } from '../redux/slice/listings/packagesServices';
-import { getVenues } from '../redux/slice/listings/VenueService';
-import { getWorkshops } from '../redux/slice/listings/workshopService';
-import { fetchWorkshopClasses } from '../redux/slice/listings/WorkshopClassService';
+import { getClassSessions } from "../redux/slice/listings/classService";
+import { getExperiences } from "../redux/slice/listings/ExperienceService";
+import { getPackages } from "../redux/slice/listings/packagesServices";
+import { getVenues } from "../redux/slice/listings/VenueService";
+import { getWorkshops } from "../redux/slice/listings/workshopService";
+import { fetchWorkshopClasses } from "../redux/slice/listings/WorkshopClassService";
 import { fetchStaffMembers } from "../redux/slice/staff/staffservice"; // Adjust the import path as needed
 
 const StaffCard = ({ name, email, role, description, onPress, image }) => {
   return (
     <TouchableOpacity
       onPress={onPress}
-      style={[styles.card, tw`bg-white rounded-lg p-4 mb-4 flex-row items-center shadow-md`]}
+      style={[
+        styles.card,
+        tw`bg-white rounded-lg p-4 mb-4 flex-row items-center shadow-md`,
+      ]}
     >
       <Image source={image} style={styles.image} />
       <View style={tw`flex-1 ml-4`}>
@@ -53,7 +56,7 @@ const Profile = () => {
   const [error, setError] = useState(null);
   const [listings, setListings] = useState([]);
   const [staffMembers, setStaffMembers] = useState([]);
-  
+
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
@@ -79,12 +82,12 @@ const Profile = () => {
         ...venuesRes.Document,
         ...workshopsRes.Document,
         ...workshopClassesRes.Document,
-      ].filter(listing => listing.status === "upcoming");
+      ].filter((listing) => listing.status === "upcoming");
 
       setListings(allListings);
       setLoading(false); // Set loading to false when data is fetched
     } catch (error) {
-      console.error('Error fetching listings:', error);
+      console.error("Error fetching listings:", error);
       setLoading(false); // Set loading to false in case of error
     }
   };
@@ -128,7 +131,7 @@ const Profile = () => {
           role: member.role,
           email: member.email,
           phone: member.phone,
-          image: require('../assets/man.png') // Placeholder image
+          image: require("../assets/man.png"), // Placeholder image
         }))
       );
     } catch (error) {
@@ -144,14 +147,16 @@ const Profile = () => {
   const renderListingItem = ({ item }) => (
     <View style={styles.listingCard}>
       <Image
-        source={{ uri: item.posterUrl || 'https://via.placeholder.com/100' }}
+        source={{ uri: item.posterUrl || "https://via.placeholder.com/100" }}
         style={styles.listingImage}
         resizeMode="cover"
       />
       <View style={styles.listingInfo}>
-        <Text style={styles.listingTitle}>{item.title || 'No Title'}</Text>
-        <Text style={styles.listingDate}>{new Date(item.date).toDateString()}</Text>
-        <Text style={styles.listingPrice}>Price: {item.price || 'Free'}</Text>
+        <Text style={styles.listingTitle}>{item.title || "No Title"}</Text>
+        <Text style={styles.listingDate}>
+          {new Date(item.date).toDateString()}
+        </Text>
+        <Text style={styles.listingPrice}>Price: {item.price || "Free"}</Text>
       </View>
     </View>
   );
@@ -247,6 +252,7 @@ const Profile = () => {
       </View>
       <View style={tw`mb-4`}>
         <Text style={styles.heading}>Upcoming</Text>
+        
         <FlatList
           data={listings}
           renderItem={renderListingItem}
@@ -256,6 +262,7 @@ const Profile = () => {
           contentContainerStyle={{ paddingRight: 20 }}
         />
       </View>
+
       <View style={tw`mb-4`}>
         <Text style={styles.heading}>History</Text>
         <FlatList
@@ -282,17 +289,17 @@ const Profile = () => {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   heading: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
   },
   listingCard: {
-    flexDirection: 'row',
+    flexDirection: "row",
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderRadius: 5,
     marginBottom: 20,
     marginRight: 10, // Adjust spacing between cards
@@ -308,7 +315,7 @@ const styles = StyleSheet.create({
   },
   listingTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 5,
   },
   listingDate: {
@@ -317,7 +324,7 @@ const styles = StyleSheet.create({
   },
   listingPrice: {
     fontSize: 14,
-    color: 'grey',
+    color: "grey",
   },
   card: {
     width: "100%",
