@@ -15,7 +15,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.code4jeph.infimuse"
     },
     "android": {
       "adaptiveIcon": {
@@ -29,7 +30,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": ""
+        "projectId": "913f40d6-a4bd-41f3-83b9-b6ba811425cd"
       }
     }
   }

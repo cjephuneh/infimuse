@@ -62,7 +62,6 @@ const ExploreScreen = () => {
 
   const handleCreateTemplatePress = () => {
     navigation.navigate("TemplateScreen"); // Navigate to the Templates screen
-    
   };
 
   const categories = {
@@ -73,7 +72,7 @@ const ExploreScreen = () => {
 
   const CategorySection = ({ title, items, imageKey, navigation }) => {
     const itemList = items && items.Document ? items.Document : [];
-    
+
     return (
       <View style={tw`mt-2 p-4`}>
         <Text style={tw`text-xl font-semibold mb-4`}>{title}</Text>
@@ -84,14 +83,13 @@ const ExploreScreen = () => {
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         >
           {itemList.map((item) => (
-          <CategoryCard key={item.id} item={item} image={item[imageKey]} templateType={title} navigation={navigation} />
-        ))}
+            <CategoryCard key={item.id} item={item} image={item[imageKey]} templateType={title} navigation={navigation} />
+          ))}
         </ScrollView>
       </View>
     );
   };
-  
-  
+
   const CategoryCard = ({ item, image, templateType, navigation }) => {
     const handleTemplatePress = () => {
       let type;
@@ -110,19 +108,20 @@ const ExploreScreen = () => {
       }
       navigation.navigate("TemplateDetailScreen", { templateType: type, templateId: item.id });
     };
-  
+
     return (
-      <TouchableOpacity style={tw`mr-4 bg-white rounded-xl overflow-hidden shadow-lg`} onPress={handleTemplatePress}>
-        <Image source={{ uri: image }} style={tw`h-36 w-full`} resizeMode="cover" />
+      <TouchableOpacity
+        style={tw`mr-4 bg-white rounded-xl overflow-hidden shadow-lg`}
+        onPress={handleTemplatePress}
+      >
+        <Image source={{ uri: image }} style={tw`h-36 w-72`} resizeMode="cover" />
         <View style={tw`p-3`}>
-          <Text style={tw`text-lg font-semibold `}>{item.title}</Text>
+          <Text style={tw`text-lg font-semibold`}>{item.title}</Text>
           <Text style={tw`text-sm`}>{item.description}</Text>
         </View>
       </TouchableOpacity>
     );
   };
-  
-  
 
   return (
     <View style={tw`bg-gray-100 flex-1`}>
@@ -138,12 +137,12 @@ const ExploreScreen = () => {
       <ScrollView>
         {Object.entries(categories).map(([key, items]) => (
           <CategorySection
-          key={key}
-          title={key.charAt(0).toUpperCase() + key.slice(1)}
-          items={items}
-          imageKey="posterUrl"
-          navigation={navigation}
-        />
+            key={key}
+            title={key.charAt(0).toUpperCase() + key.slice(1)}
+            items={items}
+            imageKey="posterUrl"
+            navigation={navigation}
+          />
         ))}
       </ScrollView>
     </View>
