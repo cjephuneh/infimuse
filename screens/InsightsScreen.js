@@ -2,10 +2,19 @@ import React from "react";
 import { View, Text, ScrollView, Dimensions } from "react-native";
 import tw from "tailwind-react-native-classnames";
 import { LineChart, BarChart, PieChart } from "react-native-chart-kit";
+import StarRating from 'react-native-star-rating-widget';
 
 const screenWidth = Dimensions.get("window").width;
 
 const InsightsScreen = () => {
+  const ratings = [
+    { className: "Dojo", rating: 4.5 },
+    { className: "Boxing", rating: 3.8 },
+    { className: "Coding", rating: 5 },
+    { className: "Therapy", rating: 4.2 },
+    { className: "Infimuse", rating: 3.6 },
+  ];
+
   return (
     <ScrollView style={tw`bg-gray-100 flex-1 p-4`}>
       <Text style={tw`text-2xl font-bold mb-4`}>Insights</Text>
@@ -53,10 +62,10 @@ const InsightsScreen = () => {
 
       {/* Second Graph */}
       <View style={tw`mb-6`}>
-        <Text style={tw`text-lg font-semibold mb-2`}>Total Listings Created</Text>
+        <Text style={tw`text-lg font-semibold mb-2`}>Second Graph Title</Text>
         <BarChart
           data={{
-            labels: ["Class1", "Class2", "Class3", "Class4", "Class5", "Class6"],
+            labels: ["January", "February", "March", "April", "May", "June"],
             datasets: [
               {
                 data: [20, 45, 28, 80, 99, 43],
@@ -92,32 +101,44 @@ const InsightsScreen = () => {
 
       {/* Third Graph */}
       <View style={tw`mb-6`}>
-        <Text style={tw`text-lg font-semibold mb-2`}>Total Revenue Collected</Text>
+        <Text style={tw`text-lg font-semibold mb-2`}>Third Graph Title</Text>
         <PieChart
           data={[
             {
               name: "Class A",
-              population: 2150,
+              population: 21500000,
               color: "rgba(131, 167, 234, 1)",
               legendFontColor: "#7F7F7F",
               legendFontSize: 15,
             },
-
+            {
+              name: "Class B",
+              population: 2800000,
+              color: "#F00",
+              legendFontColor: "#7F7F7F",
+              legendFontSize: 15,
+            },
             {
               name: "Class C",
-              population: 527,
+              population: 527612,
               color: "red",
               legendFontColor: "#7F7F7F",
               legendFontSize: 15,
             },
             {
               name: "Class D",
-              population: 853,
-              color: "green",
+              population: 8538000,
+              color: "#ffffff",
               legendFontColor: "#7F7F7F",
               legendFontSize: 15,
             },
-            
+            {
+              name: "Class E",
+              population: 11920000,
+              color: "rgb(0, 0, 255)",
+              legendFontColor: "#7F7F7F",
+              legendFontSize: 15,
+            },
           ]}
           width={screenWidth - 32}
           height={220}
@@ -137,6 +158,23 @@ const InsightsScreen = () => {
             borderRadius: 16,
           }}
         />
+      </View>
+
+      {/* Ratings List */}
+      <View style={tw`mb-6`}>
+        <Text style={tw`text-lg font-semibold mb-2`}>Class Ratings</Text>
+        {ratings.map((rating) => (
+          <View key={rating.className} style={tw`mb-4 p-4 bg-white rounded-lg shadow-md`}>
+            <Text style={tw`text-lg font-semibold`}>{rating.className}</Text>
+            <StarRating
+              rating={rating.rating}
+              onChange={() => {}}
+              starSize={20}
+              color="#A72C76"
+              style={tw`mt-2`}
+            />
+          </View>
+        ))}
       </View>
     </ScrollView>
   );

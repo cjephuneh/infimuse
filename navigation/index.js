@@ -37,6 +37,7 @@ import PackageScheduleScreen from '../screens/listings/Schedules/PackagesSchedul
 import HistoryScreen from '../screens/UpcomingScreen';
 import UpcomingScreen from '../screens/HistoryScreen';
 import SessionScreen from '../screens/SessionScreen'; 
+import QrCodeScreen from '../screens/qrcodereader'
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -104,6 +105,9 @@ function AppNavigation() {
 
         {/* Here we include the Upcoming Screen */}
         <Stack.Screen name="UpcomingScreen" component={UpcomingScreen} />
+
+
+        <Stack.Screen name="QrCodeScreen" component={QrCodeScreen} />
         
 
 
