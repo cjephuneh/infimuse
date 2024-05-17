@@ -53,10 +53,10 @@ const InsightsScreen = () => {
 
       {/* Second Graph */}
       <View style={tw`mb-6`}>
-        <Text style={tw`text-lg font-semibold mb-2`}>Second Graph Title</Text>
+        <Text style={tw`text-lg font-semibold mb-2`}>Total Listings Created</Text>
         <BarChart
           data={{
-            labels: ["January", "February", "March", "April", "May", "June"],
+            labels: ["Class1", "Class2", "Class3", "Class4", "Class5", "Class6"],
             datasets: [
               {
                 data: [20, 45, 28, 80, 99, 43],
@@ -92,44 +92,32 @@ const InsightsScreen = () => {
 
       {/* Third Graph */}
       <View style={tw`mb-6`}>
-        <Text style={tw`text-lg font-semibold mb-2`}>Third Graph Title</Text>
+        <Text style={tw`text-lg font-semibold mb-2`}>Total Revenue Collected</Text>
         <PieChart
           data={[
             {
               name: "Class A",
-              population: 21500000,
+              population: 2150,
               color: "rgba(131, 167, 234, 1)",
               legendFontColor: "#7F7F7F",
               legendFontSize: 15,
             },
-            {
-              name: "Class B",
-              population: 2800000,
-              color: "#F00",
-              legendFontColor: "#7F7F7F",
-              legendFontSize: 15,
-            },
+
             {
               name: "Class C",
-              population: 527612,
+              population: 527,
               color: "red",
               legendFontColor: "#7F7F7F",
               legendFontSize: 15,
             },
             {
               name: "Class D",
-              population: 8538000,
-              color: "#ffffff",
+              population: 853,
+              color: "green",
               legendFontColor: "#7F7F7F",
               legendFontSize: 15,
             },
-            {
-              name: "Class E",
-              population: 11920000,
-              color: "rgb(0, 0, 255)",
-              legendFontColor: "#7F7F7F",
-              legendFontSize: 15,
-            },
+            
           ]}
           width={screenWidth - 32}
           height={220}

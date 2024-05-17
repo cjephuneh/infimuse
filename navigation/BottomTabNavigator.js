@@ -50,7 +50,7 @@ function BottomTabNavigator() {
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Calender" component={CalenderScreen} />
       <Tab.Screen name="listings" component={ListingScreen} />
-      {/* <Tab.Screen name="Insight" component={InsightScreen} /> */}
+      <Tab.Screen name="Insight" component={InsightScreen} />
       <Tab.Screen name="Pricing" component={PricingScreen} />
     </Tab.Navigator>
   );
