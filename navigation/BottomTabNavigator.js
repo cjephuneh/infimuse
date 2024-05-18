@@ -7,6 +7,7 @@ import CalenderScreen from '../screens/CalenderScreen';
 import InsightScreen from '../screens/InsightsScreen';
 import ListingScreen from '../screens/CreateTemplatesScreen';
 import PricingScreen from '../screens/pricingScreen';
+import QrScanner from '../screens/qrcodereader'
 
 const Tab = createBottomTabNavigator();
 
@@ -29,7 +30,10 @@ function BottomTabNavigator() {
             iconName = 'chart-line';
           } else if (route.name === 'listings') {
             iconName = 'list';
+          } else if (route.name ==='Qrcode'){
+            iconName = 'scan'
           }
+
 
           return <Icon name={iconName} size={iconSize} color={color} style={iconStyle} />;
         },
@@ -52,6 +56,7 @@ function BottomTabNavigator() {
       <Tab.Screen name="listings" component={ListingScreen} />
       <Tab.Screen name="Insight" component={InsightScreen} />
       <Tab.Screen name="Pricing" component={PricingScreen} />
+      <Tab.Screen name="Qrcode" component={QrScanner} />
     </Tab.Navigator>
   );
 }

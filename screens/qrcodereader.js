@@ -1,56 +1,60 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Alert, StyleSheet } from 'react-native';
-import { RNCamera } from 'react-native-camera';
+import { View, Text, TouchableOpacity } from 'react-native';
+import { BarCodeScanner } from 'expo-barcode-scanner';
 import tw from 'tailwind-react-native-classnames';
-import { useNavigation } from '@react-navigation/native';
 
-const QRCodeScannerScreen = () => {
-  const [isScanned, setIsScanned] = useState(false);
-  const navigation = useNavigation();
+const QRCodeScreen = () => {
+  const [hasPermission, setHasPermission] = useState(null);
+  const [scanned, setScanned] = useState(false);
 
-  const handleBarCodeRead = ({ data }) => {
-    if (!isScanned) {
-      setIsScanned(true);
-      Alert.alert("QR Code Scanned", `Data: ${data}`, [
-        {
-          text: "OK",
-          onPress: () => setIsScanned(false),
-        },
-      ]);
-      // Handle the scanned data as per your requirement
-    }
+  useEffect(() => {
+    (async () => {
+      const { status } = await BarCodeScanner.requestPermissionsAsync();
+      setHasPermission(status === 'granted');
+    })();
+  }, []);
+
+  const handleBarCodeScanned = ({ type, data }) => {
+    setScanned(true);
+    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+    // You can perform additional actions with the scanned data here
   };
 
+  if (hasPermission === null) {
+    return (
+      <View style={tw`flex-1 items-center justify-center`}>
+        <Text style={tw`text-gray-600`}>Requesting camera permission...</Text>
+      </View>
+    );
+  }
+
+  if (hasPermission === false) {
+    return (
+      <View style={tw`flex-1 items-center justify-center`}>
+        <Text style={tw`text-red-500`}>Camera permission not granted</Text>
+      </View>
+    );
+  }
+
   return (
-    <View style={tw`flex-1`}>
-      <RNCamera
-        style={tw`flex-1`}
-        onBarCodeRead={handleBarCodeRead}
-        captureAudio={false}
-        flashMode={RNCamera.Constants.FlashMode.off}
-        androidCameraPermissionOptions={{
-          title: 'Permission to use camera',
-          message: 'We need your permission to use your camera',
-          buttonPositive: 'OK',
-          buttonNegative: 'Cancel',
-        }}
+    <View style={tw`flex-1 bg-gray-100`}>
+      <View style={tw`flex-1 items-center justify-center`}>
+        <BarCodeScanner
+          onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+          style={tw`h-96 w-full rounded-lg overflow-hidden`}
+        />
+      </View>
+      <TouchableOpacity
+        style={tw`mx-8 mb-8 py-4 rounded-lg bg-blue-500`}
+        onPress={() => setScanned(false)}
+        disabled={scanned}
       >
-        <View style={tw`flex-1 justify-center items-center`}>
-          <View style={[tw`bg-transparent border border-red-500`, styles.scanBox]} />
-        </View>
-      </RNCamera>
-      <TouchableOpacity style={tw`absolute top-10 left-4 bg-gray-800 p-2 rounded`} onPress={() => navigation.goBack()}>
-        <Text style={tw`text-white`}>Back</Text>
+        <Text style={tw`text-center text-white font-bold`}>
+          {scanned ? 'Scanning...' : 'Scan QR Code'}
+        </Text>
       </TouchableOpacity>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  scanBox: {
-    width: 250,
-    height: 250,
-  },
-});
-
-export default QRCodeScannerScreen;
+export default QRCodeScreen;

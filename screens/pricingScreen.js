@@ -5,7 +5,7 @@ import { moderateScale } from 'react-native-size-matters';
 import Colors from '../constants/Colors';
 import { initializePayment } from '../redux/slice/payments/paymentSlice';
 import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { jwtDecode } from "jwt-decode";
 import "core-js/stable/atob";
 import { Linking } from 'react-native';
@@ -13,20 +13,53 @@ import { Linking } from 'react-native';
 const plansData = [
   {
     title: 'Dabbler',
-    subtitle: 'Starter - (Free Plan)',
-    description: `Commission Package\n8% commission per Class booking including the Payment Processing Charges\n8% commission per Workshop & Package Booking inc payments\nHost decides the bearer of the cost (Host or User)\nHost pays entire commission\nAllows Hosts to schedule;\n50 Classes Listings per month\n1 Workshop Listings per month\n1 Package Listings per month`,
+    subtitle: 'Starter - (Pay as you go)',
+    features: [
+      '8% commission per Class booking including the Payment Processing Charges',
+      '8% commission per Workshop & Package Booking inc payments',
+      'Host decides the bearer of the cost (Host or User)',
+      'Host pays entire commission',
+      'Allows Hosts to schedule:',
+      '- 50 Classes Listings per month',
+      '- 1 Workshop Listings per month',
+      '- 1 Package Listings per month',
+    ],
     price: 'Pay as you go',
   },
   {
     title: 'Dipper',
     subtitle: 'Growth',
-    description: `Costs 9999/-\n5% Commission is applied to transactions of Hosts in this plan\nHost decides the bearer of the cost (Host or User)\nHost pays entire commission\nHost Pays Infimuse Commission, User pays Payment Processing Fees\nAllows Hosts to schedule upto;\n200 Classes per month\n20 Workshops per month\n2 Sponsored Listing Boots per month\nBasic analytics report\nManage Staff`,
+    features: [
+      'Costs 9999/-',
+      '5% Commission is applied to transactions of Hosts in this plan',
+      'Host decides the bearer of the cost (Host or User)',
+      'Host pays entire commission',
+      'Host Pays Infimuse Commission, User pays Payment Processing Fees',
+      'Allows Hosts to schedule:',
+      '- 200 Classes per month',
+      '- 20 Workshops per month',
+      '- 2 Sponsored Listing Boots per month',
+      'Basic analytics report',
+      'Manage Staff',
+    ],
     price: 'KES 9999',
   },
   {
     title: 'Diver',
     subtitle: 'Pro',
-    description: `Costs 16,999/-  (3 months, 6 month, 12 months)\n2.9% Commission is applied to transactions of Hosts in this plan\nHost decides the bearer of the cost (Host or User)\nHost pays entire commission\nUser pays entire commission\nAllows Hosts to schedule and offers them;\nUnlimited Classes per month\nUnlimited Workshops per month\n5 sponsored Listings per month\nManage Staff\nDetailed analytics report`,
+    features: [
+      'Costs 16,999/- (3 months, 6 month, 12 months)',
+      '2.9% Commission is applied to transactions of Hosts in this plan',
+      'Host decides the bearer of the cost (Host or User)',
+      'Host pays entire commission',
+      'User pays entire commission',
+      'Allows Hosts to schedule:',
+      '- Unlimited Classes per month',
+      '- Unlimited Workshops per month',
+      '- 5 sponsored Listings per month',
+      'Manage Staff',
+      'Detailed analytics report',
+    ],
     price: 'KES 16999',
   },
 ];
@@ -35,7 +68,7 @@ const MainSubscriptionContainer = (props) => {
   const [plan, setPlan] = useState('');
   const [loading, setLoading] = useState(false);
   const [hostId, setHostId] = useState(null);
-  const [expandedPlan, setExpandedPlan] = useState(null); // State to track expanded card
+  const [expandedPlan, setExpandedPlan] = useState(null);
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
@@ -43,13 +76,10 @@ const MainSubscriptionContainer = (props) => {
     const getHostIdFromToken = async () => {
       try {
         const token = await AsyncStorage.getItem('token');
-        console.log('Retrieved token:', token);
         if (token) {
           const decodedToken = jwtDecode(token);
-          console.log('Decoded token:', decodedToken); // Add this line to check the decoded token
           const id = decodedToken.id;
           setHostId(id);
-          console.log('HostId:', id); // Log the hostId
         } else {
           console.error('Token not found in local storage');
         }
@@ -57,10 +87,10 @@ const MainSubscriptionContainer = (props) => {
         console.error('Error retrieving token from local storage:', error);
       }
     };
-  
+
     getHostIdFromToken();
   }, []);
-  
+
   const handlePayment = async () => {
     if (!hostId) {
       console.error('HostId is null');
@@ -108,31 +138,33 @@ const MainSubscriptionContainer = (props) => {
               toggleExpand(item.title);
             }}
             style={[
-              styles.plan,
-              plan === item.title && {
-                borderColor: Colors.theme.primary,
-              },
+              styles.planCard,
+              plan === item.title && styles.planCardActive,
             ]}
           >
             <View>
               <Text style={styles.planTitle}>{item.title}</Text>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Text style={styles.amount}>{item.price}</Text>
-                <Text style={styles.period}>/mo</Text>
-              </View>
+              <Text style={styles.planSubtitle}>{item.subtitle}</Text>
               {expandedPlan === item.title && (
-                <Text style={styles.planDescription}>{item.description}</Text>
+                <View style={styles.planFeatures}>
+                  {item.features.map((feature, index) => (
+                    <Text key={index} style={styles.planFeatureText}>
+                      • {feature}
+                    </Text>
+                  ))}
+                </View>
               )}
             </View>
-            <View
-              style={[
-                styles.circle,
-                plan === item.title && {
-                  borderColor: Colors.theme.primary,
-                },
-              ]}
-            >
-              {plan === item.title && <View style={styles.active} />}
+            <View style={styles.priceContainer}>
+              <Text style={styles.price}>{item.price}</Text>
+              <View
+                style={[
+                  styles.circle,
+                  plan === item.title && styles.circleActive,
+                ]}
+              >
+                {plan === item.title && <View style={styles.active} />}
+              </View>
             </View>
           </TouchableOpacity>
         )}
@@ -140,9 +172,7 @@ const MainSubscriptionContainer = (props) => {
       <TouchableOpacity
         style={[
           styles.pay,
-          plan && {
-            backgroundColor: Colors.theme.primary,
-          },
+          plan && styles.payActive,
         ]}
         onPress={handlePayment}
         disabled={!plan || loading}
@@ -165,13 +195,15 @@ const styles = StyleSheet.create({
     marginVertical: moderateScale(20),
   },
   title: {
-    fontSize: moderateScale(22),
-    fontWeight: '800',
+    fontSize: moderateScale(24),
+    fontWeight: 'bold',
+    color: Colors.theme.primary,
   },
   desc: {
-    color: '#999',
-    fontSize: moderateScale(13),
+    color: '#666',
+    fontSize: moderateScale(14),
     marginTop: moderateScale(5),
+    marginBottom: moderateScale(20),
   },
   pay: {
     width: '100%',
@@ -179,25 +211,63 @@ const styles = StyleSheet.create({
     height: moderateScale(50),
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: moderateScale(20),
+    borderRadius: moderateScale(25),
   },
   payTxt: {
     color: '#FFFFFF',
-    fontWeight: '700',
+    fontWeight: 'bold',
   },
-  plans: {
-    marginTop: moderateScale(20),
+  payActive: {
+    backgroundColor: Colors.theme.primary,
   },
-  plan: {
+  planCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: moderateScale(10),
+    padding: moderateScale(20),
+    marginBottom: moderateScale(15),
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    flexDirection: 'row',
-    padding: moderateScale(15),
-    borderWidth: moderateScale(1),
-    borderStyle: 'solid',
-    borderColor: '#D7D7D7',
-    borderRadius: moderateScale(10),
+  },
+  planCardActive: {
+    borderWidth: 2,
+    borderColor: Colors.theme.primary,
+  },
+  planTitle: {
+    color: Colors.theme.primary,
+    fontSize: moderateScale(20),
+    fontWeight: 'bold',
+    marginBottom: moderateScale(5),
+  },
+  planSubtitle: {
+    color: '#666',
+    fontSize: moderateScale(14),
     marginBottom: moderateScale(10),
+  },
+  planFeatures: {
+    marginTop: moderateScale(10),
+  },
+  planFeatureText: {
+    color: '#666',
+    fontSize: moderateScale(14),
+    lineHeight: moderateScale(20),
+  },
+  priceContainer: {
+    alignItems: 'flex-end',
+  },
+  price: {
+    fontSize: moderateScale(20),
+    fontWeight: 'bold',
+    color: Colors.theme.primary,
+    marginBottom: moderateScale(5),
   },
   circle: {
     width: moderateScale(20),
@@ -209,26 +279,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  circleActive: {
+    borderColor: Colors.theme.primary,
+  },
   active: {
     width: moderateScale(10),
     height: moderateScale(10),
     borderRadius: moderateScale(10 / 2),
     backgroundColor: Colors.theme.primary,
-  },
-  planTitle: {
-    color: Colors.theme.primary,
-    fontSize: moderateScale(20),
-    marginBottom: moderateScale(10),
-  },
-  amount: {
-    fontSize: moderateScale(20),
-    fontWeight: '900',
-  },
-  period: {
-    color: '#999',
-  },
-  planDescription: {
-    marginTop: moderateScale(10),
-    color: '#666',
   },
 });

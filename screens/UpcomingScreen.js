@@ -7,7 +7,7 @@ import {
     Image,
     ActivityIndicator,
     TouchableOpacity,
-    Share, // Import Share from react-native
+    Share,
 } from 'react-native';
 import { getClassSessions } from '../redux/slice/listings/classService';
 import { getExperiences } from '../redux/slice/listings/ExperienceService';
@@ -15,11 +15,11 @@ import { getPackages } from '../redux/slice/listings/packagesServices';
 import { getVenues } from '../redux/slice/listings/VenueService';
 import { getWorkshops } from '../redux/slice/listings/workshopService';
 import { fetchWorkshopClasses } from '../redux/slice/listings/WorkshopClassService';
-import Poster from '../assets/posterDesign.png'
+import Poster from '../assets/posterDesign.png';
 
 const UpcomingScreen = () => {
     const [listings, setListings] = useState([]);
-    const [loading, setLoading] = useState(true); // State to track loading status
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         fetchListings();
@@ -44,20 +44,23 @@ const UpcomingScreen = () => {
             ].filter(listing => listing.status === "upcoming");
 
             setListings(allListings);
-            setLoading(false); // Set loading to false when data is fetched
+            setLoading(false);
         } catch (error) {
             console.error('Error fetching listings:', error);
-            setLoading(false); // Set loading to false in case of error
+            setLoading(false);
         }
     };
 
     const shareListing = async (listing) => {
         try {
-            const result = await Share.share({
+            const shareOptions = {
                 title: listing.title,
                 message: `Title: ${listing.title}\nDate: ${new Date(listing.date).toDateString()}\nPrice: ${listing.price || 'Free'}`,
-                url: listing.posterUrl,
-            });
+                url: listing.posterUrl || Poster, // Use the imported Poster image if posterUrl is not available
+            };
+
+            const result = await Share.share(shareOptions);
+
             if (result.action === Share.sharedAction) {
                 if (result.activityType) {
                     // Shared via activity type
