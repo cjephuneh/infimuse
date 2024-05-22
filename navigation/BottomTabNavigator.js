@@ -8,6 +8,7 @@ import InsightScreen from '../screens/InsightsScreen';
 import ListingScreen from '../screens/CreateTemplatesScreen';
 import PricingScreen from '../screens/pricingScreen';
 import QrScanner from '../screens/qrcodereader'
+import CommunityScreen from '../screens/CommunityScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -32,7 +33,12 @@ function BottomTabNavigator() {
             iconName = 'list';
           } else if (route.name ==='Qrcode'){
             iconName = 'scan'
+          } else if (route.name === 'Community') {
+            iconName = 'users';
           }
+          // } else if (route.name === 'Profile') {
+          //   iconName = 'user';
+          // }
 
 
           return <Icon name={iconName} size={iconSize} color={color} style={iconStyle} />;
@@ -57,6 +63,7 @@ function BottomTabNavigator() {
       <Tab.Screen name="Insight" component={InsightScreen} />
       <Tab.Screen name="Pricing" component={PricingScreen} />
       <Tab.Screen name="Qrcode" component={QrScanner} />
+      <Tab.Screen name="Community" component={CommunityScreen} />
     </Tab.Navigator>
   );
 }

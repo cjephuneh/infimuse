@@ -38,6 +38,7 @@ import HistoryScreen from '../screens/UpcomingScreen';
 import UpcomingScreen from '../screens/HistoryScreen';
 import SessionScreen from '../screens/SessionScreen'; 
 import QrCodeScreen from '../screens/qrcodereader'
+import CommunityScreen from '../screens/CommunityScreen';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -108,6 +109,7 @@ function AppNavigation() {
 
 
         <Stack.Screen name="QrCodeScreen" component={QrCodeScreen} />
+        <Stack.Screen name="CommunityScreen" component={CommunityScreen} />
         
 
 
