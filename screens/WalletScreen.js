@@ -11,44 +11,70 @@ const WalletScreen = () => {
     // Add more pending payments as needed
   ];
 
+  const paymentHistory = [
+    { id: 1, course: 'Basic Cooking', amount: 'KSh 1,000.00', date: '2024-05-01' },
+    { id: 2, course: 'Yoga for Beginners', amount: 'KSh 2,500.00', date: '2024-04-15' },
+    { id: 3, course: 'Web Development Bootcamp', amount: 'KSh 5,000.00', date: '2024-03-20' },
+    // Add more payment history entries as needed
+  ];
+
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.header}>My Wallet</Text>
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <Text style={styles.header}>My Wallet</Text>
 
-      <Card containerStyle={styles.accountCard}>
-        <Card.Title>Account Balance</Card.Title>
-        <Card.Divider />
-        <View style={styles.cardContent}>
-          <Icon name="money" size={40} color="#4CAF50" />
-          <Text style={styles.accountAmount}>KSh 123,456.78</Text>
-        </View>
-      </Card>
-
-      <Text style={styles.subHeader}>Pending Payments</Text>
-      {pendingPayments.map(payment => (
-        <Card key={payment.id} containerStyle={styles.pendingCard}>
-          <Card.Title>{payment.course}</Card.Title>
+        <Card containerStyle={styles.accountCard}>
+          <Card.Title>Account Balance</Card.Title>
           <Card.Divider />
           <View style={styles.cardContent}>
-            <Icon name="hourglass-half" size={24} color="#FFC107" />
-            <Text style={styles.pendingAmount}>{payment.amount}</Text>
+            <Icon name="money" size={40} color="#4CAF50" />
+            <Text style={styles.accountAmount}>KSh 123,456.78</Text>
           </View>
         </Card>
-      ))}
+
+        <Text style={styles.subHeader}>Pending Payments</Text>
+        {pendingPayments.map(payment => (
+          <Card key={payment.id} containerStyle={styles.pendingCard}>
+            <Card.Title>{payment.course}</Card.Title>
+            <Card.Divider />
+            <View style={styles.cardContent}>
+              <Icon name="hourglass-half" size={24} color="#FFC107" />
+              <Text style={styles.pendingAmount}>{payment.amount}</Text>
+            </View>
+          </Card>
+        ))}
+
+        <Text style={styles.subHeader}>Payment History</Text>
+        {paymentHistory.map(history => (
+          <Card key={history.id} containerStyle={styles.historyCard}>
+            <Card.Title>{history.course}</Card.Title>
+            <Card.Divider />
+            <View style={styles.cardContent}>
+              <View style={styles.historyContent}>
+                <Text style={styles.historyAmount}>{history.amount}</Text>
+                <Text style={styles.historyDate}>{history.date}</Text>
+              </View>
+              <Icon name="check-circle" size={24} color="#4CAF50" />
+            </View>
+          </Card>
+        ))}
+      </ScrollView>
 
       <TouchableOpacity style={styles.withdrawButton}>
         <Icon name="bank" size={24} color="#FFF" />
         <Text style={styles.withdrawText}>Withdraw</Text>
       </TouchableOpacity>
-    </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
-    padding: 20,
+    flex: 1,
     backgroundColor: '#f8f9fa',
+  },
+  scrollContainer: {
+    padding: 20,
   },
   header: {
     fontSize: 28,
@@ -72,6 +98,11 @@ const styles = StyleSheet.create({
     elevation: 2,
     marginBottom: 10,
   },
+  historyCard: {
+    borderRadius: 10,
+    elevation: 2,
+    marginBottom: 10,
+  },
   cardContent: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -87,15 +118,30 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
   },
+  historyContent: {
+    flexDirection: 'column',
+  },
+  historyAmount: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  historyDate: {
+    fontSize: 14,
+    color: '#777',
+  },
   withdrawButton: {
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+    right: 20,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#3b5998',
     padding: 15,
     borderRadius: 10,
-    marginTop: 20,
-    width: '100%',
+    width: '90%',
   },
   withdrawText: {
     color: '#FFF',
