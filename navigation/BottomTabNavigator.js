@@ -9,6 +9,7 @@ import ListingScreen from '../screens/CreateTemplatesScreen';
 import PricingScreen from '../screens/pricingScreen';
 import QrScanner from '../screens/qrcodereader'
 import CommunityScreen from '../screens/CommunityScreen';
+import WalletScreen from '../screens/WalletScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -32,13 +33,14 @@ function BottomTabNavigator() {
           } else if (route.name === 'listings') {
             iconName = 'list';
           } else if (route.name ==='Qrcode'){
-            iconName = 'scan'
+            iconName = 'qrcode'
           } else if (route.name === 'Community') {
             iconName = 'users';
+          }else if (route.name === 'Profile') {
+            iconName = 'user';
+          }else if (route.name === 'Wallet') {
+            iconName = 'wallet';
           }
-          // } else if (route.name === 'Profile') {
-          //   iconName = 'user';
-          // }
 
 
           return <Icon name={iconName} size={iconSize} color={color} style={iconStyle} />;
@@ -58,11 +60,13 @@ function BottomTabNavigator() {
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Calender" component={CalenderScreen} />
-      <Tab.Screen name="listings" component={ListingScreen} />
-      <Tab.Screen name="Insight" component={InsightScreen} />
-      <Tab.Screen name="Pricing" component={PricingScreen} />
+      {/* <Tab.Screen name="Calender" component={CalenderScreen} /> */}
+      {/* <Tab.Screen name="listings" component={ListingScreen} /> */}
+      {/* <Tab.Screen name="Insight" component={InsightScreen} /> */}
+      {/* <Tab.Screen name="Pricing" component={PricingScreen} /> */}
+      <Tab.Screen name='Profile' component={ProfileScreen}/>
       <Tab.Screen name="Qrcode" component={QrScanner} />
+      <Tab.Screen name='Wallet' component={WalletScreen}/>
       <Tab.Screen name="Community" component={CommunityScreen} />
     </Tab.Navigator>
   );
