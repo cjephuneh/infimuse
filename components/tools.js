@@ -9,10 +9,10 @@ const Tools = () => {
 
   // Dummy data for the UI
   const features = [
-    { id: 1, title: 'Update your availability', color: '#F472B6', icon: 'calendar-clock', screen: 'CalenderScreen' },
+    { id: 1, title: 'Create a listing', color: '#F472B6', icon: 'calendar-clock', screen: 'CreateTemplatesScreen' },
     { id: 2, title: 'Fine tune your Pricing', color: '#FBBF24', icon: 'currency-usd', screen: 'PricingScreen' },
-    { id: 3, title: 'Explore your setting', color: '#FB7185', icon: 'cog', screen: 'HomeScreen' },
-    { id: 4, title: 'Schedule a class', color: '#F472B6', icon: 'calendar', screen: 'ListingScreen' },
+    { id: 3, title: 'View your insights ', color: '#FB7185', icon: 'insigts', screen: 'InsightsScreen' },
+    { id: 4, title: 'Schedule a listing', color: '#F472B6', icon: 'calendar', screen: 'CalenderScreen' },
   ];
 
   return (

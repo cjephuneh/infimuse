@@ -9,6 +9,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 import tw from "tailwind-react-native-classnames";
+import { useNavigation } from '@react-navigation/native'; // Import useNavigation hook
+
 
 const WalletCard = ({ name, balance, onPress }) => {
   return (
@@ -31,7 +33,9 @@ const WalletCard = ({ name, balance, onPress }) => {
   );
 };
 
-const WalletDetails = ({ navigation }) => {
+const WalletDetails = () => {
+  const navigation = useNavigation(); // Initialize useNavigation
+
   const wallet = {
     name: "My Wallet",
     balance: "$1000", // Example balance
@@ -39,7 +43,7 @@ const WalletDetails = ({ navigation }) => {
 
   const handlePress = () => {
     // Navigate to WalletDetails screen or any other screen for wallet details
-    navigation.navigate("WalletDetails");
+    navigation.navigate("WalletScreen");
   };
 
   return (

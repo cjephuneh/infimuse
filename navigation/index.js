@@ -39,6 +39,12 @@ import UpcomingScreen from '../screens/HistoryScreen';
 import SessionScreen from '../screens/SessionScreen'; 
 import QrCodeScreen from '../screens/qrcodereader'
 import CommunityScreen from '../screens/CommunityScreen';
+// import ListingScreen from '../screens/';
+import WalletScreen from '../screens/WalletScreen';
+import CalenderScreen from '../screens/CalenderScreen';
+import InsightsScreen from '../screens/InsightsScreen';
+import PricingScreen from '../screens/pricingScreen';
+
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -96,16 +102,26 @@ function AppNavigation() {
 
         {/* Here is where we include the Drawer Navigator */}
         <Stack.Screen name="Main" component={MainDrawer} />
+      
 
 
         {/* Here we    jsdnfhsdvnjf =================================================================================  include the Schedule Screen */} 
         <Stack.Screen name="ScheduleScreen" component={ScheduleScreen} /> 
+        <Stack.Screen name="WalletScreen" component={WalletScreen} /> 
+
 
         {/* Here we include the History Screen */}
         <Stack.Screen name="HistoryScreen" component={HistoryScreen} />
 
         {/* Here we include the Upcoming Screen */}
         <Stack.Screen name="UpcomingScreen" component={UpcomingScreen} />
+        <Stack.Screen name="CalenderScreen" component={CalenderScreen} />
+        <Stack.Screen name="InsightsScreen" component={InsightsScreen} />
+        <Stack.Screen name="PricingScreen" component={PricingScreen} />
+
+
+
+
 
 
         <Stack.Screen name="QrCodeScreen" component={QrCodeScreen} />
