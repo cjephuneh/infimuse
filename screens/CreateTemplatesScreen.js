@@ -76,16 +76,22 @@ const ExploreScreen = () => {
     return (
       <View style={tw`mt-2 p-4`}>
         <Text style={tw`text-xl font-semibold mb-4`}>{title}</Text>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={tw`pl-2`}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-        >
-          {itemList.map((item) => (
-            <CategoryCard key={item.id} item={item} image={item[imageKey]} templateType={title} navigation={navigation} />
-          ))}
-        </ScrollView>
+        {itemList.length > 0 ? (
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={tw`pl-2`}
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+          >
+            {itemList.map((item) => (
+              <CategoryCard key={item.id} item={item} image={item[imageKey]} templateType={title} navigation={navigation} />
+            ))}
+          </ScrollView>
+        ) : (
+          <View style={tw`flex-1 items-center justify-center`}>
+            <Text style={tw`text-sm text-gray-500`}>No {title.toLowerCase()} available. Create a new one!</Text>
+          </View>
+        )}
       </View>
     );
   };
