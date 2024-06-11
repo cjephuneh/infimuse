@@ -41,7 +41,7 @@ const ForgotPasswordScreen = () => {
               />
             </View>
             
-            <TouchableOpacity style={[tw` w-full rounded-full py-3 mb-6 shadow-lg`,{backgroundColor: "#12B9F3"}]}>
+            <TouchableOpacity onPress={() => navigation.navigate("Main")} style={[tw` w-full rounded-full py-3 mb-6 shadow-lg`,{backgroundColor: "#12B9F3"}]}>
               <Text style={tw`text-white text-center text-lg`}>Send Instructions</Text>
             </TouchableOpacity>
           </View>
