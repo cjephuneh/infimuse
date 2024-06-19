@@ -44,6 +44,7 @@ import WalletScreen from '../screens/WalletScreen';
 import CalenderScreen from '../screens/CalenderScreen';
 import InsightsScreen from '../screens/InsightsScreen';
 import PricingScreen from '../screens/pricingScreen';
+import ChatRoom from '../screens/ChatRoom';
 
 
 const Stack = createNativeStackNavigator();
@@ -110,6 +111,7 @@ function AppNavigation() {
         <Stack.Screen name="WalletScreen" component={WalletScreen} /> 
 
 
+        <Stack.Screen name="ChatRoom" component={ChatRoom} />
         {/* Here we include the History Screen */}
         <Stack.Screen name="HistoryScreen" component={HistoryScreen} />
 
