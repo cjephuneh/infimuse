@@ -95,7 +95,7 @@ const Tweet: React.FC<TweetProps> = ({
                         <FontAwesome name='heart' size={12} color={'#687684'} />
                     </View>
                     <View style={{flex: 5, flexDirection: 'row', justifyContent: 'flex-start', alignItems: "center", paddingLeft: 4}}>
-                        <Text style={{color: '#687684', fontSize: 14}} numberOfLines={1}>Kieron Dotson and Zack John liked</Text>
+                        {/* <Text style={{color: '#687684', fontSize: 14}} numberOfLines={1}>Kieron Dotson and Zack John liked</Text> */}
                     </View>
                 </View>
                 : null
@@ -114,7 +114,7 @@ const Tweet: React.FC<TweetProps> = ({
                             {content}
                         </Text>
                     </View>
-                    <View style={{width: 260, flexDirection: 'row', justifyContent: 'space-between'}}>
+                    {/* <View style={{width: 260, flexDirection: 'row', justifyContent: 'space-between'}}>
                         <Pressable style={{flexDirection: 'row', alignItems: 'center', gap: 3.5}} onPress={() => setComment(comment + 1)}>
                             <FontAwesome name='comment-o' size={15} color={'#687684'} />
                             <Text style={{color: '#687684', fontSize: 12}}>{comment.toString()}</Text>
@@ -139,7 +139,7 @@ const Tweet: React.FC<TweetProps> = ({
                             <MaterialIcons name='ios-share'  size={15} color={'#687684'} />
                             <Text style={{color: '#687684', fontSize: 12}}>{share.toString()}</Text>
                         </Pressable>
-                    </View>
+                    </View> */}
                 </View>
             </View>
         </View>
