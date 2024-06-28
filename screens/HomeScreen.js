@@ -19,7 +19,7 @@ function HomeScreen() {
         <View style={tw`mt-6 mb-4`}>
           <Text style={tw`text-2xl font-bold text-gray-800`}>Today</Text>
           <Text style={tw`text-gray-600`}>
-            Welcome! You're on your way to being an incredible Host—here's how to start.
+            Good luck Sharing your passion with the world today!
           </Text>
         </View>
 

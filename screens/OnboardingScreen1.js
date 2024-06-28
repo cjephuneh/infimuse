@@ -34,7 +34,7 @@ export default function WelcomeScreen() {
               Connect with Creators easily
             </Text>
             <Text style={tw`text-lg text-gray-800`}>
-              Thanks to our plarform you can easily connect with creators
+              Create posters, Manage Bookings, Payments, Communication and a lot more.
             </Text>
           </View>
 

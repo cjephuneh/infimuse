@@ -5,7 +5,6 @@ import { useNavigation } from '@react-navigation/native';
 import { fetchCurrentHost } from '../redux/slice/host/hostService'; // Import fetchCurrentHost function
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
 const CustomDrawerContent = (props) => {
   const [hostData, setHostData] = useState(null);
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
@@ -27,6 +26,26 @@ const CustomDrawerContent = (props) => {
 
   const toggleSwitch = () => setNotificationsEnabled(previousState => !previousState);
 
+  const handleLogout = async () => {
+    try {
+      // Perform logout actions, e.g., clear async storage, navigate to login screen
+      await AsyncStorage.removeItem('token');
+      navigation.navigate('SignUp'); // Navigate to your login screen
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
+
+  // const handleDeleteAccount = async () => {
+  //   try {
+  //     // Perform account deletion actions, e.g., delete user data, navigate to login screen
+  //     await AsyncStorage.clear(); // Clear all stored data (adjust as per your app's logic)
+  //     navigation.navigate('LoginScreen'); // Navigate to your login screen
+  //   } catch (error) {
+  //     console.error('Error deleting account:', error);
+  //   }
+  // };
+
   return (
     <ScrollView style={styles.container}>
       {/* Header */}
@@ -46,7 +65,7 @@ const CustomDrawerContent = (props) => {
         <TouchableOpacity
           key={index}
           style={styles.itemContainer}
-          onPress={() => navigation.navigate(item.screen)} // Navigate to the specified screen
+          onPress={() => navigation.navigate(item.screen)}
         >
           <Icon name={item.icon} size={20} color="#4B5563" />
           <Text style={styles.itemText}>{item.name}</Text>
@@ -64,22 +83,33 @@ const CustomDrawerContent = (props) => {
         />
       </View>
       {/* Footer */}
-      <View style={styles.footerContainer}>
+      {/* <View style={styles.footerContainer}>
         <Text style={styles.footerText}>Infimuse Beta 1.0.1</Text>
-      </View>
+      </View> */}
+      {/* Logout and Delete Account Buttons */}
+      <TouchableOpacity style={styles.itemContainer} onPress={handleLogout}>
+        <Icon name="sign-out-alt" size={20} color="#4B5563" />
+        <Text style={styles.itemText}>Log out</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.itemContainer}
+      onPress={() => navigation.navigate('DeleteAccScreen')} >
+        <Icon name="trash-alt" size={20} color="#4B5563" />
+        <Text style={styles.itemText}>Delete my account and data</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 };
 
-// Add your drawer items here
+// Drawer items array including new items with relevant icons
 const drawerItems = [
-  { name: 'Account', icon: 'user-circle', screen: 'ProfileScreen' }, // Update with your screen name
-  { name: 'Upcoming', icon: 'user', screen: 'HistoryScreen' }, // Update with your screen name
-  { name: 'History', icon: 'history', screen: 'UpcomingScreen' }, // Update with your screen name
-  // { name: 'Session', icon: 'session', screen: 'SessionScreen' }, // Update with your screen name
-  // { name: 'Qrscanner', icon: 'user', screen: 'QrCodeScreen' }, // Update with your screen name
-  // Add more items as needed
+  { name: 'Account', icon: 'user-circle', screen: 'ProfileScreen' },
+  { name: 'Upcoming', icon: 'calendar-alt', screen: 'HistoryScreen' },
+  { name: 'History', icon: 'history', screen: 'UpcomingScreen' },
+  { name: 'Subscriptions', icon: 'clipboard-list', screen: 'SubscriptionsScreen' },
+  { name: 'Refund & Cancellations', icon: 'money-check-alt', screen: 'RefundScreen' },
+  { name: 'Privacy Policy', icon: 'shield-alt', screen: 'PrivacyScreen' },
 ];
+
 
 const styles = StyleSheet.create({
   container: {
@@ -88,7 +118,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     paddingVertical: 20,
     paddingHorizontal: 15,
-    backgroundColor: '#6B4EFF', // Adjust the color to match the design
+    backgroundColor: '#6B4EFF',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -113,10 +143,10 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingLeft: 15,
     borderBottomWidth: 1,
-    borderBottomColor: '#EDEDED', // Adjust the color to match the design
+    borderBottomColor: '#EDEDED',
   },
   itemText: {
-    color: '#4B5563', // Adjust the color to match the design
+    color: '#4B5563',
     marginLeft: 15,
     fontSize: 16,
   },
@@ -132,7 +162,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   footerText: {
-    color: '#9CA3AF', // Adjust the color to match the design
+    color: '#9CA3AF',
     fontSize: 14,
   },
 });

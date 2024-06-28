@@ -45,6 +45,10 @@ import CalenderScreen from '../screens/CalenderScreen';
 import InsightsScreen from '../screens/InsightsScreen';
 import PricingScreen from '../screens/pricingScreen';
 import ChatRoom from '../screens/ChatRoom';
+import PrivacyScreen from '../screens/PrivacyScreen';
+import RefundScreen from '../screens/RefundScreen';
+import SubscriptionsScreen from '../screens/SubscriptionsScreen';
+import DeleteAccScreen from '../screens/DeleteAccScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -109,6 +113,15 @@ function AppNavigation() {
         {/* Here we    jsdnfhsdvnjf =================================================================================  include the Schedule Screen */} 
         <Stack.Screen name="ScheduleScreen" component={ScheduleScreen} /> 
         <Stack.Screen name="WalletScreen" component={WalletScreen} /> 
+
+
+
+        {/* sidebar screens */}
+        <Stack.Screen name="PrivacyScreen" component={PrivacyScreen} />
+        <Stack.Screen name="RefundScreen" component={RefundScreen} />
+        <Stack.Screen name="SubscriptionsScreen" component={SubscriptionsScreen} />
+        <Stack.Screen name="DeleteAccScreen" component={DeleteAccScreen} />
+
 
 
         <Stack.Screen name="ChatRoom" component={ChatRoom} />
