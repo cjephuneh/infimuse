@@ -33,7 +33,7 @@ export default function WelcomeScreen() {
         >
           <View style={tw`mt-10`}>
             <Image
-              source={require("../assets/InfiMuse-01.png")}
+              source={require("../assets/InfiMuse G&T.png")}
               style={{ width: wp(100), height: wp(75) }}
             />
           </View>
