@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Image, StatusBar, StyleSheet } from 'react-native';
 import tw from 'tailwind-react-native-classnames';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/FontAwesome5'; // Import FontAwesome5
 import { useNavigation } from '@react-navigation/native'; // Import useNavigation hook
 
 const Tools = () => {
@@ -9,10 +9,10 @@ const Tools = () => {
 
   // Dummy data for the UI
   const features = [
-    { id: 1, title: 'Create a listing', color: '#F472B6', icon: 'calendar-clock', screen: 'CreateTemplatesScreen' },
-    { id: 2, title: 'Fine tune your Pricing', color: '#FBBF24', icon: 'currency-usd', screen: 'PricingScreen' },
-    { id: 3, title: 'View your insights ', color: '#FB7185', icon: 'insigts', screen: 'InsightsScreen' },
-    { id: 4, title: 'Schedule a listing', color: '#F472B6', icon: 'calendar', screen: 'CalenderScreen' },
+    { id: 1, title: 'View Templates', color: '#F472B6', icon: 'calendar-alt', screen: 'CreateTemplatesScreen' },
+    { id: 4, title: 'Manage Schedule', color: '#F472B6', icon: 'calendar', screen: 'CalenderScreen' },
+    { id: 2, title: 'Refund & Cancellation Settings', color: '#F472B6', icon: 'money-check-alt', screen: 'RefundScreen' },
+    { id: 3, title: 'Insights', color: '#F472B6', icon: 'chart-line', screen: 'InsightsScreen' },
   ];
 
   return (

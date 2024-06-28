@@ -1,9 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Card } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 const WalletScreen = () => {
+  const [hideBalance, setHideBalance] = useState(false); // State to hide/show balance
+
+  const toggleHideBalance = () => {
+    setHideBalance(prevState => !prevState);
+  };
+
   const pendingPayments = [
     { id: 1, course: 'Introduction to Computers', amount: 'KSh 1,234.56' },
     { id: 2, course: 'Introduction to Guitar for Intermediates', amount: 'KSh 3,456.78' },
@@ -27,11 +33,17 @@ const WalletScreen = () => {
           <Card.Title>Account Balance</Card.Title>
           <Card.Divider />
           <View style={styles.cardContent}>
-            <Icon name="money" size={40} color="#4CAF50" />
-            <Text style={styles.accountAmount}>KSh 123,456.78</Text>
+            <Icon name="money-bill" size={30} color="#A72C76" />
+            <Text style={[styles.accountAmount, hideBalance && styles.hiddenText]}>
+              {hideBalance ? '********' : 'KSh 123,456.78'}
+            </Text>
+            <TouchableOpacity onPress={toggleHideBalance} style={styles.hideBalanceButton}>
+              <Icon name={hideBalance ? "eye-slash" : "eye"} size={24} color="#12B9F3" />
+            </TouchableOpacity>
           </View>
         </Card>
 
+        {/* Pending Payments */}
         <Text style={styles.subHeader}>Pending Payments</Text>
         {pendingPayments.map(payment => (
           <Card key={payment.id} containerStyle={styles.pendingCard}>
@@ -44,6 +56,7 @@ const WalletScreen = () => {
           </Card>
         ))}
 
+        {/* Payment History */}
         <Text style={styles.subHeader}>Payment History</Text>
         {paymentHistory.map(history => (
           <Card key={history.id} containerStyle={styles.historyCard}>
@@ -60,8 +73,9 @@ const WalletScreen = () => {
         ))}
       </ScrollView>
 
+      {/* Withdraw Button */}
       <TouchableOpacity style={styles.withdrawButton}>
-        <Icon name="bank" size={24} color="#FFF" />
+        <Icon name="university" size={24} color="#FFF" />
         <Text style={styles.withdrawText}>Withdraw</Text>
       </TouchableOpacity>
     </View>
@@ -113,6 +127,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
   },
+  hiddenText: {
+    color: '#ccc', // Gray color for hidden text
+  },
   pendingAmount: {
     fontSize: 20,
     fontWeight: 'bold',
@@ -129,6 +146,11 @@ const styles = StyleSheet.create({
   historyDate: {
     fontSize: 14,
     color: '#777',
+  },
+  hideBalanceButton: {
+    alignSelf: 'flex-end',
+    marginRight: 10,
+    marginTop: -25,
   },
   withdrawButton: {
     position: 'absolute',

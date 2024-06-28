@@ -105,7 +105,7 @@ const drawerItems = [
   { name: 'Account', icon: 'user-circle', screen: 'ProfileScreen' },
   { name: 'Upcoming', icon: 'calendar-alt', screen: 'HistoryScreen' },
   { name: 'History', icon: 'history', screen: 'UpcomingScreen' },
-  { name: 'Subscriptions', icon: 'clipboard-list', screen: 'SubscriptionsScreen' },
+  { name: 'Subscriptions', icon: 'clipboard-list', screen: 'PricingScreen' },
   { name: 'Refund & Cancellations', icon: 'money-check-alt', screen: 'RefundScreen' },
   { name: 'Privacy Policy', icon: 'shield-alt', screen: 'PrivacyScreen' },
 ];
