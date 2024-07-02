@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native';
 import tw from 'tailwind-react-native-classnames';
-import { useNavigation } from '@react-navigation/native';
-import { createExperience } from '../../redux/slice/listings/ExperienceService'; // Import the API function
-import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
+import { createExperience } from '../../redux/slice/listings/ExperienceService';
 
 const CreateExperienceScreen = () => {
-  const navigation = useNavigation();
-
+  const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -25,95 +23,88 @@ const CreateExperienceScreen = () => {
     ageMax: '',
     templateStatus: false
   });
-
-  const [loading, setLoading] = useState(false); // State to indicate loading state
-
-  const showToast = (type, text1, text2) => {
-    Toast.show({
-      type: type,
-      text1: text1,
-      text2: text2,
-      visibilityTime: 3000,
-      autoHide: true,
-    });
-  };
+  const [loading, setLoading] = useState(false);
 
   const handleCreateExperience = async () => {
+    setLoading(true);
     try {
-      const token = await AsyncStorage.getItem('token'); // Retrieve token from AsyncStorage
+      const token = await AsyncStorage.getItem('token');
       if (!token) {
-        showToast('error', 'Error', 'Token not found. Please sign in.');
+        Toast.show({ type: 'error', text1: 'Error', text2: 'Token not found. Please sign in.' });
         return;
       }
-
-      setLoading(true); // Set loading to true when creating experience
-
-      const experienceData = {
-        title: formData.title,
-        description: formData.description,
-        posterUrl: formData.posterUrl,
-        capacity: formData.capacity,
-        duration: formData.duration,
-        price: formData.price,
-        ageGroup: formData.ageGroup,
-        ageMin: formData.ageMin,
-        ageMax: formData.ageMax,
-        date: formData.date,
-        startTime: formData.startTime,
-        endTime: formData.endTime,
-        templateStatus: false // Initialize templateStatus as false
-      };
-
-      console.log('Creating experience...', experienceData);
-      const response = await createExperience(experienceData, token);
-
-      if (response && response.status === 'success') {
-        showToast('success', 'Success', 'Experience created successfully!');
-        // Optionally, navigate to a success screen
-        // navigation.navigate('ExperienceCreatedScreen');
-      } else {
-        showToast('error', 'Error', 'Failed to create experience. Please try again.');
-      }
+      const response = await createExperience(formData, token);
+      Toast.show({ type: response.status === 'success' ? 'success' : 'error', text1: 'Success', text2: 'Experience created successfully!' });
     } catch (error) {
-      showToast('error', 'Error', 'An error occurred while creating experience. Please try again.');
-      console.error('Error creating experience:', error);
+      Toast.show({ type: 'error', text1: 'Error', text2: 'An error occurred. Please try again.' });
     } finally {
-      setLoading(false); // Set loading to false when the process is complete
+      setLoading(false);
     }
   };
 
+  const renderStepContent = (step) => {
+    switch (step) {
+      case 1:
+        return renderBasicInfo();
+      case 2:
+        return renderDetails();
+      case 3:
+        return renderFinalDetails();
+      default:
+        return <View />;
+    }
+  };
+
+  const renderBasicInfo = () => (
+    <>
+      <TextInput placeholder="Title" value={formData.title} onChangeText={(text) => setFormData({ ...formData, title: text })} style={tw`mb-4 border-b border-gray-300 p-2`} />
+      <TextInput placeholder="Description" multiline value={formData.description} onChangeText={(text) => setFormData({ ...formData, description: text })} style={tw`mb-4 border-b border-gray-300 p-2`} />
+      <TextInput placeholder="Poster URL" value={formData.posterUrl} onChangeText={(text) => setFormData({ ...formData, posterUrl: text })} style={tw`mb-4 border-b border-gray-300 p-2`} />
+    </>
+  );
+
+  const renderDetails = () => (
+    <>
+      <TextInput placeholder="Duration" value={formData.duration} onChangeText={(text) => setFormData({ ...formData, duration: text })} style={tw`mb-4 border-b border-gray-300 p-2`} />
+      <TextInput placeholder="Capacity" keyboardType="numeric" value={formData.capacity} onChangeText={(text) => setFormData({ ...formData, capacity: text })} style={tw`mb-4 border-b border-gray-300 p-2`} />
+      <TextInput placeholder="Start Time" value={formData.startTime} onChangeText={(text) => setFormData({ ...formData, startTime: text })} style={tw`mb-4 border-b border-gray-300 p-2`} />
+      <TextInput placeholder="End Time" value={formData.endTime} onChangeText={(text) => setFormData({ ...formData, endTime: text })} style={tw`mb-4 border-b border-gray-300 p-2`} />
+    </>
+  );
+
+  const renderFinalDetails = () => (
+    <>
+      <TextInput placeholder="Date" value={formData.date} onChangeText={(text) => setFormData({ ...formData, date: text })} style={tw`mb-4 border-b border-gray-300 p-2`} />
+      <TextInput placeholder="Price" keyboardType="numeric" value={formData.price} onChangeText={(text) => setFormData({ ...formData, price: text })} style={tw`mb-4 border-b border-gray-300 p-2`} />
+      <TextInput placeholder="Age Group" value={formData.ageGroup} onChangeText={(text) => setFormData({ ...formData, ageGroup: text })} style={tw`mb-4 border-b border-gray-300 p-2`} />
+      <TextInput placeholder="Age Min" keyboardType="numeric" value={formData.ageMin} onChangeText={(text) => setFormData({ ...formData, ageMin: text })} style={tw`mb-4 border-b border-gray-300 p-2`} />
+      <TextInput placeholder="Age Max" keyboardType="numeric" value={formData.ageMax} onChangeText={(text) => setFormData({ ...formData, ageMax: text })} style={tw`mb-4 border-b border-gray-300 p-2`} />
+    </>
+  );
+
   return (
-    <KeyboardAvoidingView 
-      style={tw`flex-1`} 
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
-      <ScrollView contentContainerStyle={tw`p-4 bg-gray-50 flex-grow`} >
-        <View style={tw`mb-8`}>
-          <Text style={tw`text-2xl font-bold text-gray-800 mb-4`}>Create Experience</Text>
-          {/* TextInput fields */}
-          <TextInput placeholder="Title" style={tw`border rounded p-2 border-gray-400 text-lg mb-4`} onChangeText={(title) => setFormData({ ...formData, title })} />
-          <TextInput placeholder="Description" multiline style={tw`border rounded p-2 border-gray-400 text-lg mb-4`} onChangeText={(description) => setFormData({ ...formData, description })} />
-          <TextInput placeholder="Poster URL" style={tw`border rounded p-2 border-gray-400 text-lg mb-4`} onChangeText={(posterUrl) => setFormData({ ...formData, posterUrl })} />
-          <TextInput placeholder="Duration" style={tw`border rounded p-2 border-gray-400 text-lg mb-4`} onChangeText={(duration) => setFormData({ ...formData, duration })} />
-          <TextInput placeholder="Capacity" keyboardType="numeric" style={tw`border rounded p-2 border-gray-400 text-lg mb-4`} onChangeText={(capacity) => setFormData({ ...formData, capacity })} />
-          <TextInput placeholder="Start Time" style={tw`border rounded p-2 border-gray-400 text-lg mb-4`} onChangeText={(startTime) => setFormData({ ...formData, startTime })} />
-          <TextInput placeholder="End Time" style={tw`border rounded p-2 border-gray-400 text-lg mb-4`} onChangeText={(endTime) => setFormData({ ...formData, endTime })} />
-          <TextInput placeholder="Date" style={tw`border rounded p-2 border-gray-400 text-lg mb-4`} onChangeText={(date) => setFormData({ ...formData, date })} />
-          <TextInput placeholder="Price" keyboardType="numeric" style={tw`border rounded p-2 border-gray-400 text-lg mb-4`} onChangeText={(price) => setFormData({ ...formData, price })} />
-          <TextInput placeholder="Age Group" style={tw`border rounded p-2 border-gray-400 text-lg mb-4`} onChangeText={(ageGroup) => setFormData({ ...formData, ageGroup })} />
-          <TextInput placeholder="Age Min" keyboardType="numeric" style={tw`border rounded p-2 border-gray-400 text-lg mb-4`} onChangeText={(ageMin) => setFormData({ ...formData, ageMin })} />
-          <TextInput placeholder="Age Max" keyboardType="numeric" style={tw`border rounded p-2 border-gray-400 text-lg mb-4`} onChangeText={(ageMax) => setFormData({ ...formData, ageMax })} />
-        </View>
-        {/* Create Experience button with loading indicator */}
-        <TouchableOpacity style={tw`rounded-lg bg-purple-700 p-4 items-center`} onPress={handleCreateExperience} disabled={loading}>
-          {loading ? (
-            <ActivityIndicator color="#ffffff" />
-          ) : (
-            <Text style={tw`text-white font-semibold text-lg`}>Create Experience</Text>
+    <KeyboardAvoidingView style={tw`flex-1 bg-gray-50`} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <ScrollView contentContainerStyle={tw`p-4`}>
+        <Text style={tw`text-xl font-bold mb-6`}>Create Experience</Text>
+        {renderStepContent(currentStep)}
+        <View style={tw`flex-row justify-between mt-6`}>
+          {currentStep > 1 && (
+            <TouchableOpacity onPress={() => setCurrentStep(currentStep - 1)} style={tw`bg-blue-500 px-5 py-2 rounded-md`}>
+              <Text style={tw`text-white text-lg`}>Back</Text>
+            </TouchableOpacity>
           )}
-        </TouchableOpacity>
+          {currentStep < 3 ? (
+            <TouchableOpacity onPress={() => setCurrentStep(currentStep + 1)} style={tw`bg-green-500 px-5 py-2 rounded-md`}>
+              <Text style={tw`text-white text-lg`}>Next</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity onPress={handleCreateExperience} disabled={loading} style={tw`bg-purple-700 px-5 py-2 rounded-md flex-row items-center justify-center`}>
+              {loading && <ActivityIndicator color="#ffffff" />}
+              <Text style={tw`text-white text-lg ml-2`}>Submit</Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </ScrollView>
-      <Toast ref={(ref) => Toast.setRef(ref)} />
     </KeyboardAvoidingView>
   );
 };
