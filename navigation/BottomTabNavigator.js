@@ -64,7 +64,7 @@ function BottomTabNavigator() {
       {/* <Tab.Screen name="listings" component={ListingScreen} /> */}
       {/* <Tab.Screen name="Insight" component={InsightScreen} /> */}
       {/* <Tab.Screen name="Pricing" component={PricingScreen} /> */}
-      <Tab.Screen name='Profile' component={ProfileScreen}/>
+      {/* <Tab.Screen name='Profile' component={ProfileScreen}/> */}
       <Tab.Screen name="Qrcode" component={QrScanner} />
       <Tab.Screen name='Wallet' component={WalletScreen}/>
       <Tab.Screen name="Community" component={CommunityScreen} />

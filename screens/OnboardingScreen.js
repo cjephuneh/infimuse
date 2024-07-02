@@ -30,15 +30,10 @@ export default function WelcomeScreen() {
           </View>
 
           <View style={tw`px-6`}>
-            <Text style={tw`text-4xl font-bold mb-2 text-gray-800`}>
-              Connect with Creators easily
-            </Text>
-            <Text style={tw`text-lg text-gray-800`}>
-              Share your Passions with the World
+            <Text style={tw`text-4xl font-bold mb-2 text-gray-800 text-center`}>
+            Share your Passions with the World
             </Text>
           </View>
-
-       
 
         {/* Pagination dots */}
         <View style={tw`flex-row justify-center mb-2`}>

@@ -43,6 +43,12 @@ const WalletScreen = () => {
           </View>
         </Card>
 
+        {/* Withdraw Button */}
+        <TouchableOpacity style={styles.withdrawButton}>
+          <Icon name="university" size={24} color="#FFF" />
+          <Text style={styles.withdrawText}>Withdraw</Text>
+        </TouchableOpacity>
+
         {/* Pending Payments */}
         <Text style={styles.subHeader}>Pending Payments</Text>
         {pendingPayments.map(payment => (
@@ -50,7 +56,7 @@ const WalletScreen = () => {
             <Card.Title>{payment.course}</Card.Title>
             <Card.Divider />
             <View style={styles.cardContent}>
-              <Icon name="hourglass-half" size={24} color="#FFC107" />
+              <Icon name="hourglass-half" size={24} color="#12B9F3" />
               <Text style={styles.pendingAmount}>{payment.amount}</Text>
             </View>
           </Card>
@@ -67,17 +73,13 @@ const WalletScreen = () => {
                 <Text style={styles.historyAmount}>{history.amount}</Text>
                 <Text style={styles.historyDate}>{history.date}</Text>
               </View>
-              <Icon name="check-circle" size={24} color="#4CAF50" />
+              <Icon name="check-circle" size={24} color="#12B9F3" />
             </View>
           </Card>
         ))}
       </ScrollView>
 
-      {/* Withdraw Button */}
-      <TouchableOpacity style={styles.withdrawButton}>
-        <Icon name="university" size={24} color="#FFF" />
-        <Text style={styles.withdrawText}>Withdraw</Text>
-      </TouchableOpacity>
+      
     </View>
   );
 };
@@ -153,16 +155,16 @@ const styles = StyleSheet.create({
     marginTop: -25,
   },
   withdrawButton: {
-    position: 'absolute',
     bottom: 20,
     left: 20,
     right: 20,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#3b5998',
+    backgroundColor: '#A72C76',
     padding: 15,
     borderRadius: 10,
+    marginTop:20,
     width: '90%',
   },
   withdrawText: {

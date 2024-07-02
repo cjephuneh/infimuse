@@ -30,10 +30,10 @@ export default function WelcomeScreen() {
           </View>
 
           <View style={tw`px-6`}>
-            <Text style={tw`text-4xl font-bold mb-2 text-gray-800`}>
-              Connect with Creators easily
+            <Text style={tw`text-4xl font-bold mb-2 text-gray-800 text-center`}>
+            Manage Your Sessions
             </Text>
-            <Text style={tw`text-lg text-gray-800`}>
+            <Text style={tw`text-lg text-gray-800 text-center`}>
               Create posters, Manage Bookings, Payments, Communication and a lot more.
             </Text>
           </View>

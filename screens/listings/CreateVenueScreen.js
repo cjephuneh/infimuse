@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, Image, ActivityIndicator, StyleSheet } from 'react-native';
 import tw from 'tailwind-react-native-classnames';
-import { useNavigation } from '@react-navigation/native';
-import { createVenue } from '../../redux/slice/listings/VenueService'; // Import the API function
-import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
+import * as ImagePicker from 'expo-image-picker';
+import { AntDesign } from '@expo/vector-icons'; // Importing icon
 
 const CreateVenueScreen = () => {
-  const navigation = useNavigation();
-
+  const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     name: '',
     location: '',
@@ -25,99 +24,144 @@ const CreateVenueScreen = () => {
     rules: '',
     hostId: ''
   });
+  const [loading, setLoading] = useState(false);
+  const [imagePreview, setImagePreview] = useState({ imageUrl1: null, imageUrl2: null, imageUrl3: null });
 
-  const [loading, setLoading] = useState(false); // State to indicate loading state
-
-  const showToast = (type, text1, text2) => {
-    Toast.show({
-      type: type,
-      text1: text1,
-      text2: text2,
-      visibilityTime: 3000,
-      autoHide: true,
+  const pickImage = async (imageKey) => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
     });
-  };
 
-  const handleCreateVenue = async () => {
-    try {
-      const token = await AsyncStorage.getItem('token'); // Retrieve token from AsyncStorage
-      if (!token) {
-        showToast('error', 'Error', 'Token not found. Please sign in.');
-        return;
-      }
-
-      setLoading(true); // Set loading to true when creating venue
-
-      const venueData = {
-        name: formData.name,
-        location: formData.location,
-        accessibility: formData.accessibility,
-        imageUrl1: formData.imageUrl1,
-        imageUrl2: formData.imageUrl2,
-        imageUrl3: formData.imageUrl3,
-        venueType: formData.venueType,
-        capacity: formData.capacity,
-        amenities: formData.amenities,
-        noiseLevel: formData.noiseLevel,
-        parking: formData.parking,
-        additionalInfo: formData.additionalInfo,
-        rules: formData.rules,
-        hostId: formData.hostId
-      };
-
-      console.log('Creating venue...', venueData);
-      const response = await createVenue(venueData, token);
-
-      if (response && response.status === 'success') {
-        showToast('success', 'Success', 'Venue created successfully!');
-        // Optionally, navigate to a success screen
-        // navigation.navigate('VenueCreatedScreen');
-      } else {
-        showToast('error', 'Error', 'Failed to create venue. Please try again.');
-      }
-    } catch (error) {
-      showToast('error', 'Error', 'An error occurred while creating venue. Please try again.');
-      console.error('Error creating venue:', error);
-    } finally {
-      setLoading(false); // Set loading to false when the process is complete
+    if (!result.cancelled) {
+      setImagePreview({ ...imagePreview, [imageKey]: result.uri });
+      setFormData({ ...formData, [imageKey]: result.uri });
     }
   };
 
+  const removeImage = (imageKey) => {
+    setImagePreview({ ...imagePreview, [imageKey]: null });
+    setFormData({ ...formData, [imageKey]: '' });
+  };
+
+  const handleCreateVenue = async () => {
+    setLoading(true);
+    try {
+      const token = await AsyncStorage.getItem('token');
+      const response = await createVenue(formData, token);
+      Toast.show({ type: response.status === 'success' ? 'success' : 'error', text1: response.status === 'success' ? 'Success' : 'Error', text2: response.message || 'Action completed.' });
+    } catch (error) {
+      Toast.show({ type: 'error', text1: 'Error', text2: 'An error occurred. Please try again.' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const renderStepContent = (step) => {
+    switch (step) {
+      case 1:
+        return (
+          <>
+            {renderInput('Name', 'name')}
+            {renderInput('Location', 'location')}
+            {renderInput('Accessibility', 'accessibility')}
+          </>
+        );
+      case 2:
+        return (
+          <>
+            {['imageUrl1', 'imageUrl2', 'imageUrl3'].map((key, index) => (
+              <View key={index} style={tw`mb-6`}>
+                <TouchableOpacity onPress={() => pickImage(key)} style={styles.imagePickerButton}>
+                  <Text style={tw`text-white`}>Pick Image for {`Image URL ${index + 1}`}</Text>
+                </TouchableOpacity>
+                {imagePreview[key] && (
+                  <View style={styles.imagePreviewContainer}>
+                    <Image 
+                      source={{ uri: imagePreview[key] }} 
+                      style={styles.imagePreview} 
+                      resizeMode="cover"
+                    />
+                    <TouchableOpacity 
+                      style={styles.removeImageButton} 
+                      onPress={() => removeImage(key)}
+                    >
+                      <AntDesign name="closecircle" size={24} color="red" />
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </View>
+            ))}
+          </>
+        );
+      case 3:
+        return (
+          <>
+            {renderInput('Venue Type', 'venueType')}
+            {renderInput('Capacity', 'capacity', 'numeric')}
+            {renderInput('Amenities', 'amenities')}
+          </>
+        );
+      default:
+        return null;
+    }
+  };
+
+  const renderInput = (placeholder, key, keyboardType = 'default') => (
+    <View style={tw`mb-4`}>
+      <Text style={tw`text-sm text-gray-600 mb-1`}>{placeholder}</Text>
+      <TextInput
+        placeholder={placeholder}
+        value={formData[key]}
+        onChangeText={text => setFormData({ ...formData, [key]: text })}
+        style={tw`border border-gray-300 rounded p-3`}
+        keyboardType={keyboardType}
+      />
+    </View>
+  );
+
   return (
-    <KeyboardAvoidingView 
-      style={tw`flex-1`} 
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
-      <ScrollView contentContainerStyle={tw`p-4 bg-gray-50 flex-grow`} >
-        <View style={tw`mb-8`}>
-          <Text style={tw`text-2xl font-bold text-gray-800 mb-4`}>Create Venue</Text>
-          {/* TextInput fields */}
-          <TextInput placeholder="Name" style={tw`border rounded p-2 border-gray-400 text-lg mb-4`} onChangeText={(name) => setFormData({ ...formData, name })} />
-          <TextInput placeholder="Location" style={tw`border rounded p-2 border-gray-400 text-lg mb-4`} onChangeText={(location) => setFormData({ ...formData, location })} />
-          <TextInput placeholder="Accessibility" style={tw`border rounded p-2 border-gray-400 text-lg mb-4`} onChangeText={(accessibility) => setFormData({ ...formData, accessibility })} />
-          <TextInput placeholder="Image URL 1" style={tw`border rounded p-2 border-gray-400 text-lg mb-4`} onChangeText={(imageUrl1) => setFormData({ ...formData, imageUrl1 })} />
-          <TextInput placeholder="Image URL 2" style={tw`border rounded p-2 border-gray-400 text-lg mb-4`} onChangeText={(imageUrl2) => setFormData({ ...formData, imageUrl2 })} />
-          <TextInput placeholder="Image URL 3" style={tw`border rounded p-2 border-gray-400 text-lg mb-4`} onChangeText={(imageUrl3) => setFormData({ ...formData, imageUrl3 })} />
-          <TextInput placeholder="Venue Type" style={tw`border rounded p-2 border-gray-400 text-lg mb-4`} onChangeText={(venueType) => setFormData({ ...formData, venueType })} />
-          <TextInput placeholder="Capacity" keyboardType="numeric" style={tw`border rounded p-2 border-gray-400 text-lg mb-4`} onChangeText={(capacity) => setFormData({ ...formData, capacity })} />
-          <TextInput placeholder="Amenities" style={tw`border rounded p-2 border-gray-400 text-lg mb-4`} onChangeText={(amenities) => setFormData({ ...formData, amenities })} />
-          <TextInput placeholder="Noise Level" style={tw`border rounded p-2 border-gray-400 text-lg mb-4`} onChangeText={(noiseLevel) => setFormData({ ...formData, noiseLevel })} />
-          <TextInput placeholder="Additional Info" style={tw`border rounded p-2 border-gray-400 text-lg mb-4`} onChangeText={(additionalInfo) => setFormData({ ...formData, additionalInfo })} />
-          <TextInput placeholder="Rules" style={tw`border rounded p-2 border-gray-400 text-lg mb-4`} onChangeText={(rules) => setFormData({ ...formData, rules })} />
-          <TextInput placeholder="Host ID" keyboardType="numeric" style={tw`border rounded p-2 border-gray-400 text-lg mb-4`} onChangeText={(hostId) => setFormData({ ...formData, hostId })} />
-        </View>
-        {/* Create Venue button with loading indicator */}
-        <TouchableOpacity style={tw`rounded-lg bg-purple-700 p-4 items-center`} onPress={handleCreateVenue} disabled={loading}>
-          {loading ? (
-            <ActivityIndicator color="#ffffff" />
-          ) : (
-            <Text style={tw`text-white font-semibold text-lg`}>Create Venue</Text>
+    <KeyboardAvoidingView style={tw`flex-1`} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <ScrollView contentContainerStyle={tw`p-4 bg-white flex-grow`}>
+        <Text style={tw`text-xl font-bold mb-6`}>Create Venue</Text>
+        {renderStepContent(currentStep)}
+        <View style={tw`flex-row justify-around mt-6`}>
+          {currentStep > 1 && (
+            <TouchableOpacity style={styles.navigationButton} onPress={() => setCurrentStep(currentStep - 1)}>
+              <AntDesign name="left" size={20} color="white" />
+              <Text style={tw`text-white font-semibold ml-2`}>Back</Text>
+            </TouchableOpacity>
           )}
-        </TouchableOpacity>
+          {currentStep < 3 ? (
+            <TouchableOpacity style={styles.navigationButton} onPress={() => setCurrentStep(currentStep + 1)}>
+              <Text style={tw`text-white font-semibold`}>Next</Text>
+              <AntDesign name="right" size={20} color="white" />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity style={styles.submitButton} onPress={handleCreateVenue} disabled={loading}>
+              {loading ? <ActivityIndicator size="small" color="#ffffff" /> : <AntDesign name="check" size={20} color="white" />}
+              <Text style={tw`text-white font-semibold ml-2`}>Submit</Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </ScrollView>
-      <Toast ref={(ref) => Toast.setRef(ref)} />
     </KeyboardAvoidingView>
   );
 };
+
+const styles = StyleSheet.create({
+  imagePickerButton: tw`bg-blue-500 px-4 py-2 p-4 rounded-lg flex-row items-center justify-center`,
+  imagePreviewContainer: tw`mt-2 relative`,
+  imagePreview: {
+    width: '100%',
+    height: 200,
+    borderRadius: 8,
+  },
+    removeImageButton: tw`absolute top-2 right-2 bg-white rounded-full p-1`,
+  navigationButton: tw`bg-blue-500 px-10 py-2 rounded-full shadow flex-row items-center justify-center`,
+  submitButton: tw`bg-purple-700 px-10 py-2 rounded-full shadow flex-row items-center justify-center`
+});
 
 export default CreateVenueScreen;

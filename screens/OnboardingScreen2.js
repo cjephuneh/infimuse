@@ -31,11 +31,8 @@ export default function WelcomeScreen() {
           </View>
 
           <View style={tw`px-6`}>
-            <Text style={tw`text-4xl font-bold mb-2 text-gray-800`}>
-            Build a Personalized Community
-            </Text>
-            <Text style={tw`text-lg text-gray-800`}>
-              Thanks to our plarform you can easily connect with creators
+            <Text style={tw`text-4xl font-bold mb-2 text-gray-800 text-center`}>
+            Build  Personalized Communities
             </Text>
           </View>
 
