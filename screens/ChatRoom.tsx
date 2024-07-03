@@ -5,7 +5,7 @@ import tw from 'tailwind-react-native-classnames';
 import { Message } from '../types';
 import Ripple from 'react-native-material-ripple';
 
-const greenColor = '#E1FFC7';
+const greenColor = '#18BDFA';
 const loggedInUser = 'sdfgfg';
 
 const IconButton: React.FC<{[key: string]: any}> = (props) => {
@@ -67,14 +67,14 @@ const ChatRoom: React.FC = () => {
     const [text, setText] = useState<string>('');
 
     return (
-        <ImageBackground source={require('../assets/image.png')} resizeMode="cover" style={tw`h-full`}>
+        <ImageBackground  resizeMode="cover" style={tw`h-full`}>
             {/* Add the image component at the top */}
-            <View style={tw`bg-green-700 flex-row items-center p-4`}>
+            <View style={tw`bg-blue-500 flex-row items-center p-4`}>
                 <Image
                     source={{ uri: 'https://images.pexels.com/photos/10840765/pexels-photo-10840765.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260' }}  // Replace with your image URL
                     style={tw`h-10 w-10 rounded-full`}
                 />
-                <Text style={tw`text-white text-xl ml-4`}>Introduction to Singing</Text>
+                <Text style={tw`text-white text-xl ml-4 `}>Introduction to Singing</Text>
             </View>
 
             <View style={tw`py-2 flex px-2 flex-1`}>

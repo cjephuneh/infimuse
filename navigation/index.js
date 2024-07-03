@@ -49,6 +49,7 @@ import PrivacyScreen from '../screens/PrivacyScreen';
 import RefundScreen from '../screens/RefundScreen';
 import SubscriptionsScreen from '../screens/SubscriptionsScreen';
 import DeleteAccScreen from '../screens/DeleteAccScreen';
+import DayExperiencesScreen from '../screens/listings/DayexperiencesScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -95,6 +96,7 @@ function AppNavigation() {
 
         {/* Here we include the Template Detail Screen */}
         <Stack.Screen name="TemplateDetailScreen" component={TemplateDetailScreen} />
+        <Stack.Screen name="DayExperiencesScreen" component={DayExperiencesScreen} />
 
         {/* Here we include the Schedule Screen */}
         <Stack.Screen name="ClassScheduleScreen" component={ClassScheduleScreen} />

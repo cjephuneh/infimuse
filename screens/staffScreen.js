@@ -1,27 +1,49 @@
 import React from 'react';
-import { View, Text, Image, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, Image, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import tw from 'twrnc';  // Ensure you have twrnc installed and set up
 
 const StaffScreen = ({ route }) => {
   const { member } = route.params;
-  console.log("Received member data:", member);
 
   return (
-    <ScrollView style={tw`bg-white flex-1`}>
-      <View style={tw`items-center pt-10 pb-6`}>
+    <ScrollView style={styles.container}>
+      <Text
+        style={tw`text-2xl font-bold text-gray-800 text-center mt-6 mb-4`}
+      >
+        Staff Details
+      </Text>
+      <View style={styles.content}>
         <Image
-          source={require("../assets/man.png")}
+          source={{ uri: member.imageUrl }}
           style={styles.image}
         />
         <Text style={styles.name}>{`${member.firstName} ${member.lastName}`}</Text>
         <Text style={styles.role}>{member.role}</Text>
         <Text style={styles.detail}>{member.email}</Text>
         <Text style={styles.detail}>{member.phone}</Text>
+        <Text style={styles.bio}>{member.description}</Text>
       </View>
+      <TouchableOpacity
+        style={styles.inviteButton}
+      >
+        <Text style={styles.inviteText}>
+          Invite {member.firstName}
+        </Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 };
+
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+  },
+  content: {
+    alignItems: 'center',
+    paddingTop: 40,
+    paddingBottom: 20,
+  },
   image: {
     height: 120,
     width: 120,
@@ -32,6 +54,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     color: '#333',
+    marginBottom: 10,
   },
   role: {
     fontSize: 18,
@@ -40,10 +63,35 @@ const styles = StyleSheet.create({
   },
   detail: {
     fontSize: 16,
-    color: '#000000',
-    marginTop: 5,
-
-  }
+    color: '#333',
+    marginBottom: 5,
+  },
+  bio: {
+    fontSize: 16,
+    color: '#333',
+    marginTop: 10,
+    paddingHorizontal: 20,
+    textAlign: 'center',
+  },
+  inviteButton: {
+    marginHorizontal: 20,
+    marginBottom: 20,
+    paddingVertical: 15,
+    borderRadius: 10,
+    backgroundColor: '#18BDFA',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  inviteText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
 });
 
 export default StaffScreen;

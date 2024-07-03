@@ -25,7 +25,7 @@ const ListingScreen = () => {
   const handleCreateListing = (id) => {
     // Define navigation paths for each listing
     const navigationPaths = {
-      classes: 'CreateClassesScreen',
+      classes: 'DayExperiencesScreen',
       packages: 'CreatePackagesScreen',
       workshop: 'CreateWorkshopScreen',
       venue: 'CreateVenueScreen',
