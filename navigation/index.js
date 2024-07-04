@@ -61,7 +61,6 @@ function MainDrawer() {
       <Drawer.Screen name="Home" component={BottomTabNavigator} />
       <Drawer.Screen name="Profile" component={ProfileScreen} />
       <Drawer.Screen name="CreateClasses" component={CreateClassesScreen} />
-
     </Drawer.Navigator>
   );
 }

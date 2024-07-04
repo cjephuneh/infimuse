@@ -55,19 +55,6 @@ const ExploreScreen = () => {
     setRefreshing(false);
   };
 
-  if (loading) {
-    return (
-      <View style={tw`flex-1 items-center justify-center`}>
-        <ActivityIndicator size="large" color="#0000ff" />
-        <Text style={tw`mt-2 text-lg font-semibold`}>Loading...</Text>
-      </View>
-    );
-  }
-
-  if (error) {
-    return <Text>Error fetching data: {error}</Text>;
-  }
-
   const handleCreateTemplatePress = () => {
     navigation.navigate("TemplateScreen");
   };
@@ -78,6 +65,11 @@ const ExploreScreen = () => {
     return (
       <View style={tw`mt-4 p-4`}>
         <Text style={tw`text-xl font-semibold mb-4`}>{title}</Text>
+        {error && itemList.length === 0 && (
+          <View style={tw`bg-red-100 p-4 rounded-lg`}>
+            <Text style={tw`text-red-500 text-center`}>Error fetching {title.toLowerCase()}: {error}</Text>
+          </View>
+        )}
         {itemList.length > 0 ? (
           <ScrollView
             horizontal
@@ -156,6 +148,12 @@ const ExploreScreen = () => {
           />
         ))}
       </ScrollView>
+      {loading && (
+        <View style={tw`absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-white bg-opacity-75`}>
+          <ActivityIndicator size="large" color="#0000ff" />
+          <Text style={tw`mt-2 text-lg font-semibold`}>Loading...</Text>
+        </View>
+      )}
     </View>
   );
 };

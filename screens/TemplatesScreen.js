@@ -9,7 +9,7 @@ const ListingScreen = () => {
 
   const listings = [
     { id: 'venue', title: 'Venue', description: 'Host classes physically and advertise them on our platform, get better and organized information about your class.' },
-    { id: 'Day Experiences', title: 'Day Experiences', description: 'Host classes physically and advertise them on our platform, get better and organized information about your class.' },
+    { id: 'Day_Experiences', title: 'Day Experiences', description: 'Host classes physically and advertise them on our platform, get better and organized information about your class.' },
     { id: 'packages', title: 'Packages', description: 'Host classes physically and advertise them on our platform, get better and organized information about your class.' },
     { id: 'workshop', title: 'WorkShop', description: 'Host classes physically and advertise them on our platform, get better and organized information about your class.' },
     { id: 'experience', title: 'Experience', description: 'Host unique experiences and adventures for users to enjoy and learn from.' }, // New "Experience" listing
@@ -25,7 +25,7 @@ const ListingScreen = () => {
   const handleCreateListing = (id) => {
     // Define navigation paths for each listing
     const navigationPaths = {
-      classes: 'DayExperiencesScreen',
+      Day_Experiences: 'DayExperiencesScreen',
       packages: 'CreatePackagesScreen',
       workshop: 'CreateWorkshopScreen',
       venue: 'CreateVenueScreen',

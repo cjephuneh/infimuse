@@ -9,6 +9,7 @@ import {
     TouchableOpacity,
     Share,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { getClassSessions } from '../redux/slice/listings/classService';
 import { getExperiences } from '../redux/slice/listings/ExperienceService';
 import { getPackages } from '../redux/slice/listings/packagesServices';
@@ -16,8 +17,10 @@ import { getVenues } from '../redux/slice/listings/VenueService';
 import { getWorkshops } from '../redux/slice/listings/workshopService';
 import { fetchWorkshopClasses } from '../redux/slice/listings/WorkshopClassService';
 import Poster from '../assets/posterDesign.png';
+import NoDataIcon from '../assets/image copy 2.png'; // Assuming you have an icon or GIF in assets
 
 const UpcomingScreen = () => {
+    const navigation = useNavigation();
     const [listings, setListings] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -56,19 +59,16 @@ const UpcomingScreen = () => {
             const shareOptions = {
                 title: listing.title,
                 message: `Title: ${listing.title}\nDate: ${new Date(listing.date).toDateString()}\nPrice: ${listing.price || 'Free'}`,
-                url: listing.posterUrl || Poster, // Use the imported Poster image if posterUrl is not available
+                url: listing.posterUrl || Poster, 
             };
 
             const result = await Share.share(shareOptions);
 
             if (result.action === Share.sharedAction) {
                 if (result.activityType) {
-                    // Shared via activity type
                 } else {
-                    // Shared
                 }
             } else if (result.action === Share.dismissedAction) {
-                // Dismissed
             }
         } catch (error) {
             console.error('Error sharing:', error.message);
@@ -76,36 +76,48 @@ const UpcomingScreen = () => {
     };
 
     return (
-        <ScrollView contentContainerStyle={styles.container}>
+        <View style={styles.container}>
             <Text style={styles.heading}>Upcoming</Text>
             {loading ? (
-                <ActivityIndicator size="large" color="#0000ff" />
+                <View style={styles.loadingContainer}>
+                    <ActivityIndicator size="large" color="#0000ff" />
+                    <Text style={styles.loadingText}>Loading...</Text>
+                </View>
             ) : (
-                listings.length > 0 ? (
-                    listings.map((listing, index) => (
-                        <TouchableOpacity key={index} style={styles.listingCard} onPress={() => shareListing(listing)}>
-                            <Image
-                                source={{ uri: listing.posterUrl || 'https://via.placeholder.com/100' }}
-                                style={styles.listingImage}
-                                resizeMode="cover"
-                            />
-                            <View style={styles.listingInfo}>
-                                <Text style={styles.listingTitle}>{listing.title || 'No Title'}</Text>
-                                <Text style={styles.listingDate}>{new Date(listing.date).toDateString()}</Text>
-                                <Text style={styles.listingPrice}>Price: {listing.price || 'Free'}</Text>
-                            </View>
-                        </TouchableOpacity>
-                    ))
-                ) : (
-                    <Text>No Upcoming Listings</Text>
-                )
+                <ScrollView contentContainerStyle={styles.scrollContainer}>
+                    {listings.length > 0 ? (
+                        listings.map((listing, index) => (
+                            <TouchableOpacity key={index} style={styles.listingCard} onPress={() => shareListing(listing)}>
+                                <Image
+                                    source={{ uri: listing.posterUrl || 'https://via.placeholder.com/100' }}
+                                    style={styles.listingImage}
+                                    resizeMode="cover"
+                                />
+                                <View style={styles.listingInfo}>
+                                    <Text style={styles.listingTitle}>{listing.title || 'No Title'}</Text>
+                                    <Text style={styles.listingDate}>{new Date(listing.date).toDateString()}</Text>
+                                    <Text style={styles.listingPrice}>Price: {listing.price || 'Free'}</Text>
+                                </View>
+                            </TouchableOpacity>
+                        ))
+                    ) : (
+                        <View style={styles.noDataContainer}>
+                            <Image source={NoDataIcon} style={styles.noDataImage} />
+                            <Text style={styles.noDataText}>No Upcoming Listings Found</Text>
+                            <TouchableOpacity style={styles.createButton} onPress={() => navigation.navigate('CreateTemplatesScreen')}>
+                                <Text style={styles.createButtonText}>Create a Listing</Text>
+                            </TouchableOpacity>
+                        </View>
+                    )}
+                </ScrollView>
             )}
-        </ScrollView>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         padding: 20,
         backgroundColor: '#fff',
     },
@@ -114,12 +126,26 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 20,
     },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    loadingText: {
+        marginTop: 10,
+        fontSize: 16,
+        color: '#000',
+    },
+    scrollContainer: {
+        flexGrow: 1,
+    },
     listingCard: {
         flexDirection: 'row',
         borderWidth: 1,
         borderColor: '#ccc',
         borderRadius: 5,
         marginBottom: 20,
+        padding: 10,
     },
     listingImage: {
         width: 100,
@@ -128,7 +154,8 @@ const styles = StyleSheet.create({
     },
     listingInfo: {
         flex: 1,
-        padding: 10,
+        marginLeft: 10,
+        justifyContent: 'center',
     },
     listingTitle: {
         fontSize: 18,
@@ -142,6 +169,33 @@ const styles = StyleSheet.create({
     listingPrice: {
         fontSize: 14,
         color: 'grey',
+    },
+    noDataContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 50,
+    },
+    noDataImage: {
+        width: 100,
+        height: 100,
+        marginBottom: 20,
+    },
+    noDataText: {
+        fontSize: 18,
+        color: 'grey',
+        marginBottom: 20,
+    },
+    createButton: {
+        backgroundColor: '#007bff',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 5,
+    },
+    createButtonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
     },
 });
 

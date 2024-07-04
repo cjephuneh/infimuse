@@ -18,10 +18,10 @@ const StaffScreen = ({ route }) => {
           style={styles.image}
         />
         <Text style={styles.name}>{`${member.firstName} ${member.lastName}`}</Text>
-        <Text style={styles.role}>{member.role}</Text>
-        <Text style={styles.detail}>{member.email}</Text>
-        <Text style={styles.detail}>{member.phone}</Text>
-        <Text style={styles.bio}>{member.description}</Text>
+        <Text style={styles.role}>Role: {member.role}</Text>
+        <Text style={styles.detail}>Email: {member.email}</Text>
+        <Text style={styles.detail}>Phone No: {member.phone}</Text>
+        <Text style={styles.bio}>Bio: {member.description}</Text>
       </View>
       <TouchableOpacity
         style={styles.inviteButton}
