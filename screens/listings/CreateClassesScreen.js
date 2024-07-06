@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native';
 import tw from 'tailwind-react-native-classnames';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -7,9 +7,13 @@ import { createClassSession } from '../../redux/slice/listings/classService'; //
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 import DateTimePicker from '@react-native-community/datetimepicker'; // Import datetime picker component
 import Toast from 'react-native-toast-message';
+import { getVenues } from "../../redux/slice/listings/VenueService";
+import RNPickerSelect from 'react-native-picker-select';
 
 const CreateClassesScreen = () => {
   const navigation = useNavigation();
+  const [currentStep, setCurrentStep] = useState(1);
+  const [venues, setVenues] = useState([]);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -24,14 +28,14 @@ const CreateClassesScreen = () => {
     ageGroup: '',
     ageMin: '',
     ageMax: '',
-    templateStatus: ''
+    templateStatus: '',
+    venueId: '',
   });
 
   const [showDatePicker, setShowDatePicker] = useState(false); // State to control the visibility of the date picker
   const [loading, setLoading] = useState(false); // State to indicate loading state
 
   const showToast = (type, text1, text2) => {
-    // Your implementation of showToast
     Toast.show({
       type: type,
       text1: text1,
@@ -40,6 +44,21 @@ const CreateClassesScreen = () => {
       autoHide: true,
     });
   };
+
+  useEffect(() => {
+    const fetchVenues = async () => {
+      try {
+        const token = await AsyncStorage.getItem('token');
+        if (token) {
+          const fetchedVenues = await getVenues(token);
+          setVenues(fetchedVenues.map(venue => ({ label: venue.name, value: venue.id })));
+        }
+      } catch (error) {
+        console.error("Error fetching venues:", error);
+      }
+    };
+    fetchVenues();
+  }, []);
 
   const handleDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || formData.date;
@@ -70,6 +89,7 @@ const CreateClassesScreen = () => {
         date: formData.date.toISOString().split('T')[0],
         startTime: formData.startTime,
         endTime: formData.endTime,
+        venueId: formData.venueId,
         templateStatus: false // Initialize templateStatus as false
       };
 
@@ -90,6 +110,97 @@ const CreateClassesScreen = () => {
     }
   };
 
+  const renderStepContent = (step) => {
+    switch (step) {
+      case 1:
+        return (
+          <>
+            <Text style={tw` text-lg mb-1`}>Title:</Text>
+            <TextInput
+              placeholder="Title"
+              style={tw`border rounded p-4  border-gray-400 text-lg mb-4`}
+              onChangeText={(title) => setFormData({ ...formData, title })}
+            />
+            <Text style={tw` text-lg mb-1`}>Choose an Image:</Text>
+            <TextInput
+              placeholder="Poster URL"
+              style={tw`border rounded p-2  border-gray-400 text-lg mb-4`}
+              onChangeText={(posterUrl) => setFormData({ ...formData, posterUrl })}
+            />
+            <Text style={tw` text-lg mb-1`}>Description:</Text>
+            <TextInput
+              placeholder="Description"
+              multiline
+              style={tw`border rounded p-6  border-gray-400 text-lg mb-6`}
+              onChangeText={(description) => setFormData({ ...formData, description })}
+            />
+            <Text style={tw` text-lg mb-1`}>Duration:</Text>
+            <TextInput
+              placeholder="Duration"
+              style={tw`border rounded p-2  border-gray-400 text-lg mb-4`}
+              onChangeText={(duration) => setFormData({ ...formData, duration })}
+            />
+          </>
+        );
+      case 2:
+        return (
+          <>
+            <Text style={tw` text-lg mb-1`}>Price:</Text>
+            <TextInput
+              placeholder="Price"
+              keyboardType="numeric"
+              style={tw`border rounded p-2 border-gray-400 text-lg mb-4`}
+              onChangeText={(price) => setFormData({ ...formData, price })}
+            />
+
+            <Text style={tw` text-lg mb-1`}>Capacity:</Text>
+            <TextInput
+              placeholder="Capacity"
+              keyboardType="numeric"
+              style={tw`border rounded p-2  border-gray-400 text-lg mb-4`}
+              onChangeText={(capacity) => setFormData({ ...formData, capacity })}
+            />
+
+            <Text style={tw` text-lg mb-1`}>Date:</Text>
+            <TouchableOpacity onPress={() => setShowDatePicker(true)} style={tw`flex-row items-center mb-4`}>
+              <Icon name="calendar" size={20} color="#718096" style={tw`mr-2`} />
+              <TextInput
+                placeholder="Date"
+                value={formData.date.toISOString().split('T')[0]}
+                editable={false}
+                style={tw`border p-3 mt-2 rounded border-gray-400 text-lg flex-1`}
+              />
+            </TouchableOpacity>
+            {showDatePicker && (
+              <DateTimePicker
+                value={formData.date}
+                mode="date"
+                display="default"
+                onChange={handleDateChange}
+              />
+            )}
+            {/* <TextInput
+              placeholder="Start Time"
+              value={formData.startTime}
+              onChangeText={(startTime) => setFormData({ ...formData, startTime })}
+              style={tw`border rounded p-2  border-gray-400 text-lg mb-4`}
+            /> */}
+
+            <Text style={tw` text-lg mb-1`}>Choose a Venue:</Text>
+            <TouchableOpacity style={tw` text-lg mb-1 border rounded border-gray-400`}>
+            <RNPickerSelect
+              onValueChange={(value) => setFormData({ ...formData, venueId: value })}
+              items={venues}
+              placeholder={{ label: "Select a Venue", value: null }}
+              style={tw`border rounded p-4 border-gray-600 text-lg mb-4`}
+            />
+            </TouchableOpacity>
+          </>
+        );
+      
+    }
+  };
+
   return (
     <KeyboardAvoidingView 
       style={tw`flex-1`} 
@@ -97,70 +208,34 @@ const CreateClassesScreen = () => {
     >
       <ScrollView contentContainerStyle={tw`p-4 bg-gray-50 flex-grow`} >
         <View style={tw`mb-8`}>
-          <Text style={tw`text-2xl font-bold text-gray-800 mb-4`}>Create Class Session</Text>
-          {/* TextInput fields */}
-          <TextInput placeholder="Title" style={tw`border rounded p-2  border-gray-400 text-lg mb-4`} onChangeText={(title) => setFormData({ ...formData, title })} />
-          {/* Description */}
-          <TextInput
-            placeholder="Description"
-            multiline
-            style={tw`border rounded p-2  border-gray-400 text-lg mb-4`}
-            onChangeText={(description) => setFormData({ ...formData, description })}
-          />
-          {/* Poster URL */}
-          <TextInput placeholder="Poster URL" style={tw`border rounded p-2  border-gray-400 text-lg mb-4`} onChangeText={(posterUrl) => setFormData({ ...formData, posterUrl })} />
-            {/* Date picker */}
-            <TouchableOpacity onPress={() => setShowDatePicker(true)} style={tw`flex-row items-center mb-4`}>
-            <Icon name="calendar" size={20} color="#718096" style={tw`mr-2`} />
-            <TextInput placeholder="Date" value={formData.date.toISOString().split('T')[0]} editable={false} style={tw`border-b border-gray-400 text-lg flex-1`} />
-          </TouchableOpacity>
-          {showDatePicker && (
-            <DateTimePicker
-              value={formData.date}
-              mode="date"
-              display="default"
-              onChange={handleDateChange}
-            />
-          )}
-          {/* Start time */}
-          <TextInput
-            placeholder="Start Time"
-            value={formData.startTime}
-            onChangeText={(startTime) => setFormData({ ...formData, startTime })}
-            style={tw`border rounded p-2  border-gray-400 text-lg mb-4`}
-          />
-          {/* End time */}
-          <TextInput
-            placeholder="End Time"
-            value={formData.endTime}
-            onChangeText={(endTime) => setFormData({ ...formData, endTime })}
-            style={tw`border rounded p-2  border-gray-400 text-lg mb-4`}
-          />
-          {/* Duration */}
-          <TextInput placeholder="Duration"  style={tw`border rounded p-2  border-gray-400 text-lg mb-4`} onChangeText={(duration) => setFormData({ ...formData, duration })} />
-          {/* Price */}
-          <TextInput placeholder="Price" keyboardType="numeric" style={tw`border rounded p-2 border-gray-400 text-lg mb-4`} onChangeText={(price) => setFormData({ ...formData, price })} />
-          {/* Capacity */}
-          <TextInput placeholder="Capacity" keyboardType="numeric" style={tw`border rounded p-2  border-gray-400 text-lg mb-4`} onChangeText={(capacity) => setFormData({ ...formData, capacity })} />
-          {/* Age group */}
-          <TextInput placeholder="Age Group" style={tw`border rounded p-2  border-gray-400 text-lg mb-4`} onChangeText={(ageGroup) => setFormData({ ...formData, ageGroup })} />
-          {/* Age min */}
-          <TextInput placeholder="Age Min" keyboardType="numeric" style={tw`border rounded p-2  border-gray-400 text-lg mb-4`} onChangeText={(ageMin) => setFormData({ ...formData, ageMin })} />
-          {/* Age max */}
-          <TextInput placeholder="Age Max" keyboardType="numeric" style={tw`border rounded p-2  border-gray-400 text-lg mb-4`} onChangeText={(ageMax) => setFormData({ ...formData, ageMax })} />
+          <Text style={tw`text-2xl font-bold text-gray-800 mb-6`}>Create Day Experience!</Text>
+          <Text style={tw`text-lg text-gray-600 mb-4`}>Create Your Day Experience with love ☺️</Text>
+          {renderStepContent(currentStep)}
         </View>
-        {/* Create Class Session button with loading indicator */}
-        <TouchableOpacity style={tw`rounded-lg bg-purple-700 p-3 items-center`} onPress={handleCreateClassSession} disabled={loading}>
-          {loading ? (
-            <ActivityIndicator color="#ffffff" />
-          ) : (
-            <Text style={tw`text-white font-semibold text-lg`}>Create Class Session</Text>
+        <View style={tw`flex-row justify-around mt-6`}>
+          {currentStep > 1 && (
+            <TouchableOpacity style={styles.navigationButton} onPress={() => setCurrentStep(currentStep - 1)}>
+              <Text style={tw`text-white font-semibold p-2`}>Back</Text>
+            </TouchableOpacity>
           )}
-        </TouchableOpacity>
+          {currentStep < 2 ? (
+            <TouchableOpacity style={styles.navigationButton} onPress={() => setCurrentStep(currentStep + 1)}>
+              <Text style={tw`text-white font-semibold p-2`}>Next</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity style={styles.submitButton} onPress={handleCreateClassSession} disabled={loading}>
+              {loading ? <ActivityIndicator size="small" color="#ffffff" /> : <Text style={tw`text-white font-semibold p-2`}>Submit </Text>}
+            </TouchableOpacity>
+          )}
+        </View>
       </ScrollView>
-      <Toast ref={(ref) => Toast.setRef(ref)} />
     </KeyboardAvoidingView>
   );
+};
+
+const styles = {
+  navigationButton: tw`bg-blue-500 px-10 py-2 rounded-full shadow flex-row items-center justify-center`,
+  submitButton: tw`bg-blue-500 px-10 py-2 rounded-full shadow flex-row items-center justify-center`,
 };
 
 export default CreateClassesScreen;
