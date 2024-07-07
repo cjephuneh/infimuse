@@ -239,7 +239,7 @@ const Profile = () => {
           )}
         </TouchableOpacity>
       )}
-      <View style={tw`mb-4`}>
+      {/* <View style={tw`mb-4`}>
         <Text style={styles.heading}>Templates</Text>
         <FlatList
           data={listings}
@@ -249,8 +249,8 @@ const Profile = () => {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ paddingRight: 20 }}
         />
-      </View>
-      <View style={tw`mb-4`}>
+      </View> */}
+      {/* <View style={tw`mb-4`}>
         <Text style={styles.heading}>Upcoming</Text>
         
         <FlatList
@@ -261,9 +261,9 @@ const Profile = () => {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ paddingRight: 20 }}
         />
-      </View>
+      </View> */}
 
-      <View style={tw`mb-4`}>
+      {/* <View style={tw`mb-4`}>
         <Text style={styles.heading}>History</Text>
         <FlatList
           data={listings}
@@ -273,7 +273,7 @@ const Profile = () => {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ paddingRight: 20 }}
         />
-      </View>
+      </View> */}
       <View style={tw`mb-4`}>
         <Text style={styles.heading}>Staff</Text>
         <FlatList

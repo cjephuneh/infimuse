@@ -8,32 +8,40 @@ const ListingScreen = () => {
   const navigation = useNavigation(); // Initializing navigation
 
   const listings = [
-    { id: 'Venue', title: 'Venue', description: 'Host classes physically and advertise them on our platform, get better and organized information about your class.' },
-    { id: 'Day Experiences', title: 'Day Experiences', description: 'Host classes physically and advertise them on our platform, get better and organized information about your class.' },
+    { id: 'venue', title: 'Venue', description: 'Host classes physically and advertise them on our platform, get better and organized information about your class.' },
+    { id: 'day_experiences', title: 'Day Experiences', description: 'Host classes physically and advertise them on our platform, get better and organized information about your class.' },
     // { id: 'packages', title: 'Packages', description: 'Host classes physically and advertise them on our platform, get better and organized information about your class.' },
-    { id: 'Workshop', title: 'WorkShop', description: 'Host classes physically and advertise them on our platform, get better and organized information about your class.' },
-    { id: 'Experience', title: 'Experience', description: 'Host unique experiences and adventures for users to enjoy and learn from.' }, // New "Experience" listing
+    { id: 'workshop', title: 'Workshop', description: 'Host classes physically and advertise them on our platform, get better and organized information about your class.' },
+    { id: 'experience', title: 'Experience', description: 'Host unique experiences and adventures for users to enjoy and learn from.' }, // New "Experience" listing
   ];
 
   const cardStyle = (id) => [
     tw`border p-4 rounded-lg mb-4`,
     activeListing === id
       ? tw`bg-blue-500 border-blue-700 shadow-lg text-white`
-      : tw`bg-white border-gray-300 shadow-sm text-white`,
+      : tw`bg-white border-gray-300 shadow-sm text-gray-800`, // Fixed the text color for inactive listings
   ];
 
   const handleCreateListing = (id) => {
     // Define navigation paths for each listing
     const navigationPaths = {
-      Day_Experiences: 'DayExperiencesScreen',
+      day_experiences: 'DayExperiencesScreen',
       // packages: 'CreatePackagesScreen',
       workshop: 'CreateWorkshopScreen',
       venue: 'CreateVenueScreen',
       experience: 'CreateExperienceScreen', // Navigation path for "Experience" listing
     };
 
+    // Log the id and path to debug
+    console.log(`Navigating to: ${navigationPaths[id]}`);
+
     // Navigate to the respective screen based on the listing id
-    navigation.navigate(navigationPaths[id]);
+    const screenName = navigationPaths[id];
+    if (screenName) {
+      navigation.navigate(screenName);
+    } else {
+      console.error(`Navigation path not found for id: ${id}`);
+    }
   };
 
   return (
