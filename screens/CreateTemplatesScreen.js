@@ -1,27 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { 
-  View, 
-  Text, 
-  ScrollView, 
-  TouchableOpacity, 
-  Image, 
-  RefreshControl, 
-  ActivityIndicator 
-} from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, Image, RefreshControl } from "react-native";
 import tw from "tailwind-react-native-classnames";
 import { useNavigation } from "@react-navigation/native";
 
 // Import API functions
-// import { getPackages } from "../redux/slice/listings/packagesServices";
+
+import { getPackages } from "../redux/slice/listings/packagesServices";
 import { getWorkshops } from "../redux/slice/listings/workshopService";
 import { getClassSessions } from "../redux/slice/listings/classService";
-import { getVenues } from "../redux/slice/listings/VenueService";
 
 const ExploreScreen = () => {
   const navigation = useNavigation();
   const [workshops, setWorkshops] = useState([]);
-  // const [packages, setPackages] = useState([]);
-  const [venues, setVenues] = useState([]); // Add venues state
+  const [packages, setPackages] = useState([]);
   const [classSessions, setClassSessions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -34,14 +25,16 @@ const ExploreScreen = () => {
   const fetchData = async () => {
     try {
       const workshopResponse = await getWorkshops();
-      // const packageResponse = await getPackages();
+      const packageResponse = await getPackages();
       const classSessionResponse = await getClassSessions();
-      const venueResponse = await getVenues(); // Fetch venues
 
-      setWorkshops(workshopResponse || []);
-      // setPackages(packageResponse || []);
-      setClassSessions(classSessionResponse || []);
-      setVenues(venueResponse || []); // Set venues state
+      const workshops = workshopResponse || [];
+      const packages = packageResponse || [];
+      const classSessions = classSessionResponse || [];
+
+      setWorkshops(workshops);
+      setPackages(packages);
+      setClassSessions(classSessions);
       setLoading(false);
     } catch (error) {
       setError(error.message);
@@ -55,21 +48,34 @@ const ExploreScreen = () => {
     setRefreshing(false);
   };
 
+  if (loading) {
+    return <Text>Loading...</Text>;
+  }
+
+  if (error) {
+    return <Text>Error fetching data: {error}</Text>;
+  }
+
+  console.log("Workshops:", workshops);
+  console.log("Packages:", packages);
+  console.log("Class Sessions:", classSessions);
+
   const handleCreateTemplatePress = () => {
-    navigation.navigate("TemplateScreen");
+    navigation.navigate("TemplateScreen"); // Navigate to the Templates screen
   };
 
-  const CategorySection = ({ title, items, imageKey }) => {
+  const categories = {
+    workshops,
+    packages,
+    classSessions,
+  };
+
+  const CategorySection = ({ title, items, imageKey, navigation }) => {
     const itemList = items && items.Document ? items.Document : [];
 
     return (
-      <View style={tw`mt-4 p-4`}>
+      <View style={tw`mt-2 p-4`}>
         <Text style={tw`text-xl font-semibold mb-4`}>{title}</Text>
-        {error && itemList.length === 0 && (
-          <View style={tw`bg-red-100 p-4 rounded-lg`}>
-            <Text style={tw`text-red-500 text-center`}>Error fetching {title.toLowerCase()}: {error}</Text>
-          </View>
-        )}
         {itemList.length > 0 ? (
           <ScrollView
             horizontal
@@ -78,7 +84,7 @@ const ExploreScreen = () => {
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
           >
             {itemList.map((item) => (
-              <CategoryCard key={item.id} item={item} image={item.imageUrl1} templateType={title} />
+              <CategoryCard key={item.id} item={item} image={item[imageKey]} templateType={title} navigation={navigation} />
             ))}
           </ScrollView>
         ) : (
@@ -90,23 +96,19 @@ const ExploreScreen = () => {
     );
   };
 
-  const CategoryCard = ({ item, image, templateType }) => {
+  const CategoryCard = ({ item, image, templateType, navigation }) => {
     const handleTemplatePress = () => {
       let type;
       switch (templateType) {
-        case 'Venues':
-          type = 'venues';
-          break;
-        case 'Day Experiences':
-          type = 'classes';
-          break;
         case 'Workshops':
           type = 'workshops';
           break;
-        // case 'Packages':
-        //   type = 'packages';
-        //   break;
-        
+        case 'Packages':
+          type = 'packages';
+          break;
+        case 'Class Sessions':
+          type = 'classes';
+          break;
         default:
           throw new Error('Invalid template type');
       }
@@ -120,11 +122,8 @@ const ExploreScreen = () => {
       >
         <Image source={{ uri: image }} style={tw`h-36 w-72`} resizeMode="cover" />
         <View style={tw`p-3`}>
-          <Text style={tw`text-lg font-semibold`}>{item.name}</Text>
+          <Text style={tw`text-lg font-semibold`}>{item.title}</Text>
           <Text style={tw`text-sm`}>{item.description}</Text>
-          <Text style={tw`text-sm text-gray-400`}>{item.location}</Text>
-
-
         </View>
       </TouchableOpacity>
     );
@@ -132,31 +131,26 @@ const ExploreScreen = () => {
 
   return (
     <View style={tw`bg-gray-100 flex-1`}>
-      <View style={tw`flex-row justify-between items-center p-4 mt-3`}>
+      <View style={tw`flex-row justify-between items-center p-4`}>
         <Text style={tw`text-2xl font-bold`}>Explore Templates</Text>
         <TouchableOpacity
           style={tw`bg-purple-500 px-4 py-2 rounded-lg shadow-md`}
-          onPress={handleCreateTemplatePress}
+          onPress={handleCreateTemplatePress} // Call handleCreateTemplatePress when button is pressed
         >
           <Text style={tw`text-white font-semibold`}>Create a Template</Text>
         </TouchableOpacity>
       </View>
       <ScrollView>
-        {Object.entries({ venues, classSessions, workshops }).map(([key, items]) => (
+        {Object.entries(categories).map(([key, items]) => (
           <CategorySection
             key={key}
             title={key.charAt(0).toUpperCase() + key.slice(1)}
             items={items}
             imageKey="posterUrl"
+            navigation={navigation}
           />
         ))}
       </ScrollView>
-      {loading && (
-        <View style={tw`absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-white bg-opacity-75`}>
-          <ActivityIndicator size="large" color="#0000ff" />
-          <Text style={tw`mt-2 text-lg font-semibold`}>Loading...</Text>
-        </View>
-      )}
     </View>
   );
 };
