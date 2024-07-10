@@ -5,7 +5,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { getWorkshop, updateWorkshop } from '../redux/slice/listings/workshopService';
 import { getClassSession, updateClassSession } from '../redux/slice/listings/classService';
 import { getaPackage, updatePackage } from '../redux/slice/listings/packagesServices';
-import Share from 'react-native-share';
+// import Share from 'react-native-share';
 
 import { Canvas, Image as CanvasImage, useCanvas } from 'react-native-canvas';
 
@@ -102,42 +102,42 @@ const TemplateDetailScreen = () => {
     }
   };
 
-  const handleShare = async () => {
-    const canvas = canvasRef.current;
-    if (canvas) {
-      const context = canvas.getContext('2d');
-      const posterImage = new CanvasImage(canvas);
-      posterImage.src = '../assets/Enriching activities.png';
+  // const handleShare = async () => {
+  //   const canvas = canvasRef.current;
+  //   if (canvas) {
+  //     const context = canvas.getContext('2d');
+  //     const posterImage = new CanvasImage(canvas);
+  //     posterImage.src = '../assets/Enriching activities.png';
 
-      posterImage.addEventListener('load', () => {
-        context.drawImage(posterImage, 0, 0, canvas.width, canvas.height);
-        context.fillStyle = 'black';
-        context.font = '20px Arial';
+  //     posterImage.addEventListener('load', () => {
+  //       context.drawImage(posterImage, 0, 0, canvas.width, canvas.height);
+  //       context.fillStyle = 'black';
+  //       context.font = '20px Arial';
 
-        // Adding the data to the poster
-        context.fillText(`Title: ${formData.title}`, 50, 50);
-        context.fillText(`Description: ${formData.description}`, 50, 100);
-        context.fillText(`Duration: ${formData.duration}`, 50, 150);
-        context.fillText(`Start Date: ${formData.startDate}`, 50, 200);
-        context.fillText(`End Date: ${formData.endDate}`, 50, 250);
-        context.fillText(`Capacity: ${formData.capacity}`, 50, 300);
-        context.fillText(`Price: ${formData.price}`, 50, 350);
+  //       // Adding the data to the poster
+  //       context.fillText(`Title: ${formData.title}`, 50, 50);
+  //       context.fillText(`Description: ${formData.description}`, 50, 100);
+  //       context.fillText(`Duration: ${formData.duration}`, 50, 150);
+  //       context.fillText(`Start Date: ${formData.startDate}`, 50, 200);
+  //       context.fillText(`End Date: ${formData.endDate}`, 50, 250);
+  //       context.fillText(`Capacity: ${formData.capacity}`, 50, 300);
+  //       context.fillText(`Price: ${formData.price}`, 50, 350);
 
-        canvas.toDataURL('image/png', (dataUrl) => {
-          const shareOptions = {
-            title: 'Share Template',
-            message: 'Check out this template!',
-            url: dataUrl,
-            subject: 'Template Details'
-          };
+  //       canvas.toDataURL('image/png', (dataUrl) => {
+  //         const shareOptions = {
+  //           title: 'Share Template',
+  //           message: 'Check out this template!',
+  //           url: dataUrl,
+  //           subject: 'Template Details'
+  //         };
 
-          Share.open(shareOptions)
-            .then((res) => console.log(res))
-            .catch((err) => console.error(err));
-        });
-      });
-    }
-  };
+  //         Share.open(shareOptions)
+  //           .then((res) => console.log(res))
+  //           .catch((err) => console.error(err));
+  //       });
+  //     });
+  //   }
+  // };
 
   if (loading) {
     return (
@@ -251,7 +251,7 @@ const TemplateDetailScreen = () => {
         {/* Share Template Button */}
         <TouchableOpacity
           style={tw`rounded-lg bg-blue-700 p-4 items-center shadow-md mt-4`}
-          onPress={handleShare}
+          // onPress={handleShare}
         >
           <Text style={tw`text-white font-semibold text-lg`}>Share Template</Text>
         </TouchableOpacity>
