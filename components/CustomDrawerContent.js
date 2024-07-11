@@ -87,22 +87,30 @@ const CustomDrawerContent = (props) => {
         <Text style={styles.footerText}>Infimuse Beta 1.0.1</Text>
       </View> */}
       {/* Logout and Delete Account Buttons */}
+      <TouchableOpacity style={styles.itemContainer}
+      onPress={() => navigation.navigate('DeleteAccScreen')} >
+        <Icon name="account" size={20} color="#4B5563" />
+        <Text style={styles.itemText}>Switch Account</Text>
+      </TouchableOpacity>
+      
       <TouchableOpacity style={styles.itemContainer} onPress={handleLogout}>
         <Icon name="sign-out-alt" size={20} color="#4B5563" />
         <Text style={styles.itemText}>Log out</Text>
       </TouchableOpacity>
+      
       <TouchableOpacity style={styles.itemContainer}
       onPress={() => navigation.navigate('DeleteAccScreen')} >
         <Icon name="trash-alt" size={20} color="#4B5563" />
         <Text style={styles.itemText}>Delete my account and data</Text>
       </TouchableOpacity>
+      
     </ScrollView>
   );
 };
 
 // Drawer items array including new items with relevant icons
 const drawerItems = [
-  { name: 'Account', icon: 'user-circle', screen: 'ProfileScreen' },
+  { name: 'Profile', icon: 'user-circle', screen: 'ProfileScreen' },
   { name: 'Upcoming', icon: 'calendar-alt', screen: 'HistoryScreen' },
   { name: 'History', icon: 'history', screen: 'UpcomingScreen' },
   { name: 'Subscriptions', icon: 'clipboard-list', screen: 'PricingScreen' },
