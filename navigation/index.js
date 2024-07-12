@@ -51,6 +51,11 @@ import SubscriptionsScreen from '../screens/SubscriptionsScreen';
 import DeleteAccScreen from '../screens/DeleteAccScreen';
 import DayExperiencesScreen from '../screens/listings/DayexperiencesScreen';
 import ViewTemplateScreen from '../screens/ViewTemplateScreen';
+import StaffDashboardScreen from '../screens/StaffScreens/Staff_Dashboard';
+import StaffSignUp from '../screens/StaffScreens/Staff_SignUp'; 
+import StaffSignIn from '../screens/StaffScreens/Staff_Signin';
+import StaffProfile from '../screens/StaffScreens/Staff_ProfileScreen';
+import SignInOptions from '../screens/SignInAsScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -78,6 +83,9 @@ function AppNavigation() {
         <Stack.Screen name="OnboardingScreen" component={OnboardingScreen} />
         <Stack.Screen name="SecondOnboardingScreen" component={SecondOnboardingScreen} />
         <Stack.Screen name="ThirdOnboardingScreen" component={ThirdOnboardingScreen} />
+
+        {/* Here we include the staff screen */}
+        <Stack.Screen name="SignInOptions" component={SignInOptions} />
         
         <Stack.Screen name="StaffScreen" component={StaffScreen} />
 
@@ -116,6 +124,14 @@ function AppNavigation() {
         {/* Here we    jsdnfhsdvnjf =================================================================================  include the Schedule Screen */} 
         <Stack.Screen name="ScheduleScreen" component={ScheduleScreen} /> 
         <Stack.Screen name="WalletScreen" component={WalletScreen} /> 
+
+
+        {/* Here we include the Staff Screens */}
+        <Stack.Screen name="StaffDashboardScreen" component={StaffDashboardScreen} />
+        <Stack.Screen name="StaffSignUp" component={StaffSignUp} />
+        <Stack.Screen name = "StaffSignIn" component={StaffSignIn} />
+        <Stack.Screen name = "StaffProfile" component={StaffProfile} />
+
 
 
 

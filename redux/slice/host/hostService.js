@@ -67,3 +67,33 @@ export const updateCurrentHost = async (hostData, token) => {
         throw error;
     }
 }
+
+
+// Delete current user
+export const deleteCurrentHost = async (token) => {
+    try {
+        // Decode the token to extract the host ID
+        const decodedToken = jwt_decode(token);
+        const hostId = decodedToken.id; // Assuming the host ID is stored as 'id' in the token
+
+        // Log the hostId
+        console.log('Host ID:', hostId);
+
+        const response = await fetch(`${API_URI}/hosts/${hostId}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+        if (!response.ok) {
+            throw new Error("Failed to delete current host");
+        }
+
+        const json = await response.json();
+        return json;
+    } catch (error) {
+        console.error("Error deleting current host:", error);
+        throw error;
+    }
+}

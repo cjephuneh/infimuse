@@ -33,7 +33,7 @@ const UpcomingScreen = () => {
             const classSessionsRes = await getClassSessions();
             const experiencesRes = await getExperiences();
             const packagesRes = await getPackages();
-            const venuesRes = await getVenues();
+            // const venuesRes = await getVenues();
             const workshopsRes = await getWorkshops();
             const workshopClassesRes = await fetchWorkshopClasses();
 
@@ -41,7 +41,7 @@ const UpcomingScreen = () => {
                 ...classSessionsRes.Document,
                 ...experiencesRes.Document,
                 ...packagesRes.Document,
-                ...venuesRes.Document,
+                // ...venuesRes.Document,
                 ...workshopsRes.Document,
                 ...workshopClassesRes.Document,
             ].filter(listing => listing.status === "upcoming");

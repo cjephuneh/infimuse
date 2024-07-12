@@ -29,8 +29,8 @@ const SignInScreen = () => {
     (state) => state.auth
   );
   const [credentials, setCredentials] = useState({
-    email: "calebjephuneh@gmail.com",
-    password: "Gethsemane0#",
+    email: "mikembugua960@gmail.com",
+    password: "123Jermain",
   });
   const [loading, setLoading] = useState(false);
   const [showOTPField, setShowOTPField] = useState(false); // State to control OTP field visibility

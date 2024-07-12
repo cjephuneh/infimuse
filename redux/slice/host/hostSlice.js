@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { fetchCurrentHost, updateCurrentHost } from './hostService';
+import { fetchCurrentHost, updateCurrentHost, deleteCurrentHost } from './hostService';
 
 export const fetchHostAsync = createAsyncThunk(
   'host/fetchHost',
@@ -17,6 +17,17 @@ export const updateHostAsync = createAsyncThunk(
   async ({ hostData, token }, { rejectWithValue }) => {
     try {
       return await updateCurrentHost(hostData, token);
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const deleteHostAsync = createAsyncThunk(
+  'host/delete',
+  async (token, { rejectWithValue }) => {
+    try {
+      return await deleteCurrentHost(token);
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -54,7 +65,19 @@ const hostSlice = createSlice({
       .addCase(updateHostAsync.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
+      })
+      .addCase(deleteHostAsync.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(deleteHostAsync.fulfilled, (state, action) => {
+        state.currentHost = null;
+        state.status = 'succeeded';
+      })
+      .addCase(deleteHostAsync.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
       });
+      
   }
 });
 
