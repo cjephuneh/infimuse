@@ -23,10 +23,10 @@ function HomeScreen() {
           </Text>
         </View>
 
-        <HomeCards/>       
-        <Tools/>
+        {/* <HomeCards/>        */}
+        {/* <Tools/> */}
         <Wallet/>
-        <Trends/>
+        {/* <Trends/> */}
       </ScrollView>
     </SafeAreaView>
   );
