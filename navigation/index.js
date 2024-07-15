@@ -13,6 +13,7 @@ import SecondOnboardingScreen from '../screens/OnboardingScreen1';
 import ThirdOnboardingScreen from '../screens/OnboardingScreen2';
 import StaffScreen from '../screens/staffScreen';
 import CustomDrawerContent from '../components/CustomDrawerContent'; // Import your custom drawer content component
+import StaffDrawer from '../components/StaffDrawer'; // Import your custom drawer content component
 import TemplateScreen from '../screens/TemplatesScreen';
 import CreateClassesScreen from '../screens/listings/CreateClassesScreen';
 import CreatePackagesScreen from '../screens/listings/CreatePackagesScreen';
@@ -56,6 +57,8 @@ import StaffSignUp from '../screens/StaffScreens/Staff_SignUp';
 import StaffSignIn from '../screens/StaffScreens/Staff_Signin';
 import StaffProfile from '../screens/StaffScreens/Staff_ProfileScreen';
 import SignInOptions from '../screens/SignInAsScreen';
+import StaffInsights from '../screens/StaffScreens/StaffInsightScreen';
+import StaffWallet from '../screens/StaffScreens/StaffWallet';
 
 
 const Stack = createNativeStackNavigator();
@@ -67,6 +70,16 @@ function MainDrawer() {
       <Drawer.Screen name="Home" component={BottomTabNavigator} />
       <Drawer.Screen name="Profile" component={ProfileScreen} />
       <Drawer.Screen name="CreateClasses" component={CreateClassesScreen} />
+    </Drawer.Navigator>
+  );
+}
+
+function Staff() {
+  return (
+    <Drawer.Navigator drawerContent={(props) => <StaffDrawer {...props} />}>
+      <Drawer.Screen name="Home" component={BottomTabNavigator} />
+      <Drawer.Screen name="Profile" component={ProfileScreen} />
+      {/* <Drawer.Screen name="CreateClasses" component={CreateClassesScreen} /> */}
     </Drawer.Navigator>
   );
 }
@@ -118,6 +131,7 @@ function AppNavigation() {
 
         {/* Here is where we include the Drawer Navigator */}
         <Stack.Screen name="Main" component={MainDrawer} />
+        <Stack.Screen name="Staff" component={Staff} />
       
 
 
@@ -131,6 +145,8 @@ function AppNavigation() {
         <Stack.Screen name="StaffSignUp" component={StaffSignUp} />
         <Stack.Screen name = "StaffSignIn" component={StaffSignIn} />
         <Stack.Screen name = "StaffProfile" component={StaffProfile} />
+        <Stack.Screen name = "StaffInsights" component={StaffInsights} />
+        <Stack.Screen name = "StaffWallet" component={StaffWallet} />
 
 
 
