@@ -55,7 +55,7 @@ export default function WelcomeScreen() {
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => navigation.navigate("SignIn")}
+            onPress={() => navigation.navigate("SignInOptions")}
             style={[tw`mx-5 rounded-2xl mb-4`]}
           >
             <Text
@@ -68,7 +68,7 @@ export default function WelcomeScreen() {
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => navigation.navigate("StaffSignIn")}
             style={[tw`mx-5 rounded-2xl`]}
           >
@@ -80,7 +80,7 @@ export default function WelcomeScreen() {
             >
               Login as a staff
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </SafeAreaView>
     </>

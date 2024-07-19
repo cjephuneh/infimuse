@@ -21,7 +21,8 @@ const ExploreScreen = () => {
     workshops: [],
     classSessions: [],
     experiences: [],
-    workshopClasses: []
+    workshopClasses: [],
+    venues: []
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -31,44 +32,47 @@ const ExploreScreen = () => {
     fetchData();
   }, []);
 
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const token = await AsyncStorage.getItem("token");
-      if (!token) {
-        throw new Error("Authorization token is not set");
-      }
-
-      const headers = {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
-      };
-
-      const fetchFromAPI = async (endpoint) => {
-        const response = await fetch(`${API_URI}${endpoint}`, { headers });
-        const json = await response.json();
-        if (!response.ok) throw new Error(json.message || "API call failed");
-        return json;
-      };
-
-      const workshops = await fetchFromAPI("workshops");
-      const classSessions = await fetchFromAPI("class-sessions");
-      const experiences = await fetchFromAPI("experiences");
-      const workshopClasses = await fetchFromAPI("workshop-classes");
-
-      setData({
-        workshops: workshops.Document || [],
-        classSessions: classSessions.Document || [],
-        experiences: experiences.Document || [],
-        workshopClasses: workshopClasses.Document || []
-      });
-    } catch (error) {
-      setError(error.message);
-      Alert.alert("Error", error.message);
-    } finally {
-      setLoading(false);
+const fetchData = async () => {
+  setLoading(true);
+  try {
+    const token = await AsyncStorage.getItem("token");
+    if (!token) {
+      throw new Error("Authorization token is not set");
     }
-  };
+
+    const headers = {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    };
+
+    const fetchFromAPI = async (endpoint) => {
+      const response = await fetch(`${API_URI}${endpoint}`, { headers });
+      const json = await response.json();
+      if (!response.ok) throw new Error(json.message || "API call failed");
+      return json;
+    };
+
+    const workshops = await fetchFromAPI("workshops");
+    const classSessions = await fetchFromAPI("class-sessions");
+    const experiences = await fetchFromAPI("experiences");
+    const workshopClasses = await fetchFromAPI("workshop-classes");
+    const venuesResponse = await fetchFromAPI("venues");
+
+    setData({
+      workshops: workshops.Document || [],
+      classSessions: classSessions.Document || [],
+      experiences: experiences.Document || [],
+      workshopClasses: workshopClasses.Document || [],
+      venues: venuesResponse.venuesByHost || []
+    });
+  } catch (error) {
+    setError(error.message);
+    Alert.alert("Error", error.message);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -97,6 +101,9 @@ const ExploreScreen = () => {
           break;
         case 'WorkshopClasses':
           type = 'workshopClasses';
+          break;
+        case 'venues':
+          type = 'venues';
           break;
         default:
           throw new Error('Invalid template type');
@@ -167,7 +174,7 @@ const ExploreScreen = () => {
       {loading && (
         <View style={tw`absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-white bg-opacity-75`}>
           <ActivityIndicator size="large" color="#0000ff" />
-          <Text style={tw`mt-2 text-lg font-semibold`}>Loading...</Text>
+          <Text style={tw`mt-2 text-lg font-semibold`}>We are setting things up for you hang in there ...</Text>
         </View>
       )}
     </View>
