@@ -154,7 +154,7 @@ const fetchData = async () => {
   return (
     <View style={tw`bg-gray-100 flex-1`}>
       <View style={tw`flex-row justify-between items-center p-4 mt-3`}>
-        <Text style={tw`text-2xl font-bold`}>Explore Templates</Text>
+        <Text style={tw`text-2xl font-bold`}>Templates</Text>
         <TouchableOpacity
           style={tw`bg-purple-500 px-4 py-2 rounded-lg shadow-md`}
           onPress={handleCreateTemplatePress}
