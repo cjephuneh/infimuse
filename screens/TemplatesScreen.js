@@ -9,7 +9,7 @@ const ListingScreen = () => {
 
   const listings = [
     { id: 'venue', title: 'Venue', description: 'Host classes physically and advertise them on our platform, get better and organized information about your class.' },
-    { id: 'day_experiences', title: 'Day Experiences', description: 'Host classes physically and advertise them on our platform, get better and organized information about your class.' },
+    { id: 'day_experiences', title: 'Day Group', description: 'Host classes physically and advertise them on our platform, get better and organized information about your class.' },
     // { id: 'packages', title: 'Packages', description: 'Host classes physically and advertise them on our platform, get better and organized information about your class.' },
     { id: 'workshop', title: 'Workshop', description: 'Host classes physically and advertise them on our platform, get better and organized information about your class.' },
     { id: 'experience', title: 'Experience', description: 'Host unique experiences and adventures for users to enjoy and learn from.' }, // New "Experience" listing

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 import tw from 'tailwind-react-native-classnames';
 
 import { getClassSessions } from '../redux/slice/listings/classService'; // Import API functions
@@ -43,15 +44,20 @@ const ListingSchedule = ({ date }) => {
   }, [date]);
 
   const renderItem = ({ item }) => (
-    <View style={tw`py-2 px-4 border bg-white rounded-xl mb-2 `}>
-      <Text style={tw`text-lg font-bold text-gray-800 mb-1`}>{item.type}</Text>
-      <Text style={tw`text-base`}>{item.title}</Text>
-      <Text style={tw`text-sm text-gray-500`}>{item.time}</Text>
+    <View style={[tw`py-2 px-4 border rounded-xl mb-2 bg-white flex-row justify-between items-center`, { borderColor: '#A72C76' }]}>
+      <View>
+        <Text style={tw`text-lg font-bold text-gray-800 mb-1`}>{item.type}</Text>
+        <Text style={tw`text-base`}>{item.title}</Text>
+        <Text style={tw`text-sm text-red-800`}>{item.time}</Text>
+      </View>
+      <TouchableOpacity onPress={() => console.log('Share', item)}>
+        <Icon name="send" size={24} color="#A72C76" />
+      </TouchableOpacity>
     </View>
   );
 
   return (
-    <View style={tw`flex-1 bg-gray-800 p-4`}>
+    <View style={tw`flex-1 bg-white p-4`}>
       {loading ? (
         <ActivityIndicator size="large" color="#ffffff" />
       ) : (

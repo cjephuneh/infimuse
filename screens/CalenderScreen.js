@@ -62,7 +62,7 @@ const CalendarScreen = () => {
       <ListingSchedule date={selectedDate} />
 
       <TouchableOpacity
-        style={[tw`absolute bottom-4 right-4 p-4 rounded-full shadow-lg`, { backgroundColor: '#A72C76' }]}
+        style={[tw`absolute bottom-4 right-4 p-4 rounded-full shadow-lg`, { backgroundColor: '#12B9F3' }]}
         onPress={toggleModal}
       >
         <Icon name="plus" size={24} color="#FFF" />
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     width: '100%',
-    borderRadius: 10,
+    borderRadius: 20,
     elevation: 2,
     backgroundColor: "#A72C76",
     alignItems: 'center',
