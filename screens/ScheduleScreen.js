@@ -95,7 +95,7 @@ const ScheduleScreen = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={tw`p-4 bg-gray-900 flex-grow`}>
+    <ScrollView contentContainerStyle={tw`p-4 bg-white flex-grow`}>
       <View style={tw`mb-8`}>
         <Text style={tw`text-2xl font-bold text-white mb-4`}>Schedule a Listing</Text>
         {/* Render available templates */}

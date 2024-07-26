@@ -27,7 +27,7 @@ function BottomTabNavigator() {
             iconName = 'home';
           } else if (route.name === 'Pricing') {
             iconName = 'dollar-sign';
-          } else if (route.name === 'Calender') {
+          } else if (route.name === 'Schedule') {
             iconName = 'calendar-alt';
           } else if (route.name === 'Insight') {
             iconName = 'chart-line';
@@ -66,9 +66,9 @@ function BottomTabNavigator() {
       {/* <Tab.Screen name="Insight" component={InsightScreen} /> */}
       {/* <Tab.Screen name="Pricing" component={PricingScreen} /> */}
       {/* <Tab.Screen name='Messages' component={ProfileScreen}/> */}
+      <Tab.Screen name='Schedule' component={CalenderScreen}/>
       <Tab.Screen name="Qrcode" component={QrScanner} />
-      <Tab.Screen name='Messages' component={Messagescreen}/>
-      <Tab.Screen name='Wallet' component={WalletScreen}/>
+      {/* <Tab.Screen name='Wallet' component={WalletScreen}/> */}
       <Tab.Screen name='Messages' component={Messagescreen}/>
       <Tab.Screen name="Community" component={CommunityScreen} />
     </Tab.Navigator>

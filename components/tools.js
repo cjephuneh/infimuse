@@ -10,7 +10,7 @@ const Tools = () => {
   // Dummy data for the UI
   const features = [
     { id: 1, title: 'View Templates', color: '#F472B6', icon: 'calendar-alt', screen: 'CreateTemplatesScreen' },
-    { id: 4, title: 'Manage Schedule', color: '#F472B6', icon: 'calendar', screen: 'CalenderScreen' },
+    { id: 4, title: 'Wallet', color: '#F472B6', icon: 'wallet', screen: 'WalletScreen' },
     { id: 2, title: 'Refund & Cancellation Settings', color: '#F472B6', icon: 'money-check-alt', screen: 'RefundScreen' },
     { id: 3, title: 'Insights', color: '#F472B6', icon: 'chart-line', screen: 'InsightsScreen' },
   ];

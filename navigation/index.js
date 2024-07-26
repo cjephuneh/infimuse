@@ -59,6 +59,7 @@ import StaffProfile from '../screens/StaffScreens/Staff_ProfileScreen';
 import SignInOptions from '../screens/SignInAsScreen';
 import StaffInsights from '../screens/StaffScreens/StaffInsightScreen';
 import StaffWallet from '../screens/StaffScreens/StaffWallet';
+import MessagesScreen from '../screens/MessagesScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -114,6 +115,7 @@ function AppNavigation() {
         
         {/* Here we include the Term Screen */}
         <Stack.Screen name="TermsScreen" component={TermsSreen} />
+
 
         {/* Here we include the Template Detail Screen */}
         <Stack.Screen name="TemplateDetailScreen" component={TemplateDetailScreen} />
@@ -176,6 +178,7 @@ function AppNavigation() {
 
         <Stack.Screen name="QrCodeScreen" component={QrCodeScreen} />
         <Stack.Screen name="CommunityScreen" component={CommunityScreen} />
+        <Stack.Screen name="MessagesScreen" component={MessagesScreen} />
         
 
 

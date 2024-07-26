@@ -40,7 +40,7 @@ const CalendarScreen = () => {
 
   const EventItem = ({ event }) => {
     return (
-      <View style={tw`flex-row items-center p-2 border-b border-gray-200`}>
+      <View style={tw`flex-row items-center p-2 border-b border-white`}>
         <Icon name="clock-o" size={20} color="#4B5563" style={tw`mr-2`} />
         <View style={tw`flex-1`}>
           <Text style={tw`text-base text-gray-800`}>{event.time}</Text>
@@ -107,22 +107,22 @@ const CalendarScreen = () => {
               style={styles.modalButton}
               onPress={() => navigateToScheduleScreen('ClassScheduleScreen')}
             >
-              <Text style={tw`text-white text-center text-lg`}>Class</Text>
+              <Text style={tw`text-white text-center text-lg`}>Workshop Class</Text>
             </TouchableOpacity>
             {/* PackageClass option */}
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={styles.modalButton}
               onPress={() => navigateToScheduleScreen('PackageClassScheduleScreen')}
             >
               <Text style={tw`text-white text-center text-lg`}>PackageClass</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             {/* Venue option */}
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={styles.modalButton}
               onPress={() => navigateToScheduleScreen('VenueScheduleScreen')}
             >
               <Text style={tw`text-white text-center text-lg`}>Venue</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity
               style={styles.modalButton}
               onPress={() => navigateToScheduleScreen('ExperienceScheduleScreen')}
