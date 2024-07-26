@@ -8,6 +8,7 @@ import InsightScreen from '../screens/InsightsScreen';
 import ListingScreen from '../screens/CreateTemplatesScreen';
 import PricingScreen from '../screens/pricingScreen';
 import QrScanner from '../screens/qrcodereader'
+import Messagescreen from '../screens/MessagesScreen';
 import CommunityScreen from '../screens/CommunityScreen';
 import WalletScreen from '../screens/WalletScreen';
 
@@ -36,8 +37,8 @@ function BottomTabNavigator() {
             iconName = 'qrcode'
           } else if (route.name === 'Community') {
             iconName = 'users';
-          }else if (route.name === 'Profile') {
-            iconName = 'user';
+          }else if (route.name === 'Messages') {
+            iconName = 'messages';
           }else if (route.name === 'Wallet') {
             iconName = 'wallet';
           }
@@ -64,9 +65,11 @@ function BottomTabNavigator() {
       {/* <Tab.Screen name="listings" component={ListingScreen} /> */}
       {/* <Tab.Screen name="Insight" component={InsightScreen} /> */}
       {/* <Tab.Screen name="Pricing" component={PricingScreen} /> */}
-      {/* <Tab.Screen name='Profile' component={ProfileScreen}/> */}
+      {/* <Tab.Screen name='Messages' component={ProfileScreen}/> */}
       <Tab.Screen name="Qrcode" component={QrScanner} />
+      <Tab.Screen name='Messages' component={Messagescreen}/>
       <Tab.Screen name='Wallet' component={WalletScreen}/>
+      <Tab.Screen name='Messages' component={Messagescreen}/>
       <Tab.Screen name="Community" component={CommunityScreen} />
     </Tab.Navigator>
   );
