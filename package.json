@@ -35,8 +35,8 @@
     "metro-resolver": "^0.80.9",
     "nativewind": "^2.0.11",
     "postcss": "^8.4.38",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "react-hot-toast": "^2.4.1",
     "react-native": "0.74.3",
     "react-native-calendars": "^1.1304.1",
@@ -70,8 +70,6 @@
     "redux": "^5.0.1",
     "tailwind-react-native-classnames": "^1.5.1",
     "tailwind-rn": "^4.2.0",
-    "tailwindcss-react-native": "^1.7.10",
-    "twrnc": "^4.2.0",
     "typescript": "~5.3.3"
   },
   "devDependencies": {
