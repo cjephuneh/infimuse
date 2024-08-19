@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, Image, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
-import tw from 'twrnc';  // Ensure you have twrnc installed and set up
+import tw from 'tailwind-react-native-classnames';
 
 const StaffScreen = ({ route }) => {
   const { member } = route.params;
